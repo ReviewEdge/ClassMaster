@@ -72,6 +72,34 @@ public class Filter {
         this.maxCredits = maxCredits;
     }
 
+    public String getContains() {
+        return contains;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public Time getTimeslots() {
+        return timeslots;
+    }
+
+    public String getProfessor() {
+        return professor;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public int getMinCredits() {
+        return minCredits;
+    }
+
+    public int getMaxCredits() {
+        return maxCredits;
+    }
+
     public boolean isValid(Class test){
         if(contains != null){
             return false;//TODO: have only return false if fails test for all, this is temporary
