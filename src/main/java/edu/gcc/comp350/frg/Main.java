@@ -53,8 +53,8 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("hello there");
-        System.out.println("It's scheduling time!");
-        CmdLineInterface cli = new CmdLineInterface();
+        System.out.println("It's scheduling time!\n");
+        CmdLineInterface.runInterface();
     }
 
 
