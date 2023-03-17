@@ -8,7 +8,6 @@ public class Main {
     private Schedule currentSchedule;
     private Search currentSearch;  //What's this? the current search
     private ArrayList<Search> searchHistory;
-    //private GUI gui
 
 
     public Main(Account account, Schedule currentSchedule, Search currentSearch, ArrayList<Search> searchHistory) {

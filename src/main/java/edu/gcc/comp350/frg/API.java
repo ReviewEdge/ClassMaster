@@ -1,6 +1,7 @@
 package edu.gcc.comp350.frg;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class API {
 
@@ -12,6 +13,10 @@ public class API {
 
     public ArrayList<Schedule> getSchedules(){
         return null;
+    }
+
+    public void loadSchedule(int i){
+
     }
 
     public void createSchedule(){
@@ -28,6 +33,10 @@ public class API {
 
     public String viewSchedule(){
         return null;
+    }
+
+    public void quit(){
+
     }
 
 
