@@ -52,6 +52,10 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("hello there");
+
+        // SAMPLE CODE
+        System.out.println(Class.getClassFromDBbyCourseCode("ACCT 201 A"));
+
         System.out.println("It's scheduling time!\n");
         CmdLineInterface.runInterface(false);
     }

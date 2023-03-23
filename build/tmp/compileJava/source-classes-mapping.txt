@@ -1,3 +1,5 @@
+edu/gcc/comp350/frg/DatabaseConnector.java
+ edu.gcc.comp350.frg.DatabaseConnector
 edu/gcc/comp350/frg/Department.java
  edu.gcc.comp350.frg.Department
 edu/gcc/comp350/frg/Filter.java
