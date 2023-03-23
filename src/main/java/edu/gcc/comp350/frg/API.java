@@ -19,15 +19,27 @@ public class API {
 
     }
 
-    public void createSchedule(){
+    public Schedule createSchedule(String name, String semester){
+        return null;
+    }
 
+    public int getNumSchedules(){
+        return -1;
+    }
+
+    public Schedule getCurrentSchedule(){
+        return null;
+    }
+
+    public String getClassDescription(int i){
+        return "Class " + i + " is Interesting";
     }
 
     public void addClass(){
 
     }
 
-    public void removeClass(){
+    public void removeClass(int i){
 
     }
 
