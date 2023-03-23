@@ -1,2 +1,22 @@
+edu/gcc/comp350/frg/Department.java
+ edu.gcc.comp350.frg.Department
+edu/gcc/comp350/frg/Filter.java
+ edu.gcc.comp350.frg.Filter
+edu/gcc/comp350/frg/Search.java
+ edu.gcc.comp350.frg.Search
+edu/gcc/comp350/frg/Account.java
+ edu.gcc.comp350.frg.Account
+edu/gcc/comp350/frg/Schedule.java
+ edu.gcc.comp350.frg.Schedule
+edu/gcc/comp350/frg/Term.java
+ edu.gcc.comp350.frg.Term
+edu/gcc/comp350/frg/Class.java
+ edu.gcc.comp350.frg.Class
+edu/gcc/comp350/frg/API.java
+ edu.gcc.comp350.frg.API
+edu/gcc/comp350/frg/CmdLineInterface.java
+ edu.gcc.comp350.frg.CmdLineInterface
+ edu.gcc.comp350.frg.CmdLineInterface$1
+ edu.gcc.comp350.frg.CmdLineInterface$Screen
 edu/gcc/comp350/frg/Main.java
  edu.gcc.comp350.frg.Main
