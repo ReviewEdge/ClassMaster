@@ -1,2 +1,12 @@
+edu/gcc/comp350/frg/DatabaseConnector.java
+ edu.gcc.comp350.frg.DatabaseConnector
+edu/gcc/comp350/frg/Search.java
+ edu.gcc.comp350.frg.Search
+edu/gcc/comp350/frg/Schedule.java
+ edu.gcc.comp350.frg.Schedule
+edu/gcc/comp350/frg/Class.java
+ edu.gcc.comp350.frg.Class
+edu/gcc/comp350/frg/Filter.java
+ edu.gcc.comp350.frg.Filter
 edu/gcc/comp350/frg/Main.java
  edu.gcc.comp350.frg.Main

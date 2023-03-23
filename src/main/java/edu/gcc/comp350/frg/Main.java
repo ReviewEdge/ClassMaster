@@ -8,7 +8,6 @@ public class Main {
     private Schedule currentSchedule;
     private Search currentSearch;  //What's this? the current search
     private ArrayList<Search> searchHistory;
-    //private GUI gui
 
 
     public Main(Account account, Schedule currentSchedule, Search currentSearch, ArrayList<Search> searchHistory) {
@@ -54,6 +53,10 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("hello there");
         System.out.println("It's scheduling time!");
+
+        // SAMPLE CODE
+        System.out.println(Class.getClassFromDBbyCourseCode("ACCT 201 A"));
+
     }
 
 
