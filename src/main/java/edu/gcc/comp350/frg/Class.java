@@ -87,14 +87,4 @@ public class Class {
                 '}';
 
     }
-    
-    public void getDescription(){
-
-    }
-
-    public void addClass(){
-
-    }
-
-
 }
