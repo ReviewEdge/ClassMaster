@@ -85,6 +85,15 @@ public class Class {
                 ", location='" + location + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+
+    }
+    
+    public void getDescription(){
+
+    }
+
+    public void addClass(){
+
     }
 
 
