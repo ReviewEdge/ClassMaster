@@ -25,6 +25,10 @@ public class Search {
         return filter;
     }
 
+    public Class getClass(int i){
+        return currentResults.get(i);
+    }
+
     public void setFilter(Filter filter) {
         this.filter = filter;
     }
