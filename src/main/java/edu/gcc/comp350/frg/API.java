@@ -18,7 +18,7 @@ public class API {
     }
 
     public void loadSchedule(int i) throws Exception{
-        if(getNumSchedules() < i){
+        if(getNumSchedules() < i || i < 1){
             throw new Exception("No schedule at index " + i + ", Please try again");
         }
         Schedule sch = main.getAccount().getSchedules().get(i-1);
@@ -58,6 +58,18 @@ public class API {
     public void makeSearch(String search) throws Exception{
         Search s = new Search(search, filter); // Should validate that it Can make a search from that? //TODO
         main.makeNewSearch(s);
+    }
+
+    public boolean hasCurrentSearch(){
+        return main.getCurrentSearch() != null;
+    }
+
+    public void renameCurrentSchedule(String name){
+        getCurrentSchedule().setName(name);
+    }
+
+    public ArrayList<Class> getSearchResults(){
+        return main.getCurrentSearch().getCurrentResults();
     }
 
     public void quit(){
