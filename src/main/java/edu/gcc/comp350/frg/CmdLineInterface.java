@@ -88,129 +88,127 @@ public class CmdLineInterface {
                     }
                 }
             }
-
-            // Handles the rest of the Commands
-            switch (screen) {
-                case SCHEDULE_LIST -> {
-
-                    // Loads the selected Schedule and activates calendar view
-                    if (cmdSplit[0].toLowerCase().contains("load")){
-                         //Errors if the command wasn't format correctly, then loops
-                         try {
-                             int i = Integer.parseInt(cmdSplit[1]);
-                             screen = Screen.CALENDAR;
-                             api.loadSchedule(i);
-                             System.out.println("Show actual display here: WIP");
-                             System.out.println(displayCalendar(api.getCurrentSchedule()));
-                         }
-                         catch(Exception e){
-                             System.out.println("Invalid Load Parameter, Please use a number");
-                         }
-                    }
-                    else if (cmdSplit[0].toLowerCase().contains("createschedule")){
-                        System.out.println("createSchedule: WIP");
-                        try {
-                            String semester = cmdSplit[2]; //TODO once we have semester
-                            api.createSchedule(cmdSplit[1], semester);
-                            api.loadSchedule(api.getNumSchedules()-1);
-                            System.out.println("Show new Schedule Here");
-                            System.out.println(displayCalendar(api.getCurrentSchedule()));
-                        }
-                        catch(Exception e){
-                            System.out.println("Invalid createSchedule Parameter, Please include a name and semester");
-                        }
-                    }
-                    else if (cmdSplit[0].toLowerCase().contains("viewschedules")){
-                        System.out.println("viewSchedule: WIP");
-                        System.out.println(displayScheduleList(api.getSchedules()));
-                    }
-                    else{
-                        System.out.println("Unknown Command, Type \"Help\" for a list of commands");
-                    }
-                }
-                case CALENDAR -> {
-                    if (cmdSplit[0].toLowerCase().contains("search")){
-                        screen = Screen.SEARCH;
-                        System.out.println("Searching: ");
-                    }
-                    else if (cmdSplit[0].toLowerCase().contains("viewcalendar")){
-                        System.out.println("ViewingCal: WIP");
+            //Handles all the schedule list commands
+            else if(screen == Screen.SCHEDULE_LIST){
+                // Loads the selected Schedule and activates calendar view
+                if (cmdSplit[0].toLowerCase().contains("load")){
+                    //Errors if the command wasn't format correctly, then loops
+                    try {
+                        int i = Integer.parseInt(cmdSplit[1]);
+                        screen = Screen.CALENDAR;
+                        api.loadSchedule(i);
+                        System.out.println("Show actual display here: WIP");
                         System.out.println(displayCalendar(api.getCurrentSchedule()));
-
                     }
-                    else if (cmdSplit[0].toLowerCase().contains("getdescription")){
-                        try {
-
-                            System.out.println("Getting Description: ");
-                            int i = Integer.parseInt(cmdSplit[1]);
-                            System.out.println(api.getClassDescription(i));
-                        }catch(Exception e){
-                                System.out.println("Invalid getDescription Parameter, Please include an index number for the class");
-                        }
+                    catch(Exception e){
+                        System.out.println("Invalid Load Parameter, Please use a number");
                     }
-                    else if (cmdSplit[0].toLowerCase().contains("remove")){
-                        try {
-                            int i = Integer.parseInt(cmdSplit[1]);
-                            System.out.println("Removing Class " + i +": ");
-                            api.removeClass(i);
-                            System.out.println(displayCalendar(api.getCurrentSchedule()));
-                        }catch(Exception e){
-                            System.out.println("Invalid remove Parameter, Please include an index number for the class");
-                        }
+                }
+                else if (cmdSplit[0].toLowerCase().contains("createschedule")){
+                    System.out.println("createSchedule: WIP");
+                    try {
+                        String semester = cmdSplit[2]; //TODO once we have semester
+                        api.createSchedule(cmdSplit[1], semester);
+                        api.loadSchedule(api.getNumSchedules()-1);
+                        System.out.println("Show new Schedule Here");
+                        System.out.println(displayCalendar(api.getCurrentSchedule()));
                     }
-                    else if (cmdSplit[0].toLowerCase().contains("renameschedule")){
-                        try {
-                            String name = cmdSplit[1];
-                            System.out.println("Renaming schedule to " + name);
-                        }catch(Exception e){
-                            System.out.println("Invalid renameSchedule Parameter, Please include a new name");
-                        }
+                    catch(Exception e){
+                        System.out.println("Invalid createSchedule Parameter, Please include a name and semester");
                     }
-                    else if (cmdSplit[0].toLowerCase().contains("changesemester")){
-                        try {
-                            String semester = cmdSplit[1]; //TODO Interpret as a Semester
-                            System.out.println("Changing semester to " + semester);
-                        }catch(Exception e){
-                            System.out.println("Invalid changeSemester Parameter, Please include a new semester");
-                        }
-                    }
-                    else if (cmdSplit[0].toLowerCase().contains("back")){
-                        System.out.println("Returning to Schedule List");
-                        System.out.println(displayScheduleList(api.getSchedules()));
-                        screen = Screen.SCHEDULE_LIST;
-                    }
-                    else{
-                        System.out.println("Unknown Command, Type \"Help\" for a list of commands");
-                    }
+                }
+                else if (cmdSplit[0].toLowerCase().contains("viewschedules")){
+                    System.out.println("viewSchedule: WIP");
+                    System.out.println(displayScheduleList(api.getSchedules()));
+                }
+                else{
+                    System.out.println("Unknown Command, Type \"Help\" for a list of commands");
+                }
+            }
+            //Handles all calendar commands
+            else if(screen == Screen.CALENDAR){
+                if (cmdSplit[0].toLowerCase().contains("search")){
+                    screen = Screen.SEARCH;
+                    System.out.println("Searching: ");
+                }
+                else if (cmdSplit[0].toLowerCase().contains("viewcalendar")){
+                    System.out.println("ViewingCal: WIP");
+                    System.out.println(displayCalendar(api.getCurrentSchedule()));
 
                 }
-                case SEARCH -> {
-                    if (cmdSplit[0].toLowerCase().contains("viewschedule")){
-                        System.out.println("returning to Schedule: WIP"); //TODO
-                        screen = Screen.CALENDAR;
+                else if (cmdSplit[0].toLowerCase().contains("getdescription")){
+                    try {
+
+                        System.out.println("Getting Description: ");
+                        int i = Integer.parseInt(cmdSplit[1]);
+                        System.out.println(api.getClassDescription(i));
+                    }catch(Exception e){
+                        System.out.println("Invalid getDescription Parameter, Please include an index number for the class");
                     }
-                    else if (cmdSplit[0].toLowerCase().contains("search")){
-                        System.out.println("SearchUnavailible: WIP"); //TODO
+                }
+                else if (cmdSplit[0].toLowerCase().contains("remove")){
+                    try {
+                        int i = Integer.parseInt(cmdSplit[1]);
+                        System.out.println("Removing Class " + i +": ");
+                        api.removeClass(i);
+                        System.out.println(displayCalendar(api.getCurrentSchedule()));
+                    }catch(Exception e){
+                        System.out.println("Invalid remove Parameter, Please include an index number for the class");
                     }
-                    else if (cmdSplit[0].toLowerCase().contains("addfilter")){
-                        System.out.println("FilterSystem WIP");             //TODO
+                }
+                else if (cmdSplit[0].toLowerCase().contains("renameschedule")){
+                    try {
+                        String name = cmdSplit[1];
+                        System.out.println("Renaming schedule to " + name);
+                    }catch(Exception e){
+                        System.out.println("Invalid renameSchedule Parameter, Please include a new name");
                     }
-                    else if (cmdSplit[0].toLowerCase().contains("clearfilter")){
-                        System.out.println("ClearFilter: WIP");     //TODO
+                }
+                else if (cmdSplit[0].toLowerCase().contains("changesemester")){
+                    try {
+                        String semester = cmdSplit[1]; //TODO Interpret as a Semester
+                        System.out.println("Changing semester to " + semester);
+                    }catch(Exception e){
+                        System.out.println("Invalid changeSemester Parameter, Please include a new semester");
                     }
-                    else if (cmdSplit[0].toLowerCase().contains("removefilter")){
-                        System.out.println("RemoveFilter Not Supported Yet");   //TODO
-                    }
-                    else if (cmdSplit[0].toLowerCase().contains("addclass")){
-                        System.out.println("AddClass System: WIP");     //TODO
-                    }
-                    else if (cmdSplit[0].toLowerCase().contains("back")){
-                        System.out.println("Returning to Calendar View");
-                        screen = Screen.CALENDAR;
-                    }
-                    else{
-                        System.out.println("Unknown Command, Type \"Help\" for a list of commands");
-                    }
+                }
+                else if (cmdSplit[0].toLowerCase().contains("back")){
+                    System.out.println("Returning to Schedule List");
+                    System.out.println(displayScheduleList(api.getSchedules()));
+                    screen = Screen.SCHEDULE_LIST;
+                }
+                else{
+                    System.out.println("Unknown Command, Type \"Help\" for a list of commands");
+                }
+            }
+            //Handles all Search commands
+            else if(screen == Screen.SEARCH){
+                if (cmdSplit[0].toLowerCase().contains("viewschedule")){
+                    System.out.println("returning to Schedule: WIP"); //TODO
+                    screen = Screen.CALENDAR;
+                }
+                else if (cmdSplit[0].toLowerCase().contains("search")){
+                    System.out.println("SearchUnavailible: WIP"); //TODO
+                }
+                else if (cmdSplit[0].toLowerCase().contains("addfilter")){
+                    System.out.println("FilterSystem WIP");             //TODO
+                }
+                else if (cmdSplit[0].toLowerCase().contains("clearfilter")){
+                    System.out.println("ClearFilter: WIP");     //TODO
+                }
+                else if (cmdSplit[0].toLowerCase().contains("removefilter")){
+                    System.out.println("RemoveFilter Not Supported Yet");   //TODO
+                }
+                else if (cmdSplit[0].toLowerCase().contains("addclass")){
+                    System.out.println("AddClass System: WIP");     //TODO
+                }
+                else if (cmdSplit[0].toLowerCase().contains("back")){
+                    System.out.println("Returning to Calendar View");
+                    System.out.println(displayCalendar(api.getCurrentSchedule()));
+                    screen = Screen.CALENDAR;
+                }
+                else{
+                    System.out.println("Unknown Command, Type \"Help\" for a list of commands");
                 }
             }
         }
