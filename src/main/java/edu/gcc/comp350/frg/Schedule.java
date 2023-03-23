@@ -50,6 +50,10 @@ public class Schedule {
     public void addClass (Class toAdd) throws Exception{
 
     }
+    public void removeClass (int i) throws Exception{
+
+    }
+
     public void removeClass (Class toRemove) throws Exception{
 
     }

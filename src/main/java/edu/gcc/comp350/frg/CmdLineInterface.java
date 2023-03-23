@@ -22,7 +22,7 @@ public class CmdLineInterface {
     }
 
 
-    public static void runInterface(boolean testing){
+    public static void runInterface(API api, boolean testing){
         System.out.println("Welcome to ClassMaster!");
         System.out.println("Your Journey starts at edu.gcc.comp350.frg");
         System.out.println("And Its COMPLETELY FREE, until you bribe us");
@@ -31,7 +31,6 @@ public class CmdLineInterface {
 
 
         Screen screen = Screen.SCHEDULE_LIST;
-        API api = new API();
 
         System.out.println("Printing Schedule List here");
 
@@ -40,7 +39,15 @@ public class CmdLineInterface {
         while(notQuit){
             String cmd;
             if(!testing) {
-                cmd = getInput();
+                // Sets the correct location for before the command entry point
+                String s = "";
+                switch (screen){
+                    case SCHEDULE_LIST -> s = "Schedule List";
+                    case CALENDAR -> s = "Calendar View";
+                    case SEARCH -> s = "Search Command Bar";
+                }
+
+                cmd = getInput(s + ": ");
             }
             else{
                 cmd = askTest();
@@ -68,7 +75,6 @@ public class CmdLineInterface {
                         System.out.println("- CreateSchedule \"Name\": Creates a schedule with the given name, and semester: (in the form: spring 2023)");
                         System.out.println("- ViewSchedules: Shows the list of all your schedules");
                         System.out.println("- Load \"number\": Loads the schedule of the given corresponding number from the list");
-
                     }
                     case CALENDAR -> {
                         System.out.println("Calendar Page Help:");
@@ -82,9 +88,12 @@ public class CmdLineInterface {
                     }
                     case SEARCH -> {
                         System.out.println("Search Page Help:"); //TODO
-                        System.out.println("WIP");
-                        System.out.println("- Back: Returns to the list fo schedules");
-
+                        System.out.println("- Search \"SearchTerms\": Makes a search for the \"SearchTerms\"");
+                        System.out.println("- AddClass \"number\": Adds the class at position \"number\" to the Schedule");
+                        System.out.println("- AddFilter \"hypothetical Parameters\": WIP");
+                        System.out.println("- RemoveFilter \"hypothetical Parameters\": WIP");
+                        System.out.println("- ClearFilter \"hypothetical Parameters\": WIP");
+                        System.out.println("- Back: Returns to the Calendar");
                     }
                 }
             }
@@ -106,12 +115,16 @@ public class CmdLineInterface {
                 }
                 else if (cmdSplit[0].toLowerCase().contains("createschedule")){
                     System.out.println("createSchedule: WIP");
-                    try {
+                    try { //TODO Change this from a try catch to normal if, Why'd I do that
                         String semester = cmdSplit[2]; //TODO once we have semester
-                        api.createSchedule(cmdSplit[1], semester);
-                        api.loadSchedule(api.getNumSchedules()-1);
-                        System.out.println("Show new Schedule Here");
-                        System.out.println(displayCalendar(api.getCurrentSchedule()));
+                        try {
+                            Schedule sch = api.createSchedule(cmdSplit[1], semester);
+                            api.loadSchedule(api.getNumSchedules() - 1); //Could be faster by passing in a Schedule, here at least
+                            System.out.println("Show new Schedule Here");
+                            System.out.println(displayCalendar(sch));
+                        } catch(Exception e){
+                            System.out.println(e.toString());
+                        }
                     }
                     catch(Exception e){
                         System.out.println("Invalid createSchedule Parameter, Please include a name and semester");
@@ -129,7 +142,6 @@ public class CmdLineInterface {
             else if(screen == Screen.CALENDAR){
                 if (cmdSplit[0].toLowerCase().contains("search")){
                     screen = Screen.SEARCH;
-                    System.out.println("Searching: ");
                 }
                 else if (cmdSplit[0].toLowerCase().contains("viewcalendar")){
                     System.out.println("ViewingCal: WIP");
@@ -141,7 +153,7 @@ public class CmdLineInterface {
 
                         System.out.println("Getting Description: ");
                         int i = Integer.parseInt(cmdSplit[1]);
-                        System.out.println(api.getClassDescription(i));
+                        System.out.println(api.getClassInfo(i));
                     }catch(Exception e){
                         System.out.println("Invalid getDescription Parameter, Please include an index number for the class");
                     }
@@ -184,11 +196,25 @@ public class CmdLineInterface {
             //Handles all Search commands
             else if(screen == Screen.SEARCH){
                 if (cmdSplit[0].toLowerCase().contains("viewschedule")){
-                    System.out.println("returning to Schedule: WIP"); //TODO
+                    System.out.println("Returning to Calendar: ");
+                    System.out.println(displayCalendar(api.getCurrentSchedule()));
                     screen = Screen.CALENDAR;
                 }
                 else if (cmdSplit[0].toLowerCase().contains("search")){
-                    System.out.println("SearchUnavailible: WIP"); //TODO
+                    if(cmdSplit.length > 1){
+                        StringBuilder s = new StringBuilder();
+                        for(int i  = 1; i < cmdSplit.length; i++){
+                            s.append(cmdSplit[i]);
+                        }
+                        try {
+                            api.makeSearch(s.toString());
+                        } catch (Exception e){
+                            System.out.println(e.toString());
+                        }
+                    }
+                    else{
+                        System.out.println("Invalid Search parameters, Please try again or use Help");
+                    }
                 }
                 else if (cmdSplit[0].toLowerCase().contains("addfilter")){
                     System.out.println("FilterSystem WIP");             //TODO
@@ -200,7 +226,21 @@ public class CmdLineInterface {
                     System.out.println("RemoveFilter Not Supported Yet");   //TODO
                 }
                 else if (cmdSplit[0].toLowerCase().contains("addclass")){
-                    System.out.println("AddClass System: WIP");     //TODO
+                    if(cmdSplit.length > 1){
+                        try {
+                            int i = Integer.parseInt(cmdSplit[1]);
+                            try {
+                                api.addClass(i);
+                            } catch (Exception e){
+                                System.out.println(e.toString());
+                            }
+                        } catch(Exception e){
+                            System.out.println("Could not interpret second argument as a number, Please try again");
+                        }
+                    }
+                    else{
+                        System.out.println("Invalid addClass parameters, Please try again or use Help");
+                    }
                 }
                 else if (cmdSplit[0].toLowerCase().contains("back")){
                     System.out.println("Returning to Calendar View");
@@ -214,8 +254,8 @@ public class CmdLineInterface {
         }
     }
 
-    public static String getInput(){
-        System.out.print(":");
+    public static String getInput(String s){
+        System.out.print(s);
         Scanner scn = new Scanner(System.in);
         return scn.nextLine();
     }

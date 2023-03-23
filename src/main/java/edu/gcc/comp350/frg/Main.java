@@ -17,6 +17,13 @@ public class Main {
         this.searchHistory = searchHistory;
     }
 
+    public Main() {
+        this.account = new Account(-1, "User", "userX@gcc.edu", "password", "username");
+        this.currentSchedule = null;
+        this.currentSearch = null;
+        this.searchHistory = new ArrayList<>();
+    }
+
     public Account getAccount() {
         return account;
     }
@@ -45,6 +52,11 @@ public class Main {
         this.currentSearch = currentSearch;
     }
 
+    public void makeNewSearch(Search s){
+        searchHistory.add(currentSearch);
+        setCurrentSearch(s);
+    }
+
     public void loadSchedule(int scheduleIndex){
 
     }
@@ -53,13 +65,9 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("hello there");
         System.out.println("It's scheduling time!\n");
-        CmdLineInterface.runInterface(false);
+        Main main = new Main();
+        API api = new API(main);
+
+        CmdLineInterface.runInterface(api, false);
     }
-
-
-
-
-
-
-
 }

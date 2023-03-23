@@ -8,7 +8,9 @@ class CmdLineInterfaceTest {
 
     @Test
     void runInterfaceTest(){
-        CmdLineInterface.runInterface(true);
+        Main main = new Main();
+        API api = new API(main);
+        CmdLineInterface.runInterface(api, true);
     }
 
 }

@@ -35,5 +35,13 @@ public class Class {
     public Class(Class c) {
     }
 
+    public void getDescription(){
+
+    }
+
+    public void addClass(){
+
+    }
+
 
 }
