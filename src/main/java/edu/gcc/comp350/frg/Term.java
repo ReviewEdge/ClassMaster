@@ -17,4 +17,12 @@ public class Term {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "Term{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
