@@ -41,13 +41,17 @@ public class CmdLineInterface {
             if(!testing) {
                 // Sets the correct location for before the command entry point
                 String s = "\n";
-                switch (screen){
-                    case SCHEDULE_LIST -> s = "Schedule List";
-                    case CALENDAR -> s = "Calendar View";
-                    case SEARCH -> s = "Search Command Bar";
+                if(screen == Screen.SCHEDULE_LIST) {
+                    s = "Schedule List";
                 }
-
+                else if (screen == Screen.CALENDAR) {
+                    s = "Calendar View";
+                }
+                else if (screen == Screen.SEARCH){
+                    s = "Search Command Bar";
+                }
                 cmd = getInput(s + ": ");
+
             }
             else{
                 cmd = askTest();
@@ -69,32 +73,30 @@ public class CmdLineInterface {
 
             // Handles the Help Cmd for each screen
             if(cmdSplit[0].toLowerCase().contains("help")) {
-                switch (screen) {
-                    case SCHEDULE_LIST -> {
-                        System.out.println("Schedule Page Help:");
-                        System.out.println("- CreateSchedule \"Name\": Creates a schedule with the given name, and semester: (in the form: spring 2023)");
-                        System.out.println("- ViewSchedules: Shows the list of all your schedules");
-                        System.out.println("- Load \"number\": Loads the schedule of the given corresponding number from the list");
-                    }
-                    case CALENDAR -> {
-                        System.out.println("Calendar Page Help:");
-                        System.out.println("- ViewCalendar: Displays the list of classes");
-                        System.out.println("- GetDescription \"number\": Displays the description of the class at position \"number\"");
-                        System.out.println("- RenameSchedule \"NewName\": Changes the current schedule's name to \"NewName\"");
+                if(screen == Screen.SCHEDULE_LIST) {
+                    System.out.println("Schedule Page Help:");
+                    System.out.println("- CreateSchedule \"Name\": Creates a schedule with the given name, and semester: (in the form: spring 2023)");
+                    System.out.println("- ViewSchedules: Shows the list of all your schedules");
+                    System.out.println("- Load \"number\": Loads the schedule of the given corresponding number from the list");
+                }
+                else if(screen == Screen.CALENDAR) {
+                    System.out.println("Calendar Page Help:");
+                    System.out.println("- ViewCalendar: Displays the list of classes");
+                    System.out.println("- GetDescription \"number\": Displays the description of the class at position \"number\"");
+                    System.out.println("- RenameSchedule \"NewName\": Changes the current schedule's name to \"NewName\"");
 //                        System.out.println("- changeSemester \"NewSemester\": Changes the current schedule's year to \"NewSemester\""); // Shouldn't really be possible
-                        System.out.println("- Remove \"number\": Removes the class at position \"number\" from the schedule");
-                        System.out.println("- Search: Opens a search bar");
-                        System.out.println("- Back: Returns to the list fo schedules");
-                    }
-                    case SEARCH -> {
-                        System.out.println("Search Page Help:"); //TODO
-                        System.out.println("- Search \"SearchTerms\": Makes a search for the \"SearchTerms\"");
-                        System.out.println("- AddClass \"number\": Adds the class at position \"number\" to the Schedule");
-                        System.out.println("- AddFilter \"hypothetical Parameters\": WIP");
-                        System.out.println("- RemoveFilter \"hypothetical Parameters\": WIP");
-                        System.out.println("- ClearFilter \"hypothetical Parameters\": WIP");
-                        System.out.println("- Back: Returns to the Calendar");
-                    }
+                    System.out.println("- Remove \"number\": Removes the class at position \"number\" from the schedule");
+                    System.out.println("- Search: Opens a search bar");
+                    System.out.println("- Back: Returns to the list fo schedules");
+                }
+                else if(screen == Screen.SEARCH) {
+                    System.out.println("Search Page Help:"); //TODO
+                    System.out.println("- Search \"SearchTerms\": Makes a search for the \"SearchTerms\"");
+                    System.out.println("- AddClass \"number\": Adds the class at position \"number\" to the Schedule");
+                    System.out.println("- AddFilter \"hypothetical Parameters\": WIP");
+                    System.out.println("- RemoveFilter \"hypothetical Parameters\": WIP");
+                    System.out.println("- ClearFilter \"hypothetical Parameters\": WIP");
+                    System.out.println("- Back: Returns to the Calendar");
                 }
             }
             //Handles all the schedule list commands
