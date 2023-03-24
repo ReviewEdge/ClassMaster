@@ -85,7 +85,6 @@ public class Class {
                 ", location='" + location + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+
     }
-
-
 }
