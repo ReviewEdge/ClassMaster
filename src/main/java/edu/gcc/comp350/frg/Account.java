@@ -26,4 +26,14 @@ public class Account {
     public boolean logout(){
         return false;
     }
+
+    public ArrayList<Schedule> getSchedules(){
+        return mySchedules;
+    }
+
+    public void addSchedule(Schedule sch){
+        mySchedules.add(sch);
+    }
+
+
 }

@@ -8,3 +8,5 @@ public enum Department {
     HUMA,
     WRIT
 }
+
+// need a method to add to this

@@ -57,6 +57,10 @@ public class Schedule {
         }
         classes.add(toAdd);
     }
+    public void removeClass (int i) throws Exception{
+
+    }
+
     public void removeClass (Class toRemove) throws Exception{
         for (int ){
             if (c =)
