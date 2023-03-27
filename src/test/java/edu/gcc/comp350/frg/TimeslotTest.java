@@ -62,4 +62,14 @@ class TimeslotTest {
         now.setEnd(Time.valueOf("09:00:00"));
         assertEquals("Sunday from 7:30 to 9:00.", now.toString());
     }
+
+    @Test
+    void testEquals(){
+        String no = "no";
+        Timeslot now = new Timeslot("09:00:00", "09:50:00", Day.Friday);
+        Timeslot day = new Timeslot("09:00:00", "09:50:00", Day.Sunday);
+        assertFalse(now.equals(no));
+        assertFalse(now.equals(day));
+        assertTrue(now.equals(now));
+    }
 }

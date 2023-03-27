@@ -2,6 +2,9 @@ package edu.gcc.comp350.frg;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 public class Filter {
     // characters that must be in the class name somewhere
@@ -9,7 +12,7 @@ public class Filter {
     // course code
     private String code = null;
     // the timeslots the class can be in
-    private ArrayList<Timeslot> timeslots = null;//TODO: figure out how to do timeslots
+    private ArrayList<TreeSet<Timeslot>> timeslots = null;//TODO: figure out how to do timeslots
     // the professor teaching this class
     private String professor = null;
     // the department this class is in
@@ -29,7 +32,7 @@ public class Filter {
      * @param minCredits the minimum number of credits the class takes, set to -1 if unused
      * @param maxCredits the maximum number of credits the class takes, set to -1 if unused
      */
-    public Filter(String contains, String code, ArrayList<Timeslot> timeslots, String professor, Department department, int minCredits, int maxCredits) {
+    public Filter(String contains, String code, ArrayList<TreeSet<Timeslot>> timeslots, String professor, Department department, int minCredits, int maxCredits) {
         this.contains = contains;
         this.code = code;
         this.timeslots = timeslots;
@@ -48,29 +51,185 @@ public class Filter {
     public void setContains(String contains) {
         this.contains = contains;
     }
+    public void removeContains() {
+        this.contains = null;
+    }
 
     public void setCode(String code) {
         this.code = code;
     }
+    public void removeCode() {
+        this.code = null;
+    }
 
-    public void setTimeslots(ArrayList<Timeslot> timeslots) {
+    public void setTimeslots(ArrayList<TreeSet<Timeslot>> timeslots) {
+        if(timeslots.size() != 7){
+            throw new IllegalArgumentException();
+        }
         this.timeslots = timeslots;
+    }
+
+    /**
+     * adds a timeslot to the possible timeslots to choose from
+     * @param timeslot the timeslot to add
+     * @return true if the timeslot wasn't already added
+     */
+    public void addTimeslot(Timeslot timeslot) {
+        if(this.timeslots == null){
+            this.timeslots = new ArrayList<>();
+            for(int i=0; i<7; i++){
+                this.timeslots.add(new TreeSet<Timeslot>());
+            }
+        }
+        /**
+         * the goal of the upcoming part is this:
+         * if you insert this:
+         *          |       timeslot        |
+         * into this:
+         * |  ts    |   |  ts   |       |  ts   |
+         * you should get this for ease of filtering:
+         * |              timeslot              |
+         * to do this, I check the slot strictly before the input to see if it overlaps
+         *      if so, use its start as the start of the combined timeslot, and remove it
+         *      otherwise just set the start as the input's start
+         * then check all timeslots that start after the input
+         *      if they overlap, add them to the merged slot and remove them from the day's slots
+         *          if they have a later end than the input, use that as the end of the new timeslot
+         * at the end I have a timeslot with the correct start and end
+         * and have removed all superfluous timeslots that would be inside of it
+         */
+        // get all timeslots this day
+        TreeSet<Timeslot> day = this.timeslots.get(timeslot.getDay().ordinal());
+        // find all timeslots that start later
+        Timeslot[] mayMerge = (Timeslot[]) day.tailSet(timeslot).toArray();
+        // set up some variables for the end result
+        Time start = timeslot.getStart();
+        Time end = timeslot.getEnd();
+        // find the timeslot that starts before
+        Timeslot temp = day.lower(timeslot);
+        // if it overlaps with the new timeslot, merge it in
+        if (temp != null && timeslot.overlaps(temp, true)) {
+            start = temp.getStart();
+            day.remove(temp);
+        }
+        // if there are any timeslots starting later...
+        if(mayMerge.length > 0) {
+            for(int i=0; i<mayMerge.length; i++){
+                temp = mayMerge[i];
+                // check if this slot also needs to be absorbed
+                if(timeslot.overlaps(temp, true)){
+                    day.remove(temp);
+                    // if this one ends after the input's end, then that will be the end of the new slot
+                    if(end.before(temp.getEnd())){
+                        end = temp.getEnd();
+                        day.remove(temp);
+                        break;
+                    }
+                } else {
+                    //doesn't overlap anymore, end
+                    break;
+                }
+            }
+        }else {
+            end = timeslot.getEnd();
+        }
+        day.add(new Timeslot(start, end, timeslot.getDay()));
+    }
+
+    /**
+     * removes a timeslot from the possible ones
+     * @param timeslot the timeslot to remove
+     * @return true if the timeslot was in the day's set
+     */
+    public void removeTimeslot(Timeslot timeslot) {
+        TreeSet<Timeslot> day = this.timeslots.get(timeslot.getDay().ordinal());
+        if (day.remove(timeslot)){
+            return;
+        }
+        /**
+         * the goal of the upcoming part is this:
+         * what if you remove this:
+         *          |       timeslot   |
+         * from this:
+         * |  ts        |       |          ts   |
+         * or this:
+         * |               timeslot             |
+         * you should get this:
+         * |  ts    |                  |   ts   |
+         * to do this, I check the slot strictly before the input to see if the input is in it
+         *    - if so, split it up into 2 chunks without the middle area
+         *    - otherwise, check if it overlaps
+         *          if so, set its end time to be equal to the removed slot's start
+         * then check all timeslots that start after the input for being contained in the removed time
+         *    - if so, remove them from the day's slots
+         *    - otherwise, check to see if they overlap
+         *        - if so, set their start to be the end of the removed time
+         * at the end I have removed all time that ovelaps with the input
+         */
+        // find all timeslots that start later
+        Timeslot[] mayRem = (Timeslot[]) day.tailSet(timeslot).toArray();
+        // find the timeslot that starts before
+        Timeslot temp = day.lower(timeslot);
+        // if the input timeslot is contained within it, split the timeslot before
+        if (temp != null && timeslot.isIn(temp)) {
+            day.add(new Timeslot(timeslot.getEnd(), temp.getEnd(), timeslot.getDay()));
+            temp.setEnd(timeslot.getStart());
+            return;
+        }else if (temp != null && timeslot.overlaps(temp)){
+            // it starts before and overlaps, therefore the end time must be the overlapped part
+            temp.setEnd(timeslot.getStart());
+        }
+        // if there are any timeslots starting later...
+        if(mayRem.length > 0) {
+            for(int i=0; i<mayRem.length; i++){
+                temp = mayRem[i];
+                // check if this slot needs to be removed entirely
+                if(temp.isIn(timeslot)){
+                    day.remove(temp);
+                }
+                //otherwise, if it needs to be removed partially
+                else if (temp.overlaps(timeslot)) {
+                    temp.setStart(timeslot.getEnd());
+                    break;
+                }
+                //doesn't overlap anymore, end
+                else {
+                    break;
+                }
+            }
+        }
     }
 
     public void setProfessor(String professor) {
         this.professor = professor;
+    }
+    public void removeProfessor() {
+        this.professor = null;
     }
 
     public void setDepartment(Department department) {
         this.department = department;
     }
 
+    /**
+     * basically the same as setDepartment(Department.NONE)
+     */
+    public void removeDepartment() {
+        this.department = Department.NONE;
+    }
+
     public void setMinCredits(int minCredits) {
         this.minCredits = minCredits;
+    }
+    public void removeMinCredits() {
+        this.minCredits = -1;
     }
 
     public void setMaxCredits(int maxCredits) {
         this.maxCredits = maxCredits;
+    }
+    public void removeMaxCredits(int maxCredits) {
+        this.maxCredits = -1;
     }
 
     public String getContains() {
@@ -81,7 +240,7 @@ public class Filter {
         return code;
     }
 
-    public ArrayList<Timeslot> getTimeslots() {
+    public ArrayList<TreeSet<Timeslot>> getTimeslots() {
         return timeslots;
     }
 
@@ -100,28 +259,40 @@ public class Filter {
     public int getMaxCredits() {
         return maxCredits;
     }
-
-    public boolean isValid(Class test){
+    //TODO: Remove temp, tempDep
+    public boolean isValid(Class test, Timeslot temp, Department tempDep){
         if(contains != null){
-            return false;//TODO: have only return false if fails test for all, this is temporary
+            //if the contains string isn't in the class anywhere, it doesn't match
+            if(!test.toString().toLowerCase().contains(contains.toLowerCase())) return false;
         }
         if(code != null){
-            return false;
+            if(!test.getCourseCode().toLowerCase().equals(code.toLowerCase())) return false;
         }
         if(timeslots != null){
-            return false;
+            //TODO: uncomment next line when test has time set, remove temp
+            //Timeslot t = test.getTime();
+            // the day's timeslots
+            TreeSet<Timeslot> day = timeslots.get(/*t*/temp.getDay().ordinal());
+            // all timeslots before, including ones that start at the same time as t
+            NavigableSet<Timeslot> b = day.headSet(/*t*/temp, true);
+            if(b.size() == 0) return false;// there are no open timeslots on that day
+            // the timeslot that starts just before the class' one
+            Timeslot before = b.last();
+            // check if this time fits within the allotted time
+            if(!/*t*/temp.isIn(before)) return false;
         }
         if (professor != null){
-            return false;
+            if(!test.getProfessor().toLowerCase().contains(professor.toLowerCase())) return false;
         }
         if (department != Department.NONE){
-            return false;
+            //TODO: remove tempDep
+            if(/*test.getDepartment()*/tempDep != department) return false;
         }
         if (minCredits != -1){
-            return false;
+            if(test.getCredits() < minCredits) return false;
         }
         if (maxCredits != -1){
-            return false;
+            if(test.getCredits() > maxCredits) return false;
         }
         return true;
     }
