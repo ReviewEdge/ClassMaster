@@ -48,22 +48,48 @@ public class Schedule {
     }
 
     public void addClass (Class toAdd) throws Exception{
-
+        for (Class c: classes){
+            if (c.getTime().overlaps(toAdd.getTime())){
+                Class newClass = ResolveConflict(c,toAdd);
+                classes.add(newClass);
+                return;
+            }
+        }
+        classes.add(toAdd);
     }
     public void removeClass (int i) throws Exception{
 
     }
 
     public void removeClass (Class toRemove) throws Exception{
+        for (){
+            if (c =)
+        }
+    }
 
+    private Class ResolveConflict(Class preexist, Class newexist){
+        //nah we're not gonna let you add that class. this will be changed later
+        return preexist;
     }
 
     public ArrayList<Integer> getRefNums(){
-        return null;
+        int i = 0;
+        ArrayList<Integer> refNums= new ArrayList<>();
+        for (Class c: classes){
+            refNums.set(i, c.getReferenceNum());
+            i++;
+        }
+        return refNums;
     }
 
     public ArrayList<String> getClassNames(){
-        return null;
+        int i = 0;
+        ArrayList<String> classNames= new ArrayList<>();
+        for (Class c: classes){
+            classNames.set(i, c.getName());
+            i++;
+        }
+        return classNames;
     }
 
 }
