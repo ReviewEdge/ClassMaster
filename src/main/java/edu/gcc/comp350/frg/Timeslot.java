@@ -117,6 +117,7 @@ public class Timeslot implements Comparable<Timeslot>{
      * @return true if they overlap, false otherwise
      */
     public boolean overlaps(Timeslot other){
+        if(this.day != other.day) return false;
         int comp = this.compareTo(other);
         if(comp < 0){// this starts before the other starts, check if this ends in time for the other
             if(end.before(other.start) || end.equals(other.start)) return false; // this ends before the other timeslot starts, it can't overlap
@@ -127,5 +128,17 @@ public class Timeslot implements Comparable<Timeslot>{
             else return true;
         }
         return true;
+    }
+    /**
+     * used for filtering by time,
+     * @param other the other timeslot to compare to
+     * @return true if this time is contained in the other, false otherwise
+     */
+    public boolean isIn(Timeslot other){
+        if(this.day != other.day) return false;
+        if(start.after(other.start) || start.equals(other.start)) {
+            if (end.before(other.end) || end.equals(other.end)) return true;
+        }
+        return false;
     }
 }

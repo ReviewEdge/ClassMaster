@@ -1,14 +1,15 @@
 package edu.gcc.comp350.frg;
 
 import java.sql.Time;
+import java.util.ArrayList;
 
 public class Filter {
     // characters that must be in the class name somewhere
     private String contains = null;
     // course code
     private String code = null;
-    // the timeslots this takes up
-    private Time timeslots = null;//TODO: figure out how to do timeslots
+    // the timeslots the class can be in
+    private ArrayList<Timeslot> timeslots = null;//TODO: figure out how to do timeslots
     // the professor teaching this class
     private String professor = null;
     // the department this class is in
@@ -28,7 +29,7 @@ public class Filter {
      * @param minCredits the minimum number of credits the class takes, set to -1 if unused
      * @param maxCredits the maximum number of credits the class takes, set to -1 if unused
      */
-    public Filter(String contains, String code, Time timeslots, String professor, Department department, int minCredits, int maxCredits) {
+    public Filter(String contains, String code, ArrayList<Timeslot> timeslots, String professor, Department department, int minCredits, int maxCredits) {
         this.contains = contains;
         this.code = code;
         this.timeslots = timeslots;
@@ -52,7 +53,7 @@ public class Filter {
         this.code = code;
     }
 
-    public void setTimeslots(Time timeslots) {
+    public void setTimeslots(ArrayList<Timeslot> timeslots) {
         this.timeslots = timeslots;
     }
 
@@ -80,7 +81,7 @@ public class Filter {
         return code;
     }
 
-    public Time getTimeslots() {
+    public ArrayList<Timeslot> getTimeslots() {
         return timeslots;
     }
 
