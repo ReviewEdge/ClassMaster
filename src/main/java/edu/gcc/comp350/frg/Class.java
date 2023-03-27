@@ -6,7 +6,7 @@ public class Class {
 
     private String name;
     private int referenceNum;
-    private Time time; //come back here later
+    private Timeslot time; //come back here later
     private Term term;
     private String professor;
     private Department department;
@@ -16,7 +16,7 @@ public class Class {
     private String description;
 
 
-    public Class(String name, int referenceNum, Time time, Term term, String professor, Department department, int credits, String location, String description) {
+    public Class(String name, int referenceNum, Timeslot time, Term term, String professor, Department department, int credits, String location, String description) {
         this.name = name;
         this.referenceNum = referenceNum;
         this.time = time;
@@ -55,7 +55,7 @@ public class Class {
         return referenceNum;
     }
 
-    public Time getTime() {
+    public Timeslot getTime() {
         return time;
     }
 

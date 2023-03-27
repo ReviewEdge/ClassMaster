@@ -62,7 +62,7 @@ public class Schedule {
     }
 
     public void removeClass (Class toRemove) throws Exception{
-        for (int ){
+        for (){
             if (c =)
         }
     }
