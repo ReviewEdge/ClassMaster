@@ -35,5 +35,39 @@ public class Class {
     public Class(Class c) {
     }
 
+    public int getCredits() {
+        return credits;
+    }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getReferenceNum() {
+        return referenceNum;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
+    public Term getTerm() {
+        return term;
+    }
+
+    public String getProfessor() {
+        return professor;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
 }
