@@ -8,12 +8,14 @@ public class Schedule {
     private int id;
     private Term term;
     private ArrayList<Class> classes;
+    private int currentcredits;
 
     public Schedule(String name, int id, Term term) {
         this.name = name;
         this.id = id;
         this.term = term;
         this.classes = new ArrayList<>();
+        currentcredits = 0;
     }
     //dont worry about this yet pls
 //    public Schedule( Schedule other) {
@@ -25,7 +27,13 @@ public class Schedule {
 //            this.classes.add(new Class(c));
 //        }
 //    }
-
+    public String toString(){
+        StringBuilder scheduleString = new StringBuilder();
+        for (Class c: classes){
+            scheduleString.append(c.toString()).append("\n");
+        }
+        return scheduleString.toString();
+    }
 
     public String getName() {
         return name;
@@ -48,23 +56,31 @@ public class Schedule {
     }
 
     public void addClass (Class toAdd) throws Exception{
+        if (currentcredits + toAdd.getCredits() >= 21){
+            throw new Exception("too many credits!");
+        }
         for (Class c: classes){
             if (c.getTime().overlaps(toAdd.getTime())){
                 Class newClass = ResolveConflict(c,toAdd);
+                classes.remove(c);
                 classes.add(newClass);
                 return;
             }
+            currentcredits = currentcredits + toAdd.getCredits();
+            classes.add(toAdd);
         }
         classes.add(toAdd);
     }
     public void removeClass (int i) throws Exception{
+        Class removedClass = classes.get(i);
+        currentcredits = currentcredits - removedClass.getCredits();
+        classes.remove(i);
 
     }
 
     public void removeClass (Class toRemove) throws Exception{
-        for (){
-            if (c =)
-        }
+        currentcredits = currentcredits - toRemove.getCredits();
+       classes.remove(toRemove);
     }
 
     private Class ResolveConflict(Class preexist, Class newexist){
@@ -86,7 +102,7 @@ public class Schedule {
         int i = 0;
         ArrayList<String> classNames= new ArrayList<>();
         for (Class c: classes){
-            classNames.set(i, c.getName());
+            classNames.set(i, c.getTitle());
             i++;
         }
         return classNames;

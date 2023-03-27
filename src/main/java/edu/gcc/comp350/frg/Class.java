@@ -1,10 +1,12 @@
 package edu.gcc.comp350.frg;
 
 import java.sql.Time;
+import java.util.ArrayList;
 
 public class Class {
 
-    private String name;
+    private String code;
+    private String title;
     private int referenceNum;
     private Timeslot time; //come back here later
     private Term term;
@@ -16,8 +18,9 @@ public class Class {
     private String description;
 
 
-    public Class(String name, int referenceNum, Timeslot time, Term term, String professor, Department department, int credits, String location, String description) {
-        this.name = name;
+    public Class(String code, String title, int referenceNum, Timeslot time, Term term, String professor, Department department, int credits, String location, String description) {
+        this.code = code;
+        this.title = title;
         this.referenceNum = referenceNum;
         this.time = time;
         this.term = term;
@@ -28,11 +31,15 @@ public class Class {
         this.description = description;
     }
 
-    public Class(String parseMe){
+    //stings will be printed out as :
+    //Code, Title, Time
 
-    }
-
-    public Class(Class c) {
+    public String toString(Class c){
+        StringBuilder classString = new StringBuilder("");
+        classString.append(c.code+", ");
+        classString.append(c.title+", ");
+        classString.append(c.time.toString());
+        return classString.toString();
     }
 
     public int getCredits() {
@@ -47,8 +54,8 @@ public class Class {
         return description;
     }
 
-    public String getName() {
-        return name;
+    public String  getTitle() {
+        return title;
     }
 
     public int getReferenceNum() {
