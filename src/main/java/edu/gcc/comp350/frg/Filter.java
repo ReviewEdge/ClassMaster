@@ -12,7 +12,7 @@ public class Filter {
     // course code
     private String code = null;
     // the timeslots the class can be in
-    private ArrayList<TreeSet<Timeslot>> timeslots = null;//TODO: figure out how to do timeslots
+    private ArrayList<TreeSet<Timeslot>> timeslots = null;
     // the professor teaching this class
     private String professor = null;
     // the department this class is in
@@ -39,7 +39,7 @@ public class Filter {
      * creates a filter with the parameters (probably not going to be used)
      * @param contains if the course name contains this string, set to null if unused
      * @param code the course code, set to null if unused
-     * @param timeslots TODO: fix this
+     * @param timeslots an arraylist of days of timeslots
      * @param professor the professor's name (case insensitive), set to null if unused
      * @param department the department the class is offered by, set to Department.NONE if unused
      * @param minCredits the minimum number of credits the class takes, set to -1 if unused
@@ -278,7 +278,7 @@ public class Filter {
         if(term != null && !term.equals(test.getTerm())) return false;
         if(contains != null){
             //if the contains string isn't in the class anywhere, it doesn't match
-            if(!test.getDescription().toLowerCase().contains(contains.toLowerCase())) return false;
+            if(!test.getTitle().toLowerCase().contains(contains.toLowerCase())) return false;
         }
         if(code != null){
             if(!test.getCode().toLowerCase().equals(code.toLowerCase())) return false;
