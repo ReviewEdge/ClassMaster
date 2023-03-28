@@ -16,11 +16,20 @@ public class Filter {
     // the professor teaching this class
     private String professor = null;
     // the department this class is in
-    // TODO: decide if code should be just the number and have department take up the rest
     private Department department = Department.NONE;
     // determines number of credits wanted, if searching for a specific amount set min and max to same
     private int minCredits = -1;
     private int maxCredits = -1;
+
+    public Term getTerm() {
+        return term;
+    }
+
+    public void setTerm(Term term) {
+        this.term = term;
+    }
+
+    private Term term = null;
 
     /**
      * creates a filter with the parameters (probably not going to be used)
@@ -101,7 +110,7 @@ public class Filter {
         // get all timeslots this day
         TreeSet<Timeslot> day = this.timeslots.get(timeslot.getDay().ordinal());
         // find all timeslots that start later
-        Timeslot[] mayMerge = (Timeslot[]) day.tailSet(timeslot).toArray();
+        Timeslot[] mayMerge = day.tailSet(timeslot).toArray(new Timeslot[0]);
         // set up some variables for the end result
         Time start = timeslot.getStart();
         Time end = timeslot.getEnd();
@@ -167,7 +176,7 @@ public class Filter {
          * at the end I have removed all time that ovelaps with the input
          */
         // find all timeslots that start later
-        Timeslot[] mayRem = (Timeslot[]) day.tailSet(timeslot).toArray();
+        Timeslot[] mayRem = day.tailSet(timeslot).toArray(new Timeslot[0]);
         // find the timeslot that starts before
         Timeslot temp = day.lower(timeslot);
         // if the input timeslot is contained within it, split the timeslot before
@@ -261,6 +270,7 @@ public class Filter {
     }
     //TODO: Remove temp, tempDep
     public boolean isValid(Class test, Timeslot temp, Department tempDep){
+        if(term != null && !term.equals(test.getTerm())) return false;
         if(contains != null){
             //if the contains string isn't in the class anywhere, it doesn't match
             if(!test.toString().toLowerCase().contains(contains.toLowerCase())) return false;
