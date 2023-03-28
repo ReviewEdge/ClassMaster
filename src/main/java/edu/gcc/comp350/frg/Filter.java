@@ -16,7 +16,7 @@ public class Filter {
     // the professor teaching this class
     private String professor = null;
     // the department this class is in
-    private Department department = Department.NONE;
+    private String department = null;
     // determines number of credits wanted, if searching for a specific amount set min and max to same
     private int minCredits = -1;
     private int maxCredits = -1;
@@ -27,6 +27,10 @@ public class Filter {
 
     public void setTerm(Term term) {
         this.term = term;
+    }
+
+    public void removeTerm(){
+        term = null;
     }
 
     private Term term = null;
@@ -41,7 +45,7 @@ public class Filter {
      * @param minCredits the minimum number of credits the class takes, set to -1 if unused
      * @param maxCredits the maximum number of credits the class takes, set to -1 if unused
      */
-    public Filter(String contains, String code, ArrayList<TreeSet<Timeslot>> timeslots, String professor, Department department, int minCredits, int maxCredits) {
+    public Filter(String contains, String code, ArrayList<TreeSet<Timeslot>> timeslots, String professor, String department, int minCredits, int maxCredits) {
         this.contains = contains;
         this.code = code;
         this.timeslots = timeslots;
@@ -144,7 +148,9 @@ public class Filter {
         }
         day.add(new Timeslot(start, end, timeslot.getDay()));
     }
-
+    public void removeAllTimeslots() {
+        timeslots = null;
+    }
     /**
      * removes a timeslot from the possible ones
      * @param timeslot the timeslot to remove
@@ -216,7 +222,7 @@ public class Filter {
         this.professor = null;
     }
 
-    public void setDepartment(Department department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 
@@ -224,7 +230,7 @@ public class Filter {
      * basically the same as setDepartment(Department.NONE)
      */
     public void removeDepartment() {
-        this.department = Department.NONE;
+        this.department = null;
     }
 
     public void setMinCredits(int minCredits) {
@@ -237,7 +243,7 @@ public class Filter {
     public void setMaxCredits(int maxCredits) {
         this.maxCredits = maxCredits;
     }
-    public void removeMaxCredits(int maxCredits) {
+    public void removeMaxCredits() {
         this.maxCredits = -1;
     }
 
@@ -257,7 +263,7 @@ public class Filter {
         return professor;
     }
 
-    public Department getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
@@ -268,35 +274,32 @@ public class Filter {
     public int getMaxCredits() {
         return maxCredits;
     }
-    //TODO: Remove temp, tempDep
-    public boolean isValid(Class test, Timeslot temp, Department tempDep){
+    public boolean isValid(Class test){
         if(term != null && !term.equals(test.getTerm())) return false;
         if(contains != null){
             //if the contains string isn't in the class anywhere, it doesn't match
-            if(!test.toString().toLowerCase().contains(contains.toLowerCase())) return false;
+            if(!test.getDescription().toLowerCase().contains(contains.toLowerCase())) return false;
         }
         if(code != null){
-            if(!test.getCourseCode().toLowerCase().equals(code.toLowerCase())) return false;
+            if(!test.getCode().toLowerCase().equals(code.toLowerCase())) return false;
         }
         if(timeslots != null){
-            //TODO: uncomment next line when test has time set, remove temp
-            //Timeslot t = test.getTime();
+            Timeslot t = test.getTime();
             // the day's timeslots
-            TreeSet<Timeslot> day = timeslots.get(/*t*/temp.getDay().ordinal());
+            TreeSet<Timeslot> day = timeslots.get(t.getDay().ordinal());
             // all timeslots before, including ones that start at the same time as t
-            NavigableSet<Timeslot> b = day.headSet(/*t*/temp, true);
+            NavigableSet<Timeslot> b = day.headSet(t, true);
             if(b.size() == 0) return false;// there are no open timeslots on that day
             // the timeslot that starts just before the class' one
             Timeslot before = b.last();
             // check if this time fits within the allotted time
-            if(!/*t*/temp.isIn(before)) return false;
+            if(!t.isIn(before)) return false;
         }
         if (professor != null){
             if(!test.getProfessor().toLowerCase().contains(professor.toLowerCase())) return false;
         }
-        if (department != Department.NONE){
-            //TODO: remove tempDep
-            if(/*test.getDepartment()*/tempDep != department) return false;
+        if (department != null){
+            if(!test.getDepartment().equals(department)) return false;
         }
         if (minCredits != -1){
             if(test.getCredits() < minCredits) return false;
