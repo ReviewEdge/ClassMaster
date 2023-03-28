@@ -25,4 +25,11 @@ public class Term {
                 ", name='" + name + '\'' +
                 '}';
     }
+    @Override
+    public boolean equals(Object other){
+        if(other == null) return false;
+        if (!(other instanceof Term))return false;
+        Term o = (Term) other;
+        return o.id == id && o.name.equals(name);
+    }
 }
