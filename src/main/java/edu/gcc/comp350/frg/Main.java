@@ -65,8 +65,17 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("hello there");
 
-        // SAMPLE CODE
+        // DB SAMPLE CODE
 //        System.out.println(Class.getClassFromDBbyCourseCode("ACCT 201 A"));
+//        ArrayList<Class> testClasses = new ArrayList<Class>();
+//        Class acct = Class.getClassFromDBbyCourseCode("ACCT 201 A");
+//        Class acct2 = Class.getClassFromDBbyCourseCode("ACCT 201 B");
+//        testClasses.add(acct);
+//        testClasses.add(acct2);
+//
+//        Schedule schedTest = new Schedule("test", new Term(0, "testTerm"), testClasses);
+//        schedTest.saveSchedule();
+//        System.out.println("Schedule:\n" + Schedule.getScheduleByIDFromDB(schedTest.getId()));
 
         System.out.println("It's scheduling time!\n");
         Main main = new Main();
