@@ -48,7 +48,7 @@ public class Class {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            String timeString = rs.getString("begin_tim") + " - " + rs.getString("end_tim");
+            String timeString = rs.getString("begin_tim") + " - " + rs.getString("end_tim");  //TODO: needs to make a timeslot object
             Term classTerm = new Term(rs.getInt("trm_cde"), null);
 
 
