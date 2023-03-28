@@ -1,24 +1,34 @@
 package edu.gcc.comp350.frg;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Class {
 
-    private String name;
-//    private int referenceNum;  // right now just putting in the course code, eg. COMP 205 A
-    private String courseCode;
-    private String time; // *note on time: for now, switching it to a string for simplicity
+    public String getCode() {
+        return code;
+    }
+
+    private String code;
+    private String title;
+    private int referenceNum;
+    private Timeslot time; //come back here later
     private Term term;
     private String professor;
-    private String department;  // Department enum needs work. using string for now
+    private String department;  //come back here later
     private boolean isFrance; //lol
     private int credits;
     private String location;
     private String description;
 
-    public Class(String name, String courseCode, String time, Term term, String professor, String department, int credits, String location, String description) {
-        this.name = name;
-        this.courseCode = courseCode;
+
+    public Class(Class cl) {
+    }
+
+    public Class(String code, String title, int referenceNum, Timeslot time, Term term, String professor, String department, int credits, String location, String description) {
+        this.code = code;
+        this.title = title;
+        this.referenceNum = referenceNum;
         this.time = time;
         this.term = term;
         this.professor = professor;
@@ -26,13 +36,6 @@ public class Class {
         this.credits = credits;
         this.location = location;
         this.description = description;
-    }
-
-    public Class(String parseMe){
-
-    }
-
-    public Class(Class c) {
     }
 
     public static Class getClassFromDBbyCourseCode(String courseCode) {
@@ -45,20 +48,21 @@ public class Class {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            String timeString = rs.getString("begin_tim") + " - " + rs.getString("end_tim");
+            String timeString = rs.getString("begin_tim") + " - " + rs.getString("end_tim");  //TODO: needs to make a timeslot object
             Term classTerm = new Term(rs.getInt("trm_cde"), null);
 
+
             Class newClass = new Class(
-                    rs.getString("crs_title"),
                     rs.getString("course_code"),
-                    timeString,
+                    rs.getString("crs_title"),
+                    0,  // we don't ac
+                    null,
                     classTerm,
                     rs.getString("first_name") + " " + rs.getString("last_name"),
                     rs.getString("crs_comp1"),
                     rs.getInt("credit_hrs"),
                     null,
                     rs.getString("comment_txt")
-
             );
 
             conn.close();
@@ -71,20 +75,61 @@ public class Class {
         }
     }
 
+    //stings will be printed out as :
+    //Code, Title, Time
+
+    public String toString(Class c){
+        StringBuilder classString = new StringBuilder("");
+        classString.append(c.code+", ");
+        classString.append(c.title+", ");
+        classString.append(c.time.toString());
+        return classString.toString();
+    }
 
     @Override
-    public String toString() {
-        return "Class{" +
-                "name='" + name + '\'' +
-                ", courseCode=" + courseCode +
-                ", time='" + time + '\'' +
-                ", term=" + term +
-                ", professor='" + professor + '\'' +
-                ", department=" + department +
-                ", credits=" + credits +
-                ", location='" + location + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+    public String toString(){
+        StringBuilder classString = new StringBuilder("");
+        classString.append(this.code+", ");
+        classString.append(this.title+", ");
+        if(this.time != null) {
+            classString.append(this.time.toString());
+        }
+        return classString.toString();
+    }
 
+    public int getCredits() {
+        return credits;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String  getTitle() {
+        return title;
+    }
+
+    public int getReferenceNum() {
+        return referenceNum;
+    }
+
+    public Timeslot getTime() {
+        return time;
+    }
+
+    public Term getTerm() {
+        return term;
+    }
+
+    public String getProfessor() {
+        return professor;
+    }
+
+    public String getDepartment() {
+        return department;
     }
 }

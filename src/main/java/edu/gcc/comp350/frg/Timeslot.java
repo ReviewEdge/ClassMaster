@@ -69,7 +69,7 @@ public class Timeslot implements Comparable<Timeslot>{
         String endTime = end.toString().substring(0, 5);//HH:MM
         if(endTime.charAt(0) == '0') endTime = endTime.substring(1);//remove leading 0
 
-        return day.name()+" from "+startTime+" to "+endTime+".";
+        return day.name()+" "+startTime+" - "+endTime+".";
     }
 
     public Time getStart() {

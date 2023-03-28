@@ -1,6 +1,10 @@
 package edu.gcc.comp350.frg;
 
+import java.sql.*;
 import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Schedule {
 
@@ -8,13 +12,47 @@ public class Schedule {
     private int id;
     private Term term;
     private ArrayList<Class> classes;
+    private int currentcredits;
+
+    public Schedule(String name, Term term, ArrayList<Class> classes) {
+        this.name = name;
+        this.term = term;
+        this.classes = classes;
+
+        int newID = 0;
+
+        // gets the latest ID in the database
+        try {
+            Connection conn = DatabaseConnector.connect();
+            String sql = "SELECT MAX(ID) AS max_id FROM schedules1";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            newID = rs.getInt("max_id") + 1;
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        this.id = newID;
+    }
 
     public Schedule(String name, int id, Term term) {
         this.name = name;
         this.id = id;
         this.term = term;
         this.classes = new ArrayList<>();
+        currentcredits = 0;
     }
+
+
+    public Schedule(String name, int id, Term term, ArrayList<Class> classes) {
+        this.name = name;
+        this.id = id;
+        this.term = term;
+        this.classes = classes;
+    }
+
+
     //dont worry about this yet pls
 //    public Schedule( Schedule other) {
 //        this.name = other.name;
@@ -25,7 +63,13 @@ public class Schedule {
 //            this.classes.add(new Class(c));
 //        }
 //    }
-
+    public String toString(){
+        StringBuilder scheduleString = new StringBuilder();
+        for (Class c: classes){
+            scheduleString.append(c.toString()).append("\n");
+        }
+        return scheduleString.toString();
+    }
 
     public String getName() {
         return name;
@@ -48,22 +92,122 @@ public class Schedule {
     }
 
     public void addClass (Class toAdd) throws Exception{
-
+        if (currentcredits + toAdd.getCredits() >= 21){
+            throw new Exception("too many credits!");
+        }
+        for (Class c: classes){
+            if (c.getTime().overlaps(toAdd.getTime())){
+                Class newClass = ResolveConflict(c,toAdd);
+                classes.remove(c);
+                classes.add(newClass);
+                return;
+            }
+            currentcredits = currentcredits + toAdd.getCredits();
+            classes.add(toAdd);
+        }
+        classes.add(toAdd);
     }
     public void removeClass (int i) throws Exception{
+        Class removedClass = classes.get(i);
+        currentcredits = currentcredits - removedClass.getCredits();
+        classes.remove(i);
 
     }
 
     public void removeClass (Class toRemove) throws Exception{
+        currentcredits = currentcredits - toRemove.getCredits();
+       classes.remove(toRemove);
+    }
 
+    private Class ResolveConflict(Class preexist, Class newexist){
+        //nah we're not gonna let you add that class. this will be changed later
+        return preexist;
     }
 
     public ArrayList<Integer> getRefNums(){
-        return null;
+        int i = 0;
+        ArrayList<Integer> refNums= new ArrayList<>();
+        for (Class c: classes){
+            refNums.set(i, c.getReferenceNum());
+            i++;
+        }
+        return refNums;
     }
 
     public ArrayList<String> getClassNames(){
-        return null;
+        int i = 0;
+        ArrayList<String> classNames= new ArrayList<>();
+        for (Class c: classes){
+            classNames.set(i, c.getTitle());
+            i++;
+        }
+        return classNames;
+    }
+
+
+    // commit schedule to database
+    public void saveSchedule() {
+
+        String sql = "INSERT INTO schedules1(ID,term,name,classes) VALUES(?,?,?,?)";
+
+        try (Connection conn = DatabaseConnector.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, this.id);
+            pstmt.setString(2, this.term.toString());
+            pstmt.setString(3, this.name);
+
+            JSONObject json = new JSONObject();
+            JSONArray classJSONArray = new JSONArray();
+
+            for (int i = 0; i < this.classes.size(); i++) {
+                classJSONArray.put(this.classes.get(i).getCode());
+
+            }
+            json.put("classesString", classJSONArray);
+            String classesJSON = json.toString();
+
+            pstmt.setString(4, classesJSON);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    public static Schedule getScheduleByIDFromDB(int id) {
+        try {
+            Connection conn = DatabaseConnector.connect();
+
+            String sql = "SELECT * FROM schedules1 WHERE ID LIKE '" + id + "'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            String classesString = rs.getString("Classes");
+            JSONObject classesJSON = new JSONObject(classesString);
+            JSONArray classesJSONArray = classesJSON.optJSONArray("classesString");
+
+            ArrayList<Class> newClasses = new ArrayList<Class>();
+            if (classesJSONArray != null) {
+                for (int i=0;i<classesJSONArray.length();i++){
+                    newClasses.add(Class.getClassFromDBbyCourseCode((String) classesJSONArray.get(i)));
+                }
+            }
+
+            //TODO: add parseMe to term so I can get term from DB
+            Schedule newSchedule = new Schedule(
+                    rs.getString("Name"),
+                    rs.getInt("ID"),
+                    null,
+                    newClasses
+            );
+
+            conn.close();
+            return newSchedule;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
 }

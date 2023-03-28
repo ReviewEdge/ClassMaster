@@ -1,11 +1,12 @@
 package edu.gcc.comp350.frg;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CmdLineInterface {
 
-//    private Scanner scn;
+    private static Scanner scn;
 //    private
 
 
@@ -23,6 +24,16 @@ public class CmdLineInterface {
 
 
     public static void runInterface(API api, boolean testing){
+        if(testing){
+            try {
+                scn = new Scanner(new File("AutoCommandLineTests"));
+            } catch(Exception e){
+                System.out.println(e);
+//                System.out.println(new File("").getAbsolutePath());
+                System.out.println("Test File not found");
+                return;
+            }
+        }
         System.out.println("Welcome to ClassMaster!");
         System.out.println("Your Journey starts at edu.gcc.comp350.frg");
         System.out.println("And Its COMPLETELY FREE, until you bribe us");
@@ -38,24 +49,26 @@ public class CmdLineInterface {
         boolean notQuit = true;
         while(notQuit){
             String cmd;
+            String inputSymbol = "\n";
+            if(screen == Screen.SCHEDULE_LIST) {
+                inputSymbol = "Schedule List";
+            }
+            else if (screen == Screen.CALENDAR) {
+                inputSymbol = "Calendar View";
+            }
+            else if (screen == Screen.SEARCH){
+                inputSymbol = "Search Command Bar";
+            }
+            System.out.print(inputSymbol + ": ");
             if(!testing) {
                 // Sets the correct location for before the command entry point
-                String s = "\n";
-                if(screen == Screen.SCHEDULE_LIST) {
-                    s = "Schedule List";
-                }
-                else if (screen == Screen.CALENDAR) {
-                    s = "Calendar View";
-                }
-                else if (screen == Screen.SEARCH){
-                    s = "Search Command Bar";
-                }
-                cmd = getInput(s + ": ");
+                cmd = getInput("");
 
             }
             else{
                 cmd = askTest();
             }
+
             String[] cmdSplit = cmd.split(" ");
 
             // Loop if there was no command entered
@@ -68,6 +81,9 @@ public class CmdLineInterface {
                 notQuit = false;
                 System.out.println("Thank you for using ClassMaster");
                 api.quit();
+                if(testing){
+                    scn.close();
+                }
                 continue;
             }
 
@@ -273,7 +289,13 @@ public class CmdLineInterface {
     }
 
     public static String askTest(){ //TODO when writing tests
-        return "";
+        if(scn.hasNextLine()){
+            String str = scn.nextLine();
+            System.out.println("(Test) -> " + str);
+            return str;
+        }
+        System.out.println("(Test) -> quit");
+        return "quit";
     }
 
     public static void displayCalendar(Schedule schedule){ //TODO
