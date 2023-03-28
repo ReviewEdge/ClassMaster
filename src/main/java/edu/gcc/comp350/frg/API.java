@@ -10,7 +10,6 @@ public class API {
 
     public API(Main main){
         this.main = main;
-        this.filter = new Filter();
     }
 
     public ArrayList<Schedule> getSchedules(){
@@ -56,6 +55,8 @@ public class API {
     }
 
     public void makeSearch(String search) throws Exception{
+        Filter filter = new Filter();
+        filter.setCode(search);  // assumes search is for a class code
         Search s = new Search(search, filter); // Should validate that it Can make a search from that? //TODO
         main.makeNewSearch(s);
     }

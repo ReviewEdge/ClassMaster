@@ -30,7 +30,7 @@ public class CmdLineInterface {
         // Load Data TODO
 
 
-        Screen screen = Screen.SCHEDULE_LIST;
+        Screen screen = Screen.SEARCH;
 
         displayScheduleList(api.getSchedules());
 

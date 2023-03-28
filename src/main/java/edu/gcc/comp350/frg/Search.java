@@ -11,6 +11,8 @@ public class Search {
     public Search(String query, Filter filter) {
         this.query = query;
         this.filter = filter;
+        this.currentResults = new ArrayList<Class>();
+        useCodeFilter();
     }
 
     public String getQuery() {
@@ -35,5 +37,10 @@ public class Search {
 
     public ArrayList<Class> getCurrentResults() {
         return currentResults;
+    }
+
+    // just doing this to get search working
+    public void useCodeFilter() {
+        currentResults.add(Class.getClassFromDBbyCourseCode(this.filter.getCode()));
     }
 }
