@@ -22,11 +22,14 @@ public class CmdLineInterface {
 
     }
 
+    public static void runInterface(API api){
+        runInterface(api, false, "");
+    }
 
-    public static void runInterface(API api, boolean testing){
+    public static void runInterface(API api, boolean testing, String testFile){
         if(testing){
             try {
-                scn = new Scanner(new File("AutoCommandLineTests"));
+                scn = new Scanner(new File(testFile));
             } catch(Exception e){
                 System.out.println(e);
 //                System.out.println(new File("").getAbsolutePath());
