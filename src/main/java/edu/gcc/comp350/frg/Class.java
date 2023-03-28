@@ -72,42 +72,6 @@ public class Class {
     }
 
 
-    public String getName() {
-        return name;
-    }
-
-    public String getCourseCode() {
-        return courseCode;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public Term getTerm() {
-        return term;
-    }
-
-    public String getProfessor() {
-        return professor;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     @Override
     public String toString() {
         return "Class{" +
