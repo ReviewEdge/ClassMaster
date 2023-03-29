@@ -117,6 +117,9 @@ public class Timeslot implements Comparable<Timeslot>{
      * @return true if they overlap, false otherwise
      */
     public boolean overlaps(Timeslot other){
+        if (!this.day.equals(other.getDay())) {
+            return false;
+        }
         int comp = this.compareTo(other);
         if(comp < 0){// this starts before the other starts, check if this ends in time for the other
             if(end.before(other.start) || end.equals(other.start)) return false; // this ends before the other timeslot starts, it can't overlap
