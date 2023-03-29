@@ -51,8 +51,8 @@ public class Timeslot implements Comparable<Timeslot>{
     }
 
     /**
-     * @param start the start time in a HH:MM:SS formatted string
-     * @param end the end time in a HH:MM:SS formatted string
+     * @param start the start time in a 24h HH:MM:SS formatted string
+     * @param end the end time in a 24h HH:MM:SS formatted string
      * @param day the day of the week
      */
     public Timeslot(String start, String end, Day day) {
@@ -81,7 +81,7 @@ public class Timeslot implements Comparable<Timeslot>{
     }
 
     /**
-     * @param start the start time in a HH:MM:SS formatted string
+     * @param start the start time in a 24h HH:MM:SS formatted string
      */
     public void setStart(String start) {
         this.start = Time.valueOf(start);
@@ -96,7 +96,7 @@ public class Timeslot implements Comparable<Timeslot>{
     }
 
     /**
-     * @param end the end time in a HH:MM:SS formatted string
+     * @param end the end time in a 24h HH:MM:SS formatted string
      */
     public void setEnd(String end) {
         this.end = Time.valueOf(end);
