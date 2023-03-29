@@ -3,7 +3,9 @@ package edu.gcc.comp350.frg;
 import groovyjarjarantlr4.runtime.tree.Tree;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +14,8 @@ class FilterTest {
 
     @Test
     void addTimeslot() {
-        Timeslot testTimeslot = new Timeslot("08:00:00", "10:30:00", Day.Friday);
+        ArrayList<Timeslot> testTimeslot = new ArrayList<Timeslot>();
+        testTimeslot.add(new Timeslot("08:00:00", "10:30:00", Day.Friday));
         Class testClass = new Class("code", "name", 1, testTimeslot, new Term(1, ""), "professor", Department.COMP.name(), 3, "location", "parallel lines");
         Filter f = new Filter();
         f.addTimeslot(new Timeslot("08:00:00", "09:00:00", Day.Friday));
@@ -29,7 +32,8 @@ class FilterTest {
 
     @Test
     void removeTimeslot() {
-        Timeslot testTimeslot = new Timeslot("10:00:00", "10:30:00", Day.Friday);
+        ArrayList<Timeslot> testTimeslot = new ArrayList<Timeslot>();
+        testTimeslot.add(new Timeslot("10:00:00", "10:30:00", Day.Friday));
         Class testClass = new Class("code", "name",  1, testTimeslot, new Term(1, ""), "professor", Department.COMP.name(), 3, "location", "parallel lines");
         Filter f = new Filter();
         f.addTimeslot(new Timeslot("08:00:00", "09:00:00", Day.Friday));
@@ -68,26 +72,28 @@ class FilterTest {
         int maxCred = 5;
         Term term = new Term(1, "Spring 2023");
         String contains = "parallel";
-        Timeslot t = new Timeslot("09:00:00", "10:00:00", Day.Friday);
-        timeslots.get(Day.Friday.ordinal()).add(t);
+        ArrayList<Timeslot> t = new ArrayList<Timeslot>();
+        t.add(new Timeslot("09:00:00", "10:00:00", Day.Friday));
+        timeslots.get(Day.Friday.ordinal()).add(new Timeslot("09:00:00", "10:00:00", Day.Friday));
         int ref = 1;
+        String name = "parallel";
         Class[] classes = {
                 //0, succeeds all
-                new Class(code, "name", ref, t, term, professor, department.name(), 3, "location", "parallel lines"),
+                new Class(code, name, ref, t, term, professor, department.name(), 3, "location", "parallel lines"),
                 //1, fails professor
-                new Class(code, "name", ref, t, term, "aaaaaa", department.name(), 3, "location", "parallel lines"),
+                new Class(code, name, ref, t, term, "aaaaaa", department.name(), 3, "location", "parallel lines"),
                 //2, fails timeslot
-                new Class(code, "name", ref, new Timeslot("09:00:00", "10:00:00", Day.Saturday), term, professor, department.name(), 3, "location", "parallel lines"),
+                new Class(code, name, ref, new ArrayList<Timeslot>(Arrays.asList(new Timeslot("09:00:00", "10:30:00", Day.Friday))), term, professor, department.name(), 3, "location", "parallel lines"),
                 //3, fails code
-                new Class("COMP 456", "name", ref, t, term, professor, department.name(), 3, "location", "parallel processing"),
+                new Class("COMP 456", name, ref, t, term, professor, department.name(), 3, "location", "parallel processing"),
                 //4, fails department
-                new Class(code, "name", ref, t, term, professor, Department.HUMA.name(), 3, "location", "parallel planes"),
+                new Class(code, name, ref, t, term, professor, Department.HUMA.name(), 3, "location", "parallel planes"),
                 //5, fails minimum credits
                 new Class("parallel", code, ref, t, term, professor, department.name(), 1, "location", "check title"),
                 //6, fails maximum credits
-                new Class(code, "name", ref, t, term, professor, department.name(), 10, "location", "just parallel"),
+                new Class(code, name, ref, t, term, professor, department.name(), 10, "location", "just parallel"),
                 //7, fails term
-                new Class(code, "name", ref, t, new Term(2, "NO"), professor, department.name(), 3, "France", "french parallel"),
+                new Class(code, name, ref, t, new Term(2, "NO"), professor, department.name(), 3, "France", "french parallel"),
                 //8, fails contains
                 new Class(code, "name", ref, t, term, professor, department.name(), 3, "location", "")
         };
