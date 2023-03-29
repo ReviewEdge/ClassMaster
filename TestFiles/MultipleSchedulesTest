@@ -1,0 +1,13 @@
+createSchedule 1st semester
+Search
+Search ACCT 201 A
+addClass 1
+back
+back
+createSchedule Num2 Fall20000
+back
+load 2
+Search
+Search ACCT 201 B
+addclass 1
+back

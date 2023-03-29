@@ -51,6 +51,7 @@ public class CmdLineInterface {
 
         boolean notQuit = true;
         while(notQuit){
+            System.out.println();
             String cmd;
             String inputSymbol = "\n";
             if(screen == Screen.SCHEDULE_LIST) {
@@ -184,7 +185,7 @@ public class CmdLineInterface {
                     try {
                         int i = Integer.parseInt(cmdSplit[1]);
                         System.out.println("Removing Class " + i +": ");
-                        api.removeClass(i);
+                        api.removeClass(i-1);
                         displayCalendar(api.getCurrentSchedule());
                     }catch(Exception e){
                         System.out.println("Invalid remove Parameter, Please include a valid index number for the class");
@@ -265,6 +266,7 @@ public class CmdLineInterface {
                                 int i = Integer.parseInt(cmdSplit[1]) - 1;
                                 try {
                                     api.addClass(i);
+                                    System.out.println("Class Added");
                                 } catch (Exception e) {
                                     System.out.println(e.toString());
                                 }
@@ -294,7 +296,7 @@ public class CmdLineInterface {
         return scn.nextLine();
     }
 
-    public static String askTest(){ //TODO when writing tests
+    public static String askTest(){
         if(scn.hasNextLine()){
             String str = scn.nextLine();
             System.out.println("(Test) -> " + str);
@@ -309,13 +311,13 @@ public class CmdLineInterface {
         System.out.println(schedule.toString());
     }
 
-    public static void displayScheduleList(ArrayList<Schedule> schedules){ //TODO
-        System.out.println("        *Better Display Needed*");
-        System.out.println(schedules.toString());
-    }
+    public static void displayScheduleList(ArrayList<Schedule> schedules){
+        System.out.println("Schedules:");
+        for(int i = 1; i <= schedules.size(); i++){
+            System.out.println(i + ": " + schedules.get(i-1).getName());
+        }    }
 
     public static void displaySearch(ArrayList<Class> classes){
-        System.out.println("        *Better Display Needed*");
         System.out.println("Search Results:");
         for(int i = 1; i <= classes.size(); i++){
             System.out.println(i + ": " + classes.get(i-1));

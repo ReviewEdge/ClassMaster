@@ -32,7 +32,6 @@ public class Schedule {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
         this.id = newID;
     }
 
@@ -65,7 +64,7 @@ public class Schedule {
 //    }
     public String toString(){
         StringBuilder scheduleString = new StringBuilder();
-        scheduleString.append(name + " for semester " + term + " has " + currentcredits + "\n");
+        scheduleString.append(name + " for semester " + term + " has " + currentcredits + " credits\n");
         for (Class c: classes){
             scheduleString.append(c.toString()).append("\n");
         }
