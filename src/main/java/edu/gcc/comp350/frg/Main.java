@@ -62,7 +62,6 @@ public class Main {
         System.out.println("hello there");
 
         // DB SAMPLE CODE
-//        System.out.println(Class.getClassFromDBbyCourseCode("ACCT 201 A"));
 //        ArrayList<Class> testClasses = new ArrayList<Class>();
 //        Class acct = Class.getClassFromDBbyCourseCode("ACCT 201 A");
 //        Class acct2 = Class.getClassFromDBbyCourseCode("ACCT 201 B");
