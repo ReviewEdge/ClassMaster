@@ -65,6 +65,7 @@ public class Schedule {
 //    }
     public String toString(){
         StringBuilder scheduleString = new StringBuilder();
+        scheduleString.append(name + " for semester " + term + " has " + currentcredits + "\n");
         for (Class c: classes){
             scheduleString.append(c.toString()).append("\n");
         }

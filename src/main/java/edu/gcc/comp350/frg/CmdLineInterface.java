@@ -231,6 +231,9 @@ public class CmdLineInterface {
                         StringBuilder s = new StringBuilder();
                         for(int i  = 1; i < cmdSplit.length; i++){
                             s.append(cmdSplit[i]);
+                            if(i < cmdSplit.length - 1){
+                                s.append(" ");
+                            }
                         }
                         try {
                             api.makeSearch(s.toString());
@@ -259,7 +262,7 @@ public class CmdLineInterface {
                     else {
                         if (cmdSplit.length > 1) {
                             try {
-                                int i = Integer.parseInt(cmdSplit[1]);
+                                int i = Integer.parseInt(cmdSplit[1]) - 1;
                                 try {
                                     api.addClass(i);
                                 } catch (Exception e) {
@@ -314,7 +317,10 @@ public class CmdLineInterface {
     public static void displaySearch(ArrayList<Class> classes){
         System.out.println("        *Better Display Needed*");
         System.out.println("Search Results:");
-        System.out.println(classes);
+        for(int i = 1; i <= classes.size(); i++){
+            System.out.println(i + ": " + classes.get(i-1));
+        }
+//        System.out.println(classes);
     }
 
 

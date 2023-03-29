@@ -1,7 +1,10 @@
 Help
-Supposed to fail
 createSchedule Name semester
 help
 Search
 Help
-Search ACCT 201
+Search ACCT 201 A
+addClass 1
+Search ACCT 201 B
+addClass 1
+back

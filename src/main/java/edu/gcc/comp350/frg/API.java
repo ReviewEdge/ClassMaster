@@ -28,8 +28,9 @@ public class API {
     public Schedule createSchedule(String name, String semester) throws Exception{
         Term t = new Term(0, semester); //TODO Handle Term Creation; Throws exception if invalid input, Make Term have the correct ID
         int scheduleId = 0; //TODO Make Schedule ID's unique
+        Schedule sch = new Schedule(name, t, new ArrayList<>());
 
-        Schedule sch = new Schedule(name, scheduleId, t);
+//        Schedule sch = new Schedule(name, scheduleId, t);
         main.getAccount().addSchedule(sch);
         return sch;
     }
@@ -47,6 +48,8 @@ public class API {
     }
 
     public void addClass(int i) throws Exception{
+        System.out.println("**********************************");
+        System.out.println(main.getCurrentSearch().getCurrentResults().get(i));
         Class c = main.getCurrentSearch().getClass(i);
         main.getCurrentSchedule().addClass(c);
     }
