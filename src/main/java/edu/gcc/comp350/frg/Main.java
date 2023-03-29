@@ -48,13 +48,9 @@ public class Main {
         this.currentSchedule = currentSchedule;
     }
 
-    public void setCurrentSearch(Search currentSearch) {
-        this.currentSearch = currentSearch;
-    }
-
     public void makeNewSearch(Search s){
         searchHistory.add(currentSearch);
-        setCurrentSearch(s);
+        this.currentSearch = s;
     }
 
     public void loadSchedule(int scheduleIndex){
