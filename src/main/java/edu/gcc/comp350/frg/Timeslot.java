@@ -36,7 +36,9 @@ public class Timeslot implements Comparable<Timeslot>{
      */
     @Override
     public int compareTo(Timeslot o) {
-        if(this.day != o.day) throw new IllegalArgumentException();
+        if(this.day != o.day){
+            return this.day.ordinal() - o.day.ordinal();
+        }
         return this.start.compareTo(o.start);
     }
     /**
