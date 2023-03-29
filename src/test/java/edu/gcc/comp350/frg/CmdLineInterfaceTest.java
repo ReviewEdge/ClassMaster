@@ -10,7 +10,27 @@ class CmdLineInterfaceTest {
     void runInterfaceTest(){
         Main main = new Main();
         API api = new API(main);
-        CmdLineInterface.runInterface(api, true);
+        CmdLineInterface.runInterface(api, true, "TestFiles/AutoCommandLineTests");
     }
 
+    @Test
+    void validateBadInput(){
+        Main main = new Main();
+        API api = new API(main);
+        CmdLineInterface.runInterface(api, true, "TestFiles/VerifyBadInput");
+    }
+
+    @Test
+    void MakeASearch(){
+        Main main = new Main();
+        API api = new API(main);
+        CmdLineInterface.runInterface(api, true, "TestFiles/MakeASearch");
+    }
+
+    @Test
+    void TestMultipleSchedules(){
+        Main main = new Main();
+        API api = new API(main);
+        CmdLineInterface.runInterface(api, true, "TestFiles/MultipleSchedulesTest");
+    }
 }

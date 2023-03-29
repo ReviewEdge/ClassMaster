@@ -1,11 +1,12 @@
 package edu.gcc.comp350.frg;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CmdLineInterface {
 
-//    private Scanner scn;
+    private static Scanner scn;
 //    private
 
 
@@ -21,8 +22,21 @@ public class CmdLineInterface {
 
     }
 
+    public static void runInterface(API api){
+        runInterface(api, false, "");
+    }
 
-    public static void runInterface(API api, boolean testing){
+    public static void runInterface(API api, boolean testing, String testFile){
+        if(testing){
+            try {
+                scn = new Scanner(new File(testFile));
+            } catch(Exception e){
+                System.out.println(e);
+//                System.out.println(new File("").getAbsolutePath());
+                System.out.println("Test File not found");
+                return;
+            }
+        }
         System.out.println("Welcome to ClassMaster!");
         System.out.println("Your Journey starts at edu.gcc.comp350.frg");
         System.out.println("And Its COMPLETELY FREE, until you bribe us");
@@ -37,25 +51,28 @@ public class CmdLineInterface {
 
         boolean notQuit = true;
         while(notQuit){
+            System.out.println();
             String cmd;
+            String inputSymbol = "\n";
+            if(screen == Screen.SCHEDULE_LIST) {
+                inputSymbol = "Schedule List";
+            }
+            else if (screen == Screen.CALENDAR) {
+                inputSymbol = "Calendar View";
+            }
+            else if (screen == Screen.SEARCH){
+                inputSymbol = "Search Command Bar";
+            }
+            System.out.print(inputSymbol + ": ");
             if(!testing) {
                 // Sets the correct location for before the command entry point
-                String s = "\n";
-                if(screen == Screen.SCHEDULE_LIST) {
-                    s = "Schedule List";
-                }
-                else if (screen == Screen.CALENDAR) {
-                    s = "Calendar View";
-                }
-                else if (screen == Screen.SEARCH){
-                    s = "Search Command Bar";
-                }
-                cmd = getInput(s + ": ");
+                cmd = getInput("");
 
             }
             else{
                 cmd = askTest();
             }
+
             String[] cmdSplit = cmd.split(" ");
 
             // Loop if there was no command entered
@@ -68,6 +85,9 @@ public class CmdLineInterface {
                 notQuit = false;
                 System.out.println("Thank you for using ClassMaster");
                 api.quit();
+                if(testing){
+                    scn.close();
+                }
                 continue;
             }
 
@@ -165,7 +185,7 @@ public class CmdLineInterface {
                     try {
                         int i = Integer.parseInt(cmdSplit[1]);
                         System.out.println("Removing Class " + i +": ");
-                        api.removeClass(i);
+                        api.removeClass(i-1);
                         displayCalendar(api.getCurrentSchedule());
                     }catch(Exception e){
                         System.out.println("Invalid remove Parameter, Please include a valid index number for the class");
@@ -212,6 +232,9 @@ public class CmdLineInterface {
                         StringBuilder s = new StringBuilder();
                         for(int i  = 1; i < cmdSplit.length; i++){
                             s.append(cmdSplit[i]);
+                            if(i < cmdSplit.length - 1){
+                                s.append(" ");
+                            }
                         }
                         try {
                             api.makeSearch(s.toString());
@@ -240,9 +263,10 @@ public class CmdLineInterface {
                     else {
                         if (cmdSplit.length > 1) {
                             try {
-                                int i = Integer.parseInt(cmdSplit[1]);
+                                int i = Integer.parseInt(cmdSplit[1]) - 1;
                                 try {
                                     api.addClass(i);
+                                    System.out.println("Class Added");
                                 } catch (Exception e) {
                                     System.out.println(e.toString());
                                 }
@@ -272,8 +296,14 @@ public class CmdLineInterface {
         return scn.nextLine();
     }
 
-    public static String askTest(){ //TODO when writing tests
-        return "";
+    public static String askTest(){
+        if(scn.hasNextLine()){
+            String str = scn.nextLine();
+            System.out.println("(Test) -> " + str);
+            return str;
+        }
+        System.out.println("(Test) -> quit");
+        return "quit";
     }
 
     public static void displayCalendar(Schedule schedule){ //TODO
@@ -281,15 +311,18 @@ public class CmdLineInterface {
         System.out.println(schedule.toString());
     }
 
-    public static void displayScheduleList(ArrayList<Schedule> schedules){ //TODO
-        System.out.println("        *Better Display Needed*");
-        System.out.println(schedules.toString());
-    }
+    public static void displayScheduleList(ArrayList<Schedule> schedules){
+        System.out.println("Schedules:");
+        for(int i = 1; i <= schedules.size(); i++){
+            System.out.println(i + ": " + schedules.get(i-1).getName());
+        }    }
 
     public static void displaySearch(ArrayList<Class> classes){
-        System.out.println("        *Better Display Needed*");
         System.out.println("Search Results:");
-        System.out.println(classes);
+        for(int i = 1; i <= classes.size(); i++){
+            System.out.println(i + ": " + classes.get(i-1));
+        }
+//        System.out.println(classes);
     }
 
 

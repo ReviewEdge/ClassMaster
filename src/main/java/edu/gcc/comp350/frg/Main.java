@@ -48,13 +48,9 @@ public class Main {
         this.currentSchedule = currentSchedule;
     }
 
-    public void setCurrentSearch(Search currentSearch) {
-        this.currentSearch = currentSearch;
-    }
-
     public void makeNewSearch(Search s){
         searchHistory.add(currentSearch);
-        setCurrentSearch(s);
+        this.currentSearch = s;
     }
 
     public void loadSchedule(int scheduleIndex){
@@ -80,6 +76,6 @@ public class Main {
         Main main = new Main();
         API api = new API(main);
 
-        CmdLineInterface.runInterface(api, false);
+        CmdLineInterface.runInterface(api);
     }
 }
