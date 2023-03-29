@@ -78,16 +78,10 @@ public class Class {
     //stings will be printed out as :
     //Code, Title, Time
 
-    public String toString(Class c){
-        StringBuilder classString = new StringBuilder("");
-        classString.append(c.code+", ");
-        classString.append(c.title+", ");
-        classString.append(c.time.toString());
-        return classString.toString();
-    }
+
 
     @Override
-    public String toString(){
+    public String toString(){ //add professor and time
         StringBuilder classString = new StringBuilder("");
         classString.append(this.code+", ");
         classString.append(this.title+", ");
