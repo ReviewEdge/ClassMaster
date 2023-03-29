@@ -73,6 +73,10 @@ public class API {
         return main.getCurrentSearch().getCurrentResults();
     }
 
+    public void addFilter(){
+
+    }
+
     public void quit(){
         //TODO Make sure that everything closes nicely?
     }
