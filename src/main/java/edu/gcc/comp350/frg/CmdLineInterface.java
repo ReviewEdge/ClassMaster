@@ -1,10 +1,7 @@
 package edu.gcc.comp350.frg;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.*;
 
 public class CmdLineInterface {
 
@@ -338,44 +335,49 @@ public class CmdLineInterface {
         System.out.println(schedule.toString());
         System.out.println("Weekly View: ");
         StringBuilder str = new StringBuilder();
-        str.append("Monday").append(" ".repeat(10));
-        str.append("Tuesday").append(" ".repeat(10));
-        str.append("Wednesday").append(" ".repeat(10));
-        str.append("Thursday").append(" ".repeat(10));
-        str.append("Friday").append(" ".repeat(10));
+        str.append("Monday").append(" ".repeat(20));
+        str.append("Tuesday").append(" ".repeat(20));
+        str.append("Wednesday").append(" ".repeat(20));
+        str.append("Thursday").append(" ".repeat(20));
+        str.append("Friday").append(" ".repeat(20));
         str.append("\n");
-        str.append("-".repeat(80));
+        str.append("-".repeat(130));
         str.append("\n");
         ArrayList<Class> cls = schedule.getClasses();
 
-        ArrayList<PriorityQueue<Class>> daysOfTheWeek = new ArrayList<>();
+        //TODO Figure out a way to sort classes in the list
+        ArrayList<LinkedList<Class>> daysOfTheWeek = new ArrayList<>();
         for(int i = 0; i < 5; i++){
-            daysOfTheWeek.add(new PriorityQueue<>(5, Comparator.comparing(Class::getTime)));
+            daysOfTheWeek.add(new LinkedList<>());
         }
 
-        for(Class c: cls){ //TODO THis IS Going to break whem someone pushes an array of Timeslots
-            try {
-                daysOfTheWeek.get(c.getTime().getDay().ordinal() - 1).add(c);
-            } catch(Exception e){
-//                System.out.println("Class is not at a specific time");
+        for(Class c: cls){
+            for(Timeslot t: c.getTimeSlots()) {
+                daysOfTheWeek.get(t.getDay().ordinal() - 1).add(c);
             }
         }
-//        System.out.println(daysOfTheWeek);
 
         for(int i = 0; i < cls.size(); i++){
-            for (PriorityQueue<Class> daysClasses : daysOfTheWeek) {
-                if (daysClasses.size() > 0) {
-                    Class cl = daysClasses.poll();
+            for (int d = 1; d <= daysOfTheWeek.size(); d++) {
+                if (daysOfTheWeek.get(d-1).size() > 0) {
+                    Class cl = daysOfTheWeek.get(d-1).poll();
                     str.append(cl.getCode());
-                    str.append(cl.getTime());
-                    str.append(" ".repeat(5));
+                    str.append(" @");
+                    for(Timeslot t: cl.getTimeSlots()) {
+                        if (t.getDay().ordinal()== d) {
+                            str.append(t.toString().split(" ")[1]);
+                            str.append(" - ");
+                            str.append(t.toString().split(" ")[3]);
+                            break;
+                        }
+                    }
+                    str.append(" ".repeat(3));
                 }
                 else {
-                    str.append(" ".repeat(20));
+                    str.append(" ".repeat(28));
                 }
             }
         }
-
         System.out.println(str);
     }
 
