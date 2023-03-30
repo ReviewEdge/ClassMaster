@@ -10,7 +10,7 @@ class TimeslotTest {
 
     @Test
     void compareTo() {
-        Timeslot earlier = new Timeslot(Time.valueOf("08:00:00"), Time.valueOf("09:00:00"), Day.Friday);
+        Timeslot earlier = new Timeslot(Time.valueOf("13:00:00"), Time.valueOf("13:50:00"), Day.Monday);
         Timeslot now = new Timeslot("09:00:00", "9:50:00", Day.Friday);
         Timeslot later = new Timeslot("13:00:00", "13:50:00", Day.Friday);
         assertTrue(earlier.compareTo(now) < 0);
