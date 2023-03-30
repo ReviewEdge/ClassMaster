@@ -332,28 +332,30 @@ public class CmdLineInterface {
 
     public static void handleAddFilter(API api, boolean testing){
         while(true) {
-            System.out.println("What type of filter would you like to add: ");
+            System.out.println("\nWhat type of filter would you like to add: ");
             System.out.println("1: Course Name (Any fragment)");
             System.out.println("2: Course Code (Any fragment, ie. ACCT 201, or COMP)");
             System.out.println("3: Timeslots (ie. Only classes that are held during 10:00am-3:00pm on Monday");
             System.out.println("4: Professor");
-            System.out.println("5: Department (ie. COMP)");//TODO Do we need this???
-            System.out.println("6: Credits (ie. No more than 3, No less than 2)");
+//            System.out.println("5: Department (ie. COMP)");//TODO Do we need this???
+//            System.out.println("5: Credits (ie. No more than 3, No less than 2)"); //TODO WIP/Future issue
             System.out.println("Back: return to Search");
             try {
-                String outputFilterType = getInput(": ", testing);
-                if(outputFilterType.equalsIgnoreCase("quit")){
+                String outputFilterType = getInput("Enter a number: ", testing);
+                System.out.println();
+                if(outputFilterType.equalsIgnoreCase("quit") || outputFilterType.equalsIgnoreCase("back")){
                     return;
                 }
-
                 int num = Integer.parseInt(outputFilterType);
                 if(num == 1){
                     System.out.println("Please enter the Course Name to filter by: ");
-                    String courseName = getInput(": ",testing).split(" ")[0];
+                    String courseName = getInput(": ",testing);
+                    api.addFilter(1, courseName);
                 }
                 else if (num == 2) {
                     System.out.println("Please enter the Course code to filter by: ");
-                    String courseCode = getInput(": ",testing).split(" ")[0];
+                    String courseCode = getInput(": ",testing);
+                    api.addFilter(2, courseCode);
                 }
                 else if (num == 3) {
                     System.out.println("Please enter the Day for the Timeslot in the form");
@@ -370,44 +372,18 @@ public class CmdLineInterface {
                         System.out.println("Invalid Timeslot, Please try again");
                     }
                 }
+                else if (num == 4){
+                    System.out.println("Please enter the Professor to filter by: ");
+                    String prof = getInput(": ",testing);
+                    api.addFilter(4, prof);
+                }
+                else if (num == 5){
 
-
+                }
             } catch (Exception e) {
                 System.out.println("Please enter a valid number between 1 and 6");
             }
 
         }
     }
-
-
-
 }
-
-
-/**
- * Commands to allow for each "screen"
- *
- * All:
- *  - Quit
- *  - Help
- * Schedule List:
- *      - CreateSchedule "Name (if none: default)"
- *      - ViewSchedule
- *      - Load 1,2,3...  == Loads given schedule from the list
- *
- * Calendar:
- *      - Search
- *      - Remove 1,2...n
- *      - ViewCalendar
- *      - getDescription 1,2...n == Gets description of class
- *      - ChangeSchedule
- *      - renameSchedule newName
- *
- * Search:
- *      - Search afojbsojdfbssf
- *      - addFilter _______________
- *      - clearFilter ____________
- *      - (removeFilter ________)
- *      - addClass #
- *      - ViewSchedule
- **/

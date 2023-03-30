@@ -73,12 +73,40 @@ public class API {
         return main.getCurrentSearch().getCurrentResults();
     }
 
-    public void addFilter(int type, String filter){
-
+    public void addFilter(int type, String str){
+        if(type == 1){
+            filter.setContains(str);
+        }
+        else if (type == 2) {
+            filter.setCode(str);
+        }
+        else if (type == 4){
+            filter.setProfessor(str);
+        }
     }
 
     public void addTimeslotFilter(String day, String start, String end) throws Exception{
-
+        //There HAS to be a better way to do this
+        Day d = Day.NONE;
+        if(day.equals("M")){
+            d = Day.Monday;
+        }
+        else if(day.equals("T")){
+            d = Day.Tuesday;
+        }
+        else if(day.equals("W")){
+            d = Day.Wednesday;
+        }
+        else if(day.equals("R")){
+            d = Day.Thursday;
+        }
+        else if(day.equals("F")){
+            d = Day.Friday;
+        }
+        else{
+            throw new Exception("Not a day");
+        }
+        filter.addTimeslot(new Timeslot(start + ":00", end + ":00", d));
     }
 
     public void clearFilters(){
