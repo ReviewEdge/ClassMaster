@@ -73,8 +73,27 @@ public class API {
         return main.getCurrentSearch().getCurrentResults();
     }
 
-    public void addFilter(){
+    public void addFilter(int type, String filter){
 
+    }
+
+    public void addTimeslotFilter(String day, String start, String end) throws Exception{
+
+    }
+
+    public void clearFilters(){
+        filter.removeCode();
+        filter.removeContains();
+        filter.removeAllTimeslots();
+        filter.removeDepartment();
+        filter.removeProfessor();
+        filter.removeTerm();
+        filter.removeMaxCredits();
+        filter.removeMinCredits();
+    }
+
+    public void loadSavedSchedules(){
+        System.out.println("WRITE THE LOAD METHOD");
     }
 
     public void quit(){

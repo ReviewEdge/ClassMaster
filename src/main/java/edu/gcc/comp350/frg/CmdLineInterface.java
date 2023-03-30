@@ -37,11 +37,14 @@ public class CmdLineInterface {
                 return;
             }
         }
+
+        if(!testing) {
+            api.loadSavedSchedules();
+        }
+
         System.out.println("Welcome to ClassMaster!");
         System.out.println("Your Journey starts at edu.gcc.comp350.frg");
         System.out.println("And Its COMPLETELY FREE, until you bribe us");
-
-        // Load Data TODO
 
 
         Screen screen = Screen.SCHEDULE_LIST;
@@ -63,15 +66,9 @@ public class CmdLineInterface {
             else if (screen == Screen.SEARCH){
                 inputSymbol = "Search Command Bar";
             }
-            System.out.print(inputSymbol + ": ");
-            if(!testing) {
-                // Sets the correct location for before the command entry point
-                cmd = getInput("");
+            // Sets the correct location for before the command entry point
 
-            }
-            else{
-                cmd = askTest();
-            }
+            cmd = getInput("" + inputSymbol + ": ", testing);
 
             String[] cmdSplit = cmd.split(" ");
 
@@ -106,7 +103,7 @@ public class CmdLineInterface {
                     System.out.println("- RenameSchedule \"NewName\": Changes the current schedule's name to \"NewName\"");
 //                        System.out.println("- changeSemester \"NewSemester\": Changes the current schedule's year to \"NewSemester\""); // Shouldn't really be possible
                     System.out.println("- Remove \"number\": Removes the class at position \"number\" from the schedule");
-                    System.out.println("- Search: Opens a search bar");
+                    System.out.println("- MakeSearch: Opens a search bar");
                     System.out.println("- Back: Returns to the list fo schedules");
                 }
                 else if(screen == Screen.SEARCH) {
@@ -164,7 +161,7 @@ public class CmdLineInterface {
             }
             //Handles all calendar commands
             else if(screen == Screen.CALENDAR){
-                if (cmdSplit[0].toLowerCase().contains("search")){
+                if (cmdSplit[0].toLowerCase().contains("makesearch")){
                     screen = Screen.SEARCH;
                 }
                 else if (cmdSplit[0].toLowerCase().contains("viewcalendar")){
@@ -249,9 +246,11 @@ public class CmdLineInterface {
                 }
                 else if (cmdSplit[0].toLowerCase().contains("addfilter")){
                     System.out.println("FilterSystem WIP");             //TODO
+                    handleAddFilter(api, testing);
                 }
                 else if (cmdSplit[0].toLowerCase().contains("clearfilter")){
-                    System.out.println("ClearFilter: WIP");     //TODO
+                    System.out.println("ClearingFilter");
+                    api.clearFilters();
                 }
                 else if (cmdSplit[0].toLowerCase().contains("removefilter")){
                     System.out.println("RemoveFilter Not Supported Yet");   //TODO
@@ -290,10 +289,15 @@ public class CmdLineInterface {
         }
     }
 
-    public static String getInput(String s){
+    public static String getInput(String s, boolean testing){
         System.out.print(s);
-        Scanner scn = new Scanner(System.in);
-        return scn.nextLine();
+        if(!testing) {
+            Scanner scn = new Scanner(System.in);
+            return scn.nextLine();
+        }
+        else{
+            return askTest();
+        }
     }
 
     public static String askTest(){
@@ -308,6 +312,7 @@ public class CmdLineInterface {
 
     public static void displayCalendar(Schedule schedule){ //TODO
         System.out.println("        *Better Display Needed*");
+        System.out.println();
         System.out.println(schedule.toString());
     }
 
@@ -325,6 +330,54 @@ public class CmdLineInterface {
 //        System.out.println(classes);
     }
 
+    public static void handleAddFilter(API api, boolean testing){
+        while(true) {
+            System.out.println("What type of filter would you like to add: ");
+            System.out.println("1: Course Name (Any fragment)");
+            System.out.println("2: Course Code (Any fragment, ie. ACCT 201, or COMP)");
+            System.out.println("3: Timeslots (ie. Only classes that are held during 10:00am-3:00pm on Monday");
+            System.out.println("4: Professor");
+            System.out.println("5: Department (ie. COMP)");//TODO Do we need this???
+            System.out.println("6: Credits (ie. No more than 3, No less than 2)");
+            System.out.println("Back: return to Search");
+            try {
+                String outputFilterType = getInput(": ", testing);
+                if(outputFilterType.equalsIgnoreCase("quit")){
+                    return;
+                }
+
+                int num = Integer.parseInt(outputFilterType);
+                if(num == 1){
+                    System.out.println("Please enter the Course Name to filter by: ");
+                    String courseName = getInput(": ",testing).split(" ")[0];
+                }
+                else if (num == 2) {
+                    System.out.println("Please enter the Course code to filter by: ");
+                    String courseCode = getInput(": ",testing).split(" ")[0];
+                }
+                else if (num == 3) {
+                    System.out.println("Please enter the Day for the Timeslot in the form");
+                    System.out.println("DayLetter startHour:Mins-endHour:Mins : Hours should be in 24hr time and dayLetters corrospond below");
+                    System.out.println("M - Monday, T - Tuesday, W - Wednesday, R - Thursday, F - Friday");
+                    System.out.println("Example (Monday from 12:00pm-3:30pm): M 12:00-15:30");
+                    try {
+                        String in = getInput(": ", testing);
+                        String day = in.split(" ")[0];
+                        String startTime = in.split(" ")[1].split("-")[0];
+                        String endTime = in.split(" ")[1].split("-")[1];
+                        api.addTimeslotFilter(day, startTime, endTime);
+                    } catch(Exception e){
+                        System.out.println("Invalid Timeslot, Please try again");
+                    }
+                }
+
+
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number between 1 and 6");
+            }
+
+        }
+    }
 
 
 
