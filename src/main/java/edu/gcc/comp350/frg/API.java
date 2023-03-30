@@ -85,6 +85,25 @@ public class API {
         }
     }
 
+    public void removeFilter(int type){
+        if(type == 1){
+            filter.removeContains();
+        }
+        else if (type == 2) {
+            filter.removeCode();
+        }
+        else if (type == 3) {
+            filter.removeAllTimeslots();
+        }
+        else if (type == 4){
+            filter.removeProfessor();
+        }
+        else if (type == 5){
+            filter.removeMinCredits();
+            filter.removeMaxCredits();
+        }
+    }
+
     public void addTimeslotFilter(String day, String start, String end) throws Exception{
         //There HAS to be a better way to do this
         Day d = Day.NONE;

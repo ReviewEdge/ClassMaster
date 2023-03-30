@@ -254,6 +254,26 @@ public class CmdLineInterface {
                 }
                 else if (cmdSplit[0].toLowerCase().contains("removefilter")){
                     System.out.println("RemoveFilter Not Supported Yet");   //TODO
+                    System.out.println("\nWhat type of filter would you like to remove: ");
+                    System.out.println("Will Remove ALL filters of that type");
+                    System.out.println("1: Course Name (Any fragment)");
+                    System.out.println("2: Course Code (Any fragment, ie. ACCT 201, or COMP)");
+                    System.out.println("3: Timeslots (ie. Only classes that are held during 10:00am-3:00pm on Monday");
+                    System.out.println("4: Professor");
+//                    System.out.println("5: Credits (ie. No more than 3, No less than 2)"); //TODO WIP/Future issue
+                    System.out.println("Back: return to Search");
+                    try {
+                        String outputFilterType = getInput("Enter a number: ", testing);
+                        System.out.println();
+                        if(outputFilterType.equalsIgnoreCase("quit") || outputFilterType.equalsIgnoreCase("back")){
+                            return;
+                        }
+                        int num = Integer.parseInt(outputFilterType);
+                        api.removeFilter(num);
+                    } catch(Exception e){
+                        System.out.println("Please enter a valid number between 1 and 6");
+
+                    }
                 }
                 else if (cmdSplit[0].toLowerCase().contains("addclass")){
                     if(!api.hasCurrentSearch()){
@@ -359,7 +379,7 @@ public class CmdLineInterface {
                 }
                 else if (num == 3) {
                     System.out.println("Please enter the Day for the Timeslot in the form");
-                    System.out.println("DayLetter startHour:Mins-endHour:Mins : Hours should be in 24hr time and dayLetters corrospond below");
+                    System.out.println("DayLetter startHour:Mins-endHour:Mins -> Hours should be in 24hr time and dayLetters corrospond below");
                     System.out.println("M - Monday, T - Tuesday, W - Wednesday, R - Thursday, F - Friday");
                     System.out.println("Example (Monday from 12:00pm-3:30pm): M 12:00-15:30");
                     try {
