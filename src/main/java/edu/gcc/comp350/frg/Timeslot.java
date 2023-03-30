@@ -36,7 +36,9 @@ public class Timeslot implements Comparable<Timeslot>{
      */
     @Override
     public int compareTo(Timeslot o) {
-        if(this.day != o.day) throw new IllegalArgumentException();
+        if(this.day != o.day){
+            return this.day.ordinal() - o.day.ordinal();
+        }
         return this.start.compareTo(o.start);
     }
     /**
@@ -69,7 +71,7 @@ public class Timeslot implements Comparable<Timeslot>{
         String endTime = end.toString().substring(0, 5);//HH:MM
         if(endTime.charAt(0) == '0') endTime = endTime.substring(1);//remove leading 0
 
-        return day.name()+" "+startTime+" - "+endTime+".";
+        return day.name()+" "+startTime+" - "+endTime;
     }
 
     public Time getStart() {
@@ -115,6 +117,7 @@ public class Timeslot implements Comparable<Timeslot>{
      * @param equalOverlaps whether an equal start:end counts as an overlap, defaults to false
      * @return true if they overlap, false otherwise
      */
+
     public boolean overlaps(Timeslot other, boolean equalOverlaps){
         if(this.day != other.day) return false;
         int comp = this.compareTo(other);

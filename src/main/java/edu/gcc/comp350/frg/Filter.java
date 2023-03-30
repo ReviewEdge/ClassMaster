@@ -283,17 +283,21 @@ public class Filter {
         if(code != null){
             if(!test.getCode().toLowerCase().contains(code.toLowerCase())) return false;
         }
-        if(timeslots != null){
-            Timeslot t = test.getTime();
-            // the day's timeslots
-            TreeSet<Timeslot> day = timeslots.get(t.getDay().ordinal());
-            // all timeslots before, including ones that start at the same time as t
-            NavigableSet<Timeslot> b = day.headSet(t, true);
-            if(b.size() == 0) return false;// there are no open timeslots on that day
-            // the timeslot that starts just before the class' one
-            Timeslot before = b.last();
-            // check if this time fits within the allotted time
-            if(!t.isIn(before)) return false;
+        if(timeslots != null) {
+            ArrayList<Timeslot> ts = test.getTimeSlots();
+            for (Timeslot t : ts){
+                // the day's timeslots
+                TreeSet<Timeslot> day = timeslots.get(t.getDay().ordinal());
+                // if no limitations have been put on this day, don't check
+                if(day.size() == 0) continue;
+                // all timeslots before, including ones that start at the same time as t
+                NavigableSet<Timeslot> b = day.headSet(t, true);
+                if (b.size() == 0) return false;// there are no valid timeslots on that day
+                // the timeslot that starts just before the class' one
+                Timeslot before = b.last();
+                // check if this time fits within the allotted time
+                if (!t.isIn(before)) return false;
+            }
         }
         if (professor != null){
             if(!test.getProfessor().toLowerCase().contains(professor.toLowerCase())) return false;
