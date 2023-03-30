@@ -1,3 +1,17 @@
+createSchedule Name Spring2023
+makeSearch
+Search ACCT 201 A
+addClass 1
+back
+quit
+
+
+
+
+
+
+
+
 Help
 createSchedule Name semester
 help

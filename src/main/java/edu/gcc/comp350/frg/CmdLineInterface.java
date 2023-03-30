@@ -2,6 +2,8 @@ package edu.gcc.comp350.frg;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class CmdLineInterface {
@@ -334,6 +336,47 @@ public class CmdLineInterface {
         System.out.println("        *Better Display Needed*");
         System.out.println();
         System.out.println(schedule.toString());
+        System.out.println("Weekly View: ");
+        StringBuilder str = new StringBuilder();
+        str.append("Monday").append(" ".repeat(10));
+        str.append("Tuesday").append(" ".repeat(10));
+        str.append("Wednesday").append(" ".repeat(10));
+        str.append("Thursday").append(" ".repeat(10));
+        str.append("Friday").append(" ".repeat(10));
+        str.append("\n");
+        str.append("-".repeat(80));
+        str.append("\n");
+        ArrayList<Class> cls = schedule.getClasses();
+
+        ArrayList<PriorityQueue<Class>> daysOfTheWeek = new ArrayList<>();
+        for(int i = 0; i < 5; i++){
+            daysOfTheWeek.add(new PriorityQueue<>(5, Comparator.comparing(Class::getTime)));
+        }
+
+        for(Class c: cls){ //TODO THis IS Going to break whem someone pushes an array of Timeslots
+            try {
+                daysOfTheWeek.get(c.getTime().getDay().ordinal() - 1).add(c);
+            } catch(Exception e){
+//                System.out.println("Class is not at a specific time");
+            }
+        }
+//        System.out.println(daysOfTheWeek);
+
+        for(int i = 0; i < cls.size(); i++){
+            for (PriorityQueue<Class> daysClasses : daysOfTheWeek) {
+                if (daysClasses.size() > 0) {
+                    Class cl = daysClasses.poll();
+                    str.append(cl.getCode());
+                    str.append(cl.getTime());
+                    str.append(" ".repeat(5));
+                }
+                else {
+                    str.append(" ".repeat(20));
+                }
+            }
+        }
+
+        System.out.println(str);
     }
 
     public static void displayScheduleList(ArrayList<Schedule> schedules){
