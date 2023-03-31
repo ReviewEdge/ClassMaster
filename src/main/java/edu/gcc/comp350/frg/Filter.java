@@ -281,7 +281,7 @@ public class Filter {
             if(!test.getTitle().toLowerCase().contains(contains.toLowerCase())) return false;
         }
         if(code != null){
-            if(!test.getCode().toLowerCase().equals(code.toLowerCase())) return false;
+            if(!test.getCode().toLowerCase().contains(code.toLowerCase())) return false;
         }
         if(timeslots != null) {
             ArrayList<Timeslot> ts = test.getTimeSlots();
