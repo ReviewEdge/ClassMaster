@@ -36,6 +36,7 @@ public class API {
         }
         Schedule sch = main.getAccount().getSchedules().get(i-1);
         main.changeCurrentSchedule(sch);
+        filter.setTerm(main.getCurrentSchedule().getTerm());
     }
 
     /**
@@ -46,11 +47,16 @@ public class API {
      * @return the schedule created
      * @throws Exception if either the parameters were incorrect (ie. the semester was not one)
      */
-    public Schedule createSchedule(String name, String semester) {
-        Term t = new Term(semester); //TODO Handle Term Creation; Throws exception if invalid input, Make Term have the correct ID
-        Schedule sch = new Schedule(name, t, new ArrayList<>());
-        main.getAccount().addSchedule(sch);
-        return sch;
+    public Schedule createSchedule(String name, String semester) throws Exception {
+        try {
+            Term t = new Term(semester);
+            Schedule sch = new Schedule(name, t, new ArrayList<>());
+            main.getAccount().addSchedule(sch);
+            filter.setTerm(t);
+            return sch;
+        } catch (Exception e){
+            throw new Exception("Invalid Semester");
+        }
     }
 
     /**
