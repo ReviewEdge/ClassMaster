@@ -59,7 +59,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        System.out.println("hello there");
+//        System.out.println("hello there");
 
         // DB SAMPLE CODE
 //        ArrayList<Class> testClasses = new ArrayList<Class>();
@@ -72,7 +72,7 @@ public class Main {
 //        schedTest.saveSchedule();
 //        System.out.println("Schedule:\n" + Schedule.getScheduleByIDFromDB(schedTest.getId()));
 
-        System.out.println("It's scheduling time!\n");
+//        System.out.println("It's scheduling time!\n");
         Main main = new Main();
         API api = new API(main);
 
