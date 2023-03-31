@@ -48,13 +48,9 @@ public class Main {
         this.currentSchedule = currentSchedule;
     }
 
-    public void setCurrentSearch(Search currentSearch) {
-        this.currentSearch = currentSearch;
-    }
-
     public void makeNewSearch(Search s){
         searchHistory.add(currentSearch);
-        setCurrentSearch(s);
+        this.currentSearch = s;
     }
 
     public void loadSchedule(int scheduleIndex){
@@ -63,10 +59,9 @@ public class Main {
 
 
     public static void main(String[] args) {
-        System.out.println("hello there");
+//        System.out.println("hello there");
 
         // DB SAMPLE CODE
-//        System.out.println(Class.getClassFromDBbyCourseCode("ACCT 201 A"));
 //        ArrayList<Class> testClasses = new ArrayList<Class>();
 //        Class acct = Class.getClassFromDBbyCourseCode("ACCT 201 A");
 //        Class acct2 = Class.getClassFromDBbyCourseCode("ACCT 201 B");
@@ -77,7 +72,7 @@ public class Main {
 //        schedTest.saveSchedule();
 //        System.out.println("Schedule:\n" + Schedule.getScheduleByIDFromDB(schedTest.getId()));
 
-        System.out.println("It's scheduling time!\n");
+//        System.out.println("It's scheduling time!\n");
         Main main = new Main();
         API api = new API(main);
 

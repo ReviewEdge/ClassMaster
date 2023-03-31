@@ -26,4 +26,18 @@ class CmdLineInterfaceTest {
         API api = new API(main);
         CmdLineInterface.runInterface(api, true, "TestFiles/MakeASearch");
     }
+
+    @Test
+    void TestMultipleSchedules(){
+        Main main = new Main();
+        API api = new API(main);
+        CmdLineInterface.runInterface(api, true, "TestFiles/MultipleSchedulesTest");
+    }
+
+    @Test
+    void addFilters(){
+        Main main = new Main();
+        API api = new API(main);
+        CmdLineInterface.runInterface(api, true, "TestFiles/addFiltersTest");
+    }
 }

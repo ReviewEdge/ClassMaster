@@ -10,7 +10,7 @@ class TimeslotTest {
 
     @Test
     void compareTo() {
-        Timeslot earlier = new Timeslot(Time.valueOf("08:00:00"), Time.valueOf("09:00:00"), Day.Friday);
+        Timeslot earlier = new Timeslot(Time.valueOf("13:00:00"), Time.valueOf("13:50:00"), Day.Monday);
         Timeslot now = new Timeslot("09:00:00", "9:50:00", Day.Friday);
         Timeslot later = new Timeslot("13:00:00", "13:50:00", Day.Friday);
         assertTrue(earlier.compareTo(now) < 0);
@@ -20,7 +20,7 @@ class TimeslotTest {
     @Test
     void testToString() {
         Timeslot now = new Timeslot("09:00:00", "20:50:00", Day.Friday);
-        assertEquals("Friday from 9:00 to 20:50.", now.toString());
+        assertEquals("Friday 9:00 - 20:50", now.toString());
     }
 
     @Test
@@ -60,7 +60,7 @@ class TimeslotTest {
         assertEquals(Day.Sunday, now.getDay());
         now.setStart(Time.valueOf("07:30:00"));
         now.setEnd(Time.valueOf("09:00:00"));
-        assertEquals("Sunday from 7:30 to 9:00.", now.toString());
+        assertEquals("Sunday 7:30 - 9:00", now.toString());
     }
 
     @Test

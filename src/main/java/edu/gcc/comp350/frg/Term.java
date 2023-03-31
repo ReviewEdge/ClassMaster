@@ -20,10 +20,7 @@ public class Term {
 
     @Override
     public String toString() {
-        return "Term{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return name;
     }
     @Override
     public boolean equals(Object other){

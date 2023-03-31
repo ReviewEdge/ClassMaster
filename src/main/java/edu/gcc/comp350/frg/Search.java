@@ -11,6 +11,8 @@ public class Search {
     public Search(String query, Filter filter) {
         this.query = query;
         this.filter = filter;
+        currentResults = new ArrayList<>();
+        runQuery();
     }
 
     public String getQuery() {
@@ -35,5 +37,13 @@ public class Search {
 
     public ArrayList<Class> getCurrentResults() {
         return currentResults;
+    }
+
+    public void runQuery(){
+        ArrayList<Class> classResults = Class.getClassesFromDBbySearchTerm(query);
+
+        for (Class c : classResults) {
+            currentResults.add(c);
+        }
     }
 }

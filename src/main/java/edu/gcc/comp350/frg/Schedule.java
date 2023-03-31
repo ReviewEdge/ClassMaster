@@ -17,7 +17,12 @@ public class Schedule {
     public Schedule(String name, Term term, ArrayList<Class> classes) {
         this.name = name;
         this.term = term;
-        this.classes = classes;
+        if (classes == null) {
+            this.classes = new ArrayList<>();
+
+        } else {
+            this.classes = classes;
+        }
 
         int newID = 0;
 
@@ -32,7 +37,6 @@ public class Schedule {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
         this.id = newID;
     }
 
@@ -65,8 +69,10 @@ public class Schedule {
 //    }
     public String toString(){
         StringBuilder scheduleString = new StringBuilder();
-        for (Class c: classes){
-            scheduleString.append(c.toString()).append("\n");
+        scheduleString.append(name).append(" for semester ").append(term).append(" has ").append(currentcredits).append(" credits\n");
+        for(int i = 0; i < classes.size(); i++){
+            scheduleString.append(i+1).append( ": ");
+            scheduleString.append(classes.get(i)).append("\n");
         }
         return scheduleString.toString();
     }
@@ -93,33 +99,52 @@ public class Schedule {
 
     public void addClass (Class toAdd) throws Exception{
         if (currentcredits + toAdd.getCredits() >= 21){
-            throw new Exception("too many credits!");
+            System.out.println("Your schedule has over 20 credits!");
+//            throw new Exception("too many credits!");
         }
+
+        ArrayList<Timeslot> toAddSlots = toAdd.getTimeSlots();
+
+        // for every class currently in the schedule...
         for (Class c: classes){
-            if (c.getTime().overlaps(toAdd.getTime())){
-                Class newClass = ResolveConflict(c,toAdd);
-                classes.remove(c);
-                classes.add(newClass);
-                return;
+            ArrayList<Timeslot> currClassSlots = c.getTimeSlots();
+            // for every timeslot of a current class...
+            for (int i = 0; i < currClassSlots.size(); i++) {
+                // for every timeslot of the adding class...
+                for (int j = 0; j < toAddSlots.size(); j++) {
+                    // checks if one of the classes overlaps
+                    if (currClassSlots.get(i).overlaps(toAddSlots.get(j))) {
+                        //TODO: eventually we'll want this to actually resolve the conflict intelligently, prompt user
+//                        Class newClass = ResolveConflict(c,toAdd);
+//                        classes.remove(c);
+//                        currentcredits-=c.getCredits();
+//                        classes.add(newClass);
+//                        currentcredits+= newClass.getCredits();
+                        throw new Exception("overlaps class in schedule");
+                    }
+                }
             }
-            currentcredits = currentcredits + toAdd.getCredits();
-            classes.add(toAdd);
         }
+
+        currentcredits = currentcredits + toAdd.getCredits();
         classes.add(toAdd);
     }
-    public void removeClass (int i) throws Exception{
+
+
+    public void removeClass (int i) {
         Class removedClass = classes.get(i);
         currentcredits = currentcredits - removedClass.getCredits();
         classes.remove(i);
 
     }
 
-    public void removeClass (Class toRemove) throws Exception{
+    public void removeClass (Class toRemove) {
         currentcredits = currentcredits - toRemove.getCredits();
        classes.remove(toRemove);
     }
 
     private Class ResolveConflict(Class preexist, Class newexist){
+        System.out.println("Classes Overlap!"); //TODO: this should be throwing an exception (which gets caught in API?)
         //nah we're not gonna let you add that class. this will be changed later
         return preexist;
     }
@@ -186,7 +211,7 @@ public class Schedule {
             JSONObject classesJSON = new JSONObject(classesString);
             JSONArray classesJSONArray = classesJSON.optJSONArray("classesString");
 
-            ArrayList<Class> newClasses = new ArrayList<Class>();
+            ArrayList<Class> newClasses = new ArrayList<>();
             if (classesJSONArray != null) {
                 for (int i=0;i<classesJSONArray.length();i++){
                     newClasses.add(Class.getClassFromDBbyCourseCode((String) classesJSONArray.get(i)));

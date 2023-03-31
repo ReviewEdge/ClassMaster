@@ -12,24 +12,33 @@ public class Class {
     private String code;
     private String title;
     private int referenceNum;
-    private Timeslot time; //come back here later
+    private ArrayList<Timeslot> timeSlots;
     private Term term;
     private String professor;
-    private String department;  //come back here later
-    private boolean isFrance; //lol
+    private String department;
     private int credits;
     private String location;
     private String description;
 
-
-    public Class(Class cl) {
+    //TODO: is this doing a proper deep copy?
+    public Class(Class c) {
+        this.code = c.getCode();
+        this.title = c.getTitle();
+        this.referenceNum = c.getReferenceNum();
+        this.timeSlots = c.getTimeSlots();
+        this.term = c.getTerm();
+        this.professor = c.getProfessor();
+        this.department = c.getDepartment();
+        this.credits = c.getCredits();
+        this.location = c.getLocation();
+        this.description = c.getDescription();
     }
 
-    public Class(String code, String title, int referenceNum, Timeslot time, Term term, String professor, String department, int credits, String location, String description) {
+    public Class(String code, String title, int referenceNum, ArrayList<Timeslot> timeSlots, Term term, String professor, String department, int credits, String location, String description) {
         this.code = code;
         this.title = title;
         this.referenceNum = referenceNum;
-        this.time = time;
+        this.timeSlots = timeSlots;
         this.term = term;
         this.professor = professor;
         this.department = department;
@@ -38,25 +47,75 @@ public class Class {
         this.description = description;
     }
 
+
+    public static ArrayList<Class> getClassesFromDBbySearchTerm(String searchTerm) {
+        try {
+
+            Connection conn = DatabaseConnector.connect();
+
+            String sql = "SELECT * FROM classes20to21v4 WHERE search_terms LIKE '%" + searchTerm + "%'";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // returns null if no class was found
+            if (rs.getString("course_code") == null) {
+                return null;
+            }
+
+            ArrayList<Class> classesResults = new ArrayList<>();
+
+            while (rs.next()) {
+                Term classTerm = new Term(rs.getInt("trm_cde"), null);
+                Class newClass = new Class(
+                        rs.getString("course_code"),
+                        rs.getString("crs_title"),
+                        0,  // we don't actually have this data
+                        getTimeslotsFromClassRow(rs),
+                        classTerm,
+                        rs.getString("first_name") + " " + rs.getString("last_name"),
+                        rs.getString("crs_comp1"),
+                        rs.getInt("credit_hrs"),
+                        null,
+                        rs.getString("comment_txt")
+                );
+
+                classesResults.add(newClass);
+            }
+
+            conn.close();
+
+            return classesResults;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+
     public static Class getClassFromDBbyCourseCode(String courseCode) {
         try {
 
             Connection conn = DatabaseConnector.connect();
 
-            String sql = "SELECT * FROM classes20to21v3 WHERE course_code LIKE '" + courseCode + "'";
+            String sql = "SELECT * FROM classes20to21v4 WHERE course_code LIKE '" + courseCode + "'";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            String timeString = rs.getString("begin_tim") + " - " + rs.getString("end_tim");  //TODO: needs to make a timeslot object
-            Term classTerm = new Term(rs.getInt("trm_cde"), null);
+            // returns null if no class was found
+            if (rs.getString("course_code") == null) {
+                return null;
+            }
 
+            Term classTerm = new Term(rs.getInt("trm_cde"), null);
 
             Class newClass = new Class(
                     rs.getString("course_code"),
                     rs.getString("crs_title"),
                     0,  // we don't ac
-                    null,
+                    getTimeslotsFromClassRow(rs),
                     classTerm,
                     rs.getString("first_name") + " " + rs.getString("last_name"),
                     rs.getString("crs_comp1"),
@@ -75,19 +134,67 @@ public class Class {
         }
     }
 
-    //stings will be printed out as :
-    //Code, Title, Time
 
+    private static ArrayList<Timeslot> getTimeslotsFromClassRow(ResultSet rs) throws SQLException {
+        ArrayList<Day> days = new ArrayList<>();
+
+        if(rs.getString("monday_cde") != null) {
+            days.add(Day.Monday);
+        }
+        if(rs.getString("tuesday_cde") != null) {
+            days.add(Day.Tuesday);
+        }
+        if(rs.getString("wednesday_cde") != null) {
+            days.add(Day.Wednesday);
+        }
+        if(rs.getString("thursday_cde") != null) {
+            days.add(Day.Thursday);
+        }
+        if(rs.getString("friday_cde") != null) {
+            days.add(Day.Friday);
+        }
+
+        String start12hr = rs.getString("begin_tim");
+        // returns a null timeslot if the time is null in the database
+        if (start12hr == null) {
+            return null;
+        }
+        String start = convert12to24hr(start12hr);
+        String end = convert12to24hr(rs.getString("end_tim"));
+
+        ArrayList<Timeslot> slots = new ArrayList<>();
+
+        for (int i = 0; i < days.size(); i++) {
+            slots.add(new Timeslot(start, end, days.get(i)));
+        }
+
+        return slots;
+    }
+
+    private static String convert12to24hr(String dbTimeStr) {
+        String[] timeAndAMorPm = dbTimeStr.split(" ");
+        if (timeAndAMorPm[1].equals("PM")) {
+            String[] timeNums = timeAndAMorPm[0].split(":");
+            int tfHour = Integer.parseInt(timeNums[0]) + 12;
+
+            return tfHour + ":" + timeNums[1] + ":" + timeNums[2];
+        }
+
+        return timeAndAMorPm[0];
+    }
 
 
     @Override
-    public String toString(){ //add professor and time
-        StringBuilder classString = new StringBuilder("");
+    public String toString(){
+        StringBuilder classString = new StringBuilder();
         classString.append(this.code+", ");
         classString.append(this.title+", ");
-        if(this.time != null) {
-            classString.append(this.time.toString());
+        if(this.timeSlots != null) {
+            classString.append(this.timeSlots.toString());
+        } else {
+            classString.append("No Timeslot");
         }
+        classString.append(", "+ this.professor);
         return classString.toString();
     }
 
@@ -111,8 +218,8 @@ public class Class {
         return referenceNum;
     }
 
-    public Timeslot getTime() {
-        return time;
+    public ArrayList<Timeslot> getTimeSlots() {
+        return timeSlots;
     }
 
     public Term getTerm() {
