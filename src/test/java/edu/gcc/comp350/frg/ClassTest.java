@@ -22,8 +22,8 @@ class ClassTest {
 
     @Test
     void getClassFromDBbyCourseCode() {
-        String acctCode = "ACCT 201 A";
-        String acct2Code = "ACCT 201 A";
+        String acctCode = "2020 10 ACCT 201 A";
+        String acct2Code = "2020 10 ACCT 201 A";
 
         Class acct = Class.getClassFromDBbyCourseCode(acctCode);
         Class acct2 = Class.getClassFromDBbyCourseCode(acct2Code);
