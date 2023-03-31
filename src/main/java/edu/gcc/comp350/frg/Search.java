@@ -40,6 +40,10 @@ public class Search {
     }
 
     public void runQuery(){
-        currentResults.add(Class.getClassFromDBbyCourseCode(query));
+        ArrayList<Class> classResults = Class.getClassesFromDBbySearchTerm(query);
+
+        for (Class c : classResults) {
+            currentResults.add(c);
+        }
     }
 }

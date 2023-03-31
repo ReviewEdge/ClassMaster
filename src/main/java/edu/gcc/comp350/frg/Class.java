@@ -15,7 +15,7 @@ public class Class {
     private ArrayList<Timeslot> timeSlots;
     private Term term;
     private String professor;
-    private String department;  //come back here later
+    private String department;
     private int credits;
     private String location;
     private String description;
@@ -47,15 +47,67 @@ public class Class {
         this.description = description;
     }
 
+
+    public static ArrayList<Class> getClassesFromDBbySearchTerm(String searchTerm) {
+        try {
+
+            Connection conn = DatabaseConnector.connect();
+
+            String sql = "SELECT * FROM classes20to21v4 WHERE search_terms LIKE '%" + searchTerm + "%'";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // returns null if no class was found
+            if (rs.getString("course_code") == null) {
+                return null;
+            }
+
+            ArrayList<Class> classesResults = new ArrayList<>();
+
+            while (rs.next()) {
+                Term classTerm = new Term(rs.getInt("trm_cde"), null);
+                Class newClass = new Class(
+                        rs.getString("course_code"),
+                        rs.getString("crs_title"),
+                        0,  // we don't actually have this data
+                        getTimeslotsFromClassRow(rs),
+                        classTerm,
+                        rs.getString("first_name") + " " + rs.getString("last_name"),
+                        rs.getString("crs_comp1"),
+                        rs.getInt("credit_hrs"),
+                        null,
+                        rs.getString("comment_txt")
+                );
+
+                classesResults.add(newClass);
+            }
+
+            conn.close();
+
+            return classesResults;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+
     public static Class getClassFromDBbyCourseCode(String courseCode) {
         try {
 
             Connection conn = DatabaseConnector.connect();
 
-            String sql = "SELECT * FROM classes20to21v3 WHERE course_code LIKE '" + courseCode + "'";
+            String sql = "SELECT * FROM classes20to21v4 WHERE course_code LIKE '" + courseCode + "'";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
+
+            // returns null if no class was found
+            if (rs.getString("course_code") == null) {
+                return null;
+            }
 
             Term classTerm = new Term(rs.getInt("trm_cde"), null);
 
