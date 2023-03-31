@@ -115,6 +115,7 @@ public class Schedule {
                     if (currClassSlots.get(i).overlaps(toAddSlots.get(j))) {
                         Class newClass = ResolveConflict(c,toAdd);
                         classes.remove(c);
+                        currentcredits-=c.getCredits();
                         classes.add(newClass);
                         currentcredits+= newClass.getCredits();
                         return;
