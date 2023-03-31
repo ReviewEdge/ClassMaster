@@ -433,6 +433,7 @@ public class CmdLineInterface {
                     str.append(" ".repeat(28));
                 }
             }
+            str.append("\n");
         }
 
         // Prints the string
