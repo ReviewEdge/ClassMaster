@@ -417,7 +417,7 @@ public class CmdLineInterface {
             for (int d = 1; d <= daysOfTheWeek.size(); d++) {
                 if (daysOfTheWeek.get(d-1).size() > 0) {
                     Class cl = daysOfTheWeek.get(d-1).poll();
-                    str.append(cl.getCode());
+                    str.append(cl.getCourseCodeWithoutTerm());
                     str.append(" @");
                     for(Timeslot t: cl.getTimeSlots()) {
                         if (t.getDay().ordinal()== d) {
