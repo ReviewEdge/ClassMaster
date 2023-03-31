@@ -99,7 +99,8 @@ public class Schedule {
 
     public void addClass (Class toAdd) throws Exception{
         if (currentcredits + toAdd.getCredits() >= 21){
-            throw new Exception("too many credits!");
+            System.out.println("Your schedule has over 20 credits!");
+//            throw new Exception("too many credits!");
         }
 
         ArrayList<Timeslot> toAddSlots = toAdd.getTimeSlots();
@@ -113,12 +114,13 @@ public class Schedule {
                 for (int j = 0; j < toAddSlots.size(); j++) {
                     // checks if one of the classes overlaps
                     if (currClassSlots.get(i).overlaps(toAddSlots.get(j))) {
-                        Class newClass = ResolveConflict(c,toAdd);
-                        classes.remove(c);
-                        currentcredits-=c.getCredits();
-                        classes.add(newClass);
-                        currentcredits+= newClass.getCredits();
-                        return;
+                        //TODO: eventually we'll want this to actually resolve the conflict intelligently, prompt user
+//                        Class newClass = ResolveConflict(c,toAdd);
+//                        classes.remove(c);
+//                        currentcredits-=c.getCredits();
+//                        classes.add(newClass);
+//                        currentcredits+= newClass.getCredits();
+                        throw new Exception("overlaps class in schedule");
                     }
                 }
             }
@@ -142,6 +144,7 @@ public class Schedule {
     }
 
     private Class ResolveConflict(Class preexist, Class newexist){
+        System.out.println("Classes Overlap!"); //TODO: this should be throwing an exception (which gets caught in API?)
         //nah we're not gonna let you add that class. this will be changed later
         return preexist;
     }
