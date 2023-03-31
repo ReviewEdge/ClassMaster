@@ -204,6 +204,27 @@ public class Schedule {
     }
 
 
+    public static ArrayList<Integer> getAllScheduleIDsFromDB() {
+        try {
+            Connection conn = DatabaseConnector.connect();
+
+            String sql = "SELECT * FROM schedules1";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            ArrayList<Integer> schedIDs = new ArrayList<>();
+            while (rs.next()) {
+                schedIDs.add(rs.getInt("ID"));
+            }
+            conn.close();
+            return schedIDs;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+
     public static Schedule getScheduleByIDFromDB(int id) {
         try {
             Connection conn = DatabaseConnector.connect();
