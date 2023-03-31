@@ -98,6 +98,10 @@ public class Schedule {
     }
 
     public void addClass (Class toAdd) throws Exception{
+        if (!toAdd.getTerm().equals(this.term)) {
+            throw new Exception("class term is different from your schedule's term");
+        }
+
         if (currentcredits + toAdd.getCredits() >= 21){
             System.out.println("Your schedule has over 20 credits!");
 //            throw new Exception("too many credits!");

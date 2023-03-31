@@ -64,9 +64,13 @@ public class Class {
             }
 
             ArrayList<Class> classesResults = new ArrayList<>();
-
+            // TODO: replace this with a method makeClassFromRS( rs )
             while (rs.next()) {
-                Term classTerm = new Term(rs.getInt("trm_cde"), null);
+                Term classTerm = null;
+                // checks if the class has a term
+                if (rs.getInt("trm_cde") != 0) {
+                    classTerm = new Term(rs.getInt("trm_cde"));
+                }
                 Class newClass = new Class(
                         rs.getString("course_code"),
                         rs.getString("crs_title"),
@@ -108,9 +112,8 @@ public class Class {
             if (rs.getString("course_code") == null) {
                 return null;
             }
-
-            Term classTerm = new Term(rs.getInt("trm_cde"), null);
-
+            // TODO: replace this with a method makeClassFromRS( rs )
+            Term classTerm = new Term(rs.getInt("trm_cde"));
             Class newClass = new Class(
                     rs.getString("course_code"),
                     rs.getString("crs_title"),
@@ -189,12 +192,17 @@ public class Class {
         StringBuilder classString = new StringBuilder();
         classString.append(this.code+", ");
         classString.append(this.title+", ");
-        if(this.timeSlots != null) {
-            classString.append(this.timeSlots.toString());
+        if(this.term != null) {
+            classString.append(this.term + ", ");
         } else {
-            classString.append("No Timeslot");
+            classString.append("No Term" + ", ");
         }
-        classString.append(", "+ this.professor);
+        if(this.timeSlots != null) {
+            classString.append(this.timeSlots + ", ");
+        } else {
+            classString.append("No Timeslot" + ", ");
+        }
+        classString.append(this.professor);
         return classString.toString();
     }
 
