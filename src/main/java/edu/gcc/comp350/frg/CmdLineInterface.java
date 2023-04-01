@@ -390,7 +390,7 @@ public class CmdLineInterface {
         System.out.println(schedule.toString());
         System.out.println("Weekly View: ");
         StringBuilder str = new StringBuilder();
-        str.append("Monday").append(" ".repeat(20));
+        str.append("Monday").append(" ".repeat(22));
         str.append("Tuesday").append(" ".repeat(20));
         str.append("Wednesday").append(" ".repeat(20));
         str.append("Thursday").append(" ".repeat(20));

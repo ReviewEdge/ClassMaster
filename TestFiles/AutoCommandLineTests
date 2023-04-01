@@ -8,8 +8,9 @@ createSchedule Name Spring 2021
 makeSearch
 Search Comp350
 addClass 1
-Search ACCT 201 A
+Search ACCT 402 A
 addClass 1
+back
 quit
 
 
