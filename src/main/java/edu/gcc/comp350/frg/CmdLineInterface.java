@@ -34,7 +34,7 @@ public class CmdLineInterface {
      *
      * @param api is the interface which allows the front-end to talk to the actual structures
      * @param testing is a boolean variable to delineate if it should take user input or read from a file
-     * @param testFile is the file which has pre-loaded commands
+     * @param testFile is the file which has preloaded commands
      */
 
     public static void runInterface(API api, boolean testing, String testFile){
@@ -70,7 +70,7 @@ public class CmdLineInterface {
             System.out.println();
 
             // Sets the correct location for before the command entry point ie: Calendar View:
-            // Simillar to how the command line functions with its document structure
+            // Similar to how the command line functions with its document structure
             String cmd;
             String inputSymbol = "\n";
             if(screen == Screen.SCHEDULE_LIST) {
@@ -83,13 +83,13 @@ public class CmdLineInterface {
                 inputSymbol = "Search Command Bar";
             }
 
-            //Promtps the user for their next command
+            //Prompts the user for their next command
             cmd = getInput("" + inputSymbol + ": ", testing);
             //Parses it in to be read as commands and parameters
             String[] cmdSplit = cmd.split(" ");
 
             // Loop if there was no command entered
-            if(cmdSplit.length <= 0){
+            if(cmdSplit.length == 0){
                 continue;
             }
 
@@ -318,7 +318,8 @@ public class CmdLineInterface {
                                     api.addClass(i);
                                     System.out.println("Class Added");
                                 } catch (Exception e) {
-                                    System.out.println(e.toString());
+                                    System.out.println("Index not available, please try again");
+//                                    System.out.println(e.toString());
                                 }
                             } catch (Exception e) {
                                 System.out.println("Could not interpret second argument as a number, Please try again");

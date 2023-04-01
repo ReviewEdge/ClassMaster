@@ -43,7 +43,8 @@ public class Search {
         ArrayList<Class> classResults = Class.getClassesFromDBbySearchTerm(query);
 
         for (Class c : classResults) {
-            currentResults.add(c);
+            if(filter.isValid(c))
+                currentResults.add(c);
         }
     }
 }

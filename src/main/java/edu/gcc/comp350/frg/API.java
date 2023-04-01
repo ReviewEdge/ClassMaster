@@ -52,7 +52,6 @@ public class API {
             Term t = new Term(semester);
             Schedule sch = new Schedule(name, t, new ArrayList<>());
             main.getAccount().addSchedule(sch);
-            filter.setTerm(t);
             return sch;
         } catch (Exception e){
             throw new Exception("Invalid Semester");
@@ -116,6 +115,7 @@ public class API {
      * @throws Exception
      */
     public void makeSearch(String query) throws Exception{
+        System.out.println(filter.getTerm());
         Search s = new Search(query, filter); // Should validate that it Can make a search from that? //TODO
         main.makeNewSearch(s);
     }
@@ -247,6 +247,10 @@ public class API {
      */
     public void loadSavedSchedules(){
         System.out.println("WRITE THE LOAD METHOD");
+        ArrayList<Integer> scheduleIDs = Schedule.getAllScheduleIDsFromDB();
+        for(int i: scheduleIDs){
+            main.getAccount().addSchedule(Schedule.getScheduleByIDFromDB(i));
+        }
     }
 
     /**
@@ -254,7 +258,11 @@ public class API {
      */
 
     public void quit(){
-        //TODO Make sure that everything closes nicely?
+        //TODO Make sure that everything closes nicely?... KEEP Checking
+        ArrayList<Schedule> schedules = main.getAccount().getSchedules();
+        for(Schedule sch: schedules){
+            sch.saveSchedule();
+        }
     }
 
 
