@@ -36,6 +36,11 @@ public class Term {
         this.name = name;
     }
 
+    public static String getValidSemesters() {
+        String s = "\"Fall 2020\", and \"Spring 2021\"";
+        return s;
+    }
+
     public int getId() {
         return id;
     }

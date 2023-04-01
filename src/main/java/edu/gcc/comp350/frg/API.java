@@ -54,7 +54,7 @@ public class API {
             main.getAccount().addSchedule(sch);
             return sch;
         } catch (Exception e){
-            throw new Exception("Invalid Semester");
+            throw e;
         }
     }
 

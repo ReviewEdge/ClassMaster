@@ -154,8 +154,8 @@ public class CmdLineInterface {
                 }
                 // Handles the createSchedule command: creates a schedule with parameters "name" and "semester"
                 else if (cmdSplit[0].toLowerCase().contains("createschedule")){
-                    try { // Change this from a try catch to normal if, Why'd I do that
-                        String semester = cmdSplit[2];
+                    if(cmdSplit.length >= 4){ // Change this from a try catch to normal if, Why'd I do that
+                        String semester = cmdSplit[2] + " " + cmdSplit[3];
                         try {
                             Schedule sch = api.createSchedule(cmdSplit[1], semester);
                             api.loadSchedule(api.getNumSchedules()); //Could be faster by passing in a Schedule, here at least
@@ -166,8 +166,9 @@ public class CmdLineInterface {
                             System.out.println(e.toString());
                         }
                     }
-                    catch(Exception e){
+                    else {
                         System.out.println("Invalid createSchedule Parameter, Please include a name and semester");
+                        System.out.println("All possible semesters are: " + Term.getValidSemesters());
                     }
                 }
                 // Handles the viewSchedule Command: Displaying all schedules for the account
