@@ -97,7 +97,7 @@ public class CmdLineInterface {
             if(cmdSplit[0].toLowerCase().contains("quit")){
                 notQuit = false;
                 System.out.println("Thank you for using ClassMaster");
-                api.quit();
+                api.quit(testing);
                 if(testing){
                     scn.close();
                 }

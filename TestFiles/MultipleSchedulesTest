@@ -1,10 +1,10 @@
-createSchedule 1st Spring2021
+createSchedule 1st Spring 2021
 makeSearch
 Search ACCT 201 A
 addClass 1
 back
 back
-createSchedule Num2 Fall2020
+createSchedule Num2 Fall 2020
 back
 load 2
 makeSearch

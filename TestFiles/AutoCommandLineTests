@@ -1,10 +1,10 @@
-createSchedule Name Fall2020
+createSchedule Name Fall 2020
 makeSearch
 Search ACCT 201 A
 addClass 1
 back
 back
-createSchedule Name Spring2021
+createSchedule Name Spring 2021
 makeSearch
 Search Comp350
 addClass 1

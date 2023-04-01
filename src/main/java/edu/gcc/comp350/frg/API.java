@@ -260,11 +260,13 @@ public class API {
      * Handles quiting/closing things in the api
      */
 
-    public void quit(){
+    public void quit(boolean testing){
         //TODO Make sure that everything closes nicely?... KEEP Checking
-        ArrayList<Schedule> schedules = main.getAccount().getSchedules();
-        for(Schedule sch: schedules){
-            sch.saveSchedule();
+        if(!testing) {
+            ArrayList<Schedule> schedules = main.getAccount().getSchedules();
+            for (Schedule sch : schedules) {
+                sch.saveSchedule();
+            }
         }
     }
 
