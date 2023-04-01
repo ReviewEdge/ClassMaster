@@ -94,6 +94,9 @@ public class API {
     public void addClass(int i) throws Exception{
 //        System.out.println("**********************************");
 //        System.out.println(main.getCurrentSearch().getCurrentResults().get(i));
+        if(i > main.getCurrentSearch().getCurrentResults().size()){
+            throw new Exception("Index not available, please try again");
+        }
         Class c = main.getCurrentSearch().getClass(i);
         main.getCurrentSchedule().addClass(c);
 //        main.getCurrentSchedule().saveSchedule();

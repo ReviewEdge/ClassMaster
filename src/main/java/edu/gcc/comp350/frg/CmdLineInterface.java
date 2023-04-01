@@ -319,8 +319,7 @@ public class CmdLineInterface {
                                     api.addClass(i);
                                     System.out.println("Class Added");
                                 } catch (Exception e) {
-                                    System.out.println("Index not available, please try again");
-//                                    System.out.println(e.toString());
+                                    System.out.println(e.toString());
                                 }
                             } catch (Exception e) {
                                 System.out.println("Could not interpret second argument as a number, Please try again");
