@@ -118,7 +118,6 @@ public class API {
      * @throws Exception
      */
     public void makeSearch(String query) throws Exception{
-        System.out.println(filter.getTerm());
         Search s = new Search(query, filter); // Should validate that it Can make a search from that? //TODO
         main.makeNewSearch(s);
     }
