@@ -52,6 +52,7 @@ public class API {
             Term t = new Term(semester);
             Schedule sch = new Schedule(name, t, new ArrayList<>());
             main.getAccount().addSchedule(sch);
+//            sch.saveSchedule();
             return sch;
         } catch (Exception e){
             throw e;
@@ -95,6 +96,7 @@ public class API {
 //        System.out.println(main.getCurrentSearch().getCurrentResults().get(i));
         Class c = main.getCurrentSearch().getClass(i);
         main.getCurrentSchedule().addClass(c);
+//        main.getCurrentSchedule().saveSchedule();
     }
 
     /**
@@ -105,6 +107,7 @@ public class API {
      */
     public void removeClass(int i) throws Exception {
         main.getCurrentSchedule().removeClass(i);
+//        main.getCurrentSchedule().saveSchedule();
     }
 
     /**
@@ -135,6 +138,7 @@ public class API {
      */
     public void renameCurrentSchedule(String newName){
         getCurrentSchedule().setName(newName);
+//        main.getCurrentSchedule().saveSchedule();
     }
 
     /**
