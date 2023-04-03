@@ -268,7 +268,8 @@ public class API {
         if(!testing) {
             ArrayList<Schedule> schedules = main.getAccount().getSchedules();
             for (Schedule sch : schedules) {
-                sch.saveSchedule();
+                sch.saveAndReplaceInDatabase();
+//                sch.saveSchedule();
             }
         }
     }

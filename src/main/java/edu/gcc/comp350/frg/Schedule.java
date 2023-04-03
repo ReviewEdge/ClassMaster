@@ -181,8 +181,14 @@ public class Schedule {
 
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setInt(1, this.id);
-            pstmt.setString(2, this.term.toString());
+            if(term != null) { //TODO Remove this if-else once we start reading in the term from the db
+                pstmt.setString(2, this.term.toString());
+            }
+            else{
+                pstmt.setString(2, null);
+            }
             pstmt.setString(3, this.name);
 
             JSONObject json = new JSONObject();
@@ -202,7 +208,6 @@ public class Schedule {
             System.out.println(e.getMessage());
         }
     }
-
 
     public static ArrayList<Integer> getAllScheduleIDsFromDB() {
         try {
@@ -224,7 +229,6 @@ public class Schedule {
         }
     }
 
-
     public static Schedule getScheduleByIDFromDB(int id) {
         try {
             Connection conn = DatabaseConnector.connect();
@@ -243,11 +247,21 @@ public class Schedule {
                 }
             }
 
+            //TODO Remove these 8 lines once we're correctly reading in term from the DB
+            Term term = null;
+            try {
+                term = new Term("Fall 2020");
+                if(newClasses.size() > 0){
+                    term = newClasses.get(0).getTerm();
+                }
+            } catch (Exception e){
+            }
+
             //TODO: add parseMe to term so I can get term from DB
             Schedule newSchedule = new Schedule(
                     rs.getString("Name"),
                     rs.getInt("ID"),
-                    null,
+                    term,
                     newClasses
             );
 
@@ -260,5 +274,24 @@ public class Schedule {
         }
     }
 
+    public static void deleteScheduleByIDFromDB(int id) {
+        try {
+            Connection conn = DatabaseConnector.connect();
+
+            String sql = "DELETE FROM schedules1 WHERE ID = '" + id + "'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+        }
+    }
+//
+    public void saveAndReplaceInDatabase() {
+        ArrayList<Integer> IDs = getAllScheduleIDsFromDB();
+        if(IDs.contains(id)) {
+            deleteScheduleByIDFromDB(id);
+        }
+        saveSchedule();
+    }
 }
 
