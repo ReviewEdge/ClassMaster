@@ -225,7 +225,7 @@ public class Schedule {
     }
 
 
-    public static Schedule getScheduleByIDFromDB(int id) {
+    public static Schedule getScheduleByIDFromDB(int id) throws Exception{
         try {
             Connection conn = DatabaseConnector.connect();
 

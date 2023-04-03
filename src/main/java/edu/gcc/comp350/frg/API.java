@@ -255,7 +255,11 @@ public class API {
         System.out.println("WRITE THE LOAD METHOD");
         ArrayList<Integer> scheduleIDs = Schedule.getAllScheduleIDsFromDB();
         for(int i: scheduleIDs){
-            main.getAccount().addSchedule(Schedule.getScheduleByIDFromDB(i));
+            try {
+                main.getAccount().addSchedule(Schedule.getScheduleByIDFromDB(i));
+            } catch (Exception e){
+
+            }
         }
     }
 

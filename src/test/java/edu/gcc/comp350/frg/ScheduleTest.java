@@ -57,7 +57,11 @@ class ScheduleTest {
 
         Schedule schedTest = new Schedule(schedName, new Term(0, "testTerm"), testClasses);
         schedTest.saveSchedule();
-        assertEquals(schedName, Schedule.getScheduleByIDFromDB(schedTest.getId()).getName());
+        try {
+            assertEquals(schedName, Schedule.getScheduleByIDFromDB(schedTest.getId()).getName());
+        } catch(Exception e){
+            assert false;
+        }
     }
 
     //TODO:
