@@ -177,7 +177,7 @@ public class Schedule {
     // commit schedule to database
     public void saveSchedule() {
 
-        String sql = "INSERT INTO schedules1(ID,term,name,classes) VALUES(?,?,?,?)";
+        String sql = "REPLACE INTO schedules1(ID,term,name,classes) VALUES(?,?,?,?)";
 
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -244,10 +244,11 @@ public class Schedule {
             }
 
             //TODO: add parseMe to term so I can get term from DB
+            Term schedTerm = new Term(rs.getString("Term"));
             Schedule newSchedule = new Schedule(
                     rs.getString("Name"),
                     rs.getInt("ID"),
-                    null,
+                    schedTerm,
                     newClasses
             );
 
