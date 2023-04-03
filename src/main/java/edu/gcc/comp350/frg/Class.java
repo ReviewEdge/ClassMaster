@@ -172,7 +172,9 @@ public class Class {
         if (timeAndAMorPm[1].equals("PM")) {
             String[] timeNums = timeAndAMorPm[0].split(":");
             int tfHour = Integer.parseInt(timeNums[0]) + 12;
-
+            if(tfHour == 24){
+                tfHour -= 12;
+            }
             return tfHour + ":" + timeNums[1] + ":" + timeNums[2];
         }
 

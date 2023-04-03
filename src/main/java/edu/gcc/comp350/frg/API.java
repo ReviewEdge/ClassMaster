@@ -36,6 +36,7 @@ public class API {
         }
         Schedule sch = main.getAccount().getSchedules().get(i-1);
         main.changeCurrentSchedule(sch);
+        filter.setTerm(main.getCurrentSchedule().getTerm());
     }
 
     /**
@@ -46,11 +47,16 @@ public class API {
      * @return the schedule created
      * @throws Exception if either the parameters were incorrect (ie. the semester was not one)
      */
-    public Schedule createSchedule(String name, String semester) {
-        Term t = new Term(semester); //TODO Handle Term Creation; Throws exception if invalid input, Make Term have the correct ID
-        Schedule sch = new Schedule(name, t, new ArrayList<>());
-        main.getAccount().addSchedule(sch);
-        return sch;
+    public Schedule createSchedule(String name, String semester) throws Exception {
+        try {
+            Term t = new Term(semester);
+            Schedule sch = new Schedule(name, t, new ArrayList<>());
+            main.getAccount().addSchedule(sch);
+//            sch.saveSchedule();
+            return sch;
+        } catch (Exception e){
+            throw e;
+        }
     }
 
     /**
@@ -88,8 +94,12 @@ public class API {
     public void addClass(int i) throws Exception{
 //        System.out.println("**********************************");
 //        System.out.println(main.getCurrentSearch().getCurrentResults().get(i));
+        if(i > main.getCurrentSearch().getCurrentResults().size()){
+            throw new Exception("Index not available, please try again");
+        }
         Class c = main.getCurrentSearch().getClass(i);
         main.getCurrentSchedule().addClass(c);
+//        main.getCurrentSchedule().saveSchedule();
     }
 
     /**
@@ -100,6 +110,7 @@ public class API {
      */
     public void removeClass(int i) throws Exception {
         main.getCurrentSchedule().removeClass(i);
+//        main.getCurrentSchedule().saveSchedule();
     }
 
     /**
@@ -129,6 +140,7 @@ public class API {
      */
     public void renameCurrentSchedule(String newName){
         getCurrentSchedule().setName(newName);
+//        main.getCurrentSchedule().saveSchedule();
     }
 
     /**
@@ -241,14 +253,24 @@ public class API {
      */
     public void loadSavedSchedules(){
         System.out.println("WRITE THE LOAD METHOD");
+        ArrayList<Integer> scheduleIDs = Schedule.getAllScheduleIDsFromDB();
+        for(int i: scheduleIDs){
+            main.getAccount().addSchedule(Schedule.getScheduleByIDFromDB(i));
+        }
     }
 
     /**
      * Handles quiting/closing things in the api
      */
 
-    public void quit(){
-        //TODO Make sure that everything closes nicely?
+    public void quit(boolean testing){
+        //TODO Make sure that everything closes nicely?... KEEP Checking
+        if(!testing) {
+            ArrayList<Schedule> schedules = main.getAccount().getSchedules();
+            for (Schedule sch : schedules) {
+                sch.saveSchedule();
+            }
+        }
     }
 
 
