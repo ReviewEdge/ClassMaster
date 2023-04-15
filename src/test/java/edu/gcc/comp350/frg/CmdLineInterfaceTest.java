@@ -10,42 +10,48 @@ class CmdLineInterfaceTest {
     void runInterfaceTest(){
         Main main = new Main();
         API api = new API(main);
-        CmdLineInterface.runInterface(api, true, "TestFiles/AutoCommandLineTests");
+        CmdLineInterface cli = new CmdLineInterface(api, true, "TestFiles/AutoCommandLineTests");
+        cli.runInterface();
     }
 
     @Test
     void validateBadInput(){
         Main main = new Main();
         API api = new API(main);
-        CmdLineInterface.runInterface(api, true, "TestFiles/VerifyBadInput");
+        CmdLineInterface cli = new CmdLineInterface(api, true, "TestFiles/VerifyBadInput");
+        cli.runInterface();
     }
 
     @Test
     void MakeASearch(){
         Main main = new Main();
         API api = new API(main);
-        CmdLineInterface.runInterface(api, true, "TestFiles/MakeASearch");
+        CmdLineInterface cli = new CmdLineInterface(api, true, "TestFiles/MakeASearch");
+        cli.runInterface();
     }
 
     @Test
     void TestMultipleSchedules(){
         Main main = new Main();
         API api = new API(main);
-        CmdLineInterface.runInterface(api, true, "TestFiles/MultipleSchedulesTest");
+        CmdLineInterface cli = new CmdLineInterface(api, true, "TestFiles/MultipleSchedulesTest");
+        cli.runInterface();
     }
 
     @Test
     void addFilters(){
         Main main = new Main();
         API api = new API(main);
-        CmdLineInterface.runInterface(api, true, "TestFiles/addFiltersTest");
+        CmdLineInterface cli = new CmdLineInterface(api, true, "TestFiles/addFiltersTest");
+        cli.runInterface();
     }
 
     @Test
     void classConflictTest(){
         Main main = new Main();
         API api = new API(main);
-        CmdLineInterface.runInterface(api, true, "TestFiles/classConflictTest");
+        CmdLineInterface cli = new CmdLineInterface(api, true, "TestFiles/classConflictTest");
+        cli.runInterface();
     }
 
     //Only used for cleaning up the database... NOT ACTUALLY A TEST, Just needed a way to run the cmd
