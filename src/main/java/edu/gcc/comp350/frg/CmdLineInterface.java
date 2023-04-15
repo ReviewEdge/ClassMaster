@@ -1,11 +1,13 @@
 package edu.gcc.comp350.frg;
 
+import org.apache.tools.ant.taskdefs.modules.Link;
+
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class CmdLineInterface {
 
-    //Scanner for user input
     private Scanner scn;
     private API api;
     private boolean testing;
@@ -41,7 +43,7 @@ public class CmdLineInterface {
             try {
                 scn = new Scanner(new File(filename));
             } catch(Exception e){
-                System.out.println(e);
+                System.out.println(e.toString());
                 System.out.println("Test File not found");
                 return;
             }
@@ -487,7 +489,8 @@ public class CmdLineInterface {
      * @param schedule The schedule to print to the console
      */
 
-    public void displayCalendar(Schedule schedule){ //TODO make it clearer which classes are which index for remove
+    public void displayCalendar(Schedule schedule){
+        //TODO make it clearer which classes are which index for remove
         // Prints the header
         System.out.println();
         System.out.println(schedule.toString());
@@ -504,7 +507,6 @@ public class CmdLineInterface {
         ArrayList<Class> cls = schedule.getClasses();
 
         // Determines what classes meet on what days of the week
-        //TODO Figure out a way to sort classes in the list
         ArrayList<LinkedList<Class>> daysOfTheWeek = new ArrayList<>();
         for(int i = 0; i < 5; i++){
             daysOfTheWeek.add(new LinkedList<>());
@@ -515,6 +517,8 @@ public class CmdLineInterface {
                 daysOfTheWeek.get(t.getDay().ordinal() - 1).add(c);
             }
         }
+
+        daysOfTheWeek = sortDaysByTime(daysOfTheWeek);
 
         // Adds the classes in a row based on time
         for(int i = 0; i < cls.size(); i++){
@@ -542,6 +546,40 @@ public class CmdLineInterface {
 
         // Prints the string
         System.out.println(str);
+    }
+
+    /**
+     *  Sorts each day's classes by time
+     * @param days The ArrayList of LinkedLists which holds all the classes in the schedule that match that day's index
+     * @return the new days array
+     */
+    private ArrayList<LinkedList<Class>> sortDaysByTime(ArrayList<LinkedList<Class>> days){
+
+        for(int i = 0 ; i < days.size(); i++){
+            // Create a copy and then sort it
+            LinkedList<Class> sortedDay = new LinkedList<>();
+            LinkedList<Class> dayOfInterest = new LinkedList<>();
+            for(Class c: days.get(i)){
+                dayOfInterest.add(new Class(c));
+            }
+            int k = 0;
+            while(k < dayOfInterest.size()){
+                int nextClass = 0;
+                Timeslot earliest = dayOfInterest.get(nextClass).getTimeOnDay(i+1);
+                for(int j = 0; j < dayOfInterest.size(); j++){
+                    Timeslot ts = dayOfInterest.get(j).getTimeOnDay(i+1);
+                    if(ts.compareTo(earliest) < 0) {
+                        earliest = ts;
+                        nextClass = j;
+                    }
+                }
+                sortedDay.add(dayOfInterest.remove(nextClass));
+            }
+            days.set(i, sortedDay);
+        }
+
+
+        return days;
     }
 
     /**

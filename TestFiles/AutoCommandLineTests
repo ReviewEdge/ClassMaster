@@ -11,6 +11,11 @@ addClass 1
 Search ACCT 402 A
 addClass 1
 back
+makeSearch
+Search comp
+addClass 1
+addClass 4
+back
 quit
 
 
