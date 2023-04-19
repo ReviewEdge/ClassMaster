@@ -30,6 +30,17 @@ input,textarea {
     height:100vh;
 }
 
+
+.active {
+    min-width: 10rem;
+}
+
+@media (max-width: 812px) {
+    .hamburger-menu.active{
+        height: auto;
+    }
+}
+
 @media (max-width: 480px) {
     .hamburger-menu {
         height: auto;
@@ -71,4 +82,10 @@ input,textarea {
 .schedule-classes-list {
     padding: 1rem;
     line-height: 20%;
+}
+
+.calendar-view {
+    border: black solid;
+    padding: 1rem;
+    margin: 8px;
 }
