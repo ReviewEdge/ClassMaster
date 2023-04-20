@@ -226,12 +226,12 @@ public class Schedule {
 
 
     public static Schedule getScheduleByIDFromDB(int id) throws Exception{
-        try {
-            Connection conn = DatabaseConnector.connect();
+        String sql = "SELECT * FROM schedules1 WHERE ID = ?";
 
-            String sql = "SELECT * FROM schedules1 WHERE ID LIKE '" + id + "'";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+        try (Connection conn = DatabaseConnector.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
             String classesString = rs.getString("Classes");
             JSONObject classesJSON = new JSONObject(classesString);
             JSONArray classesJSONArray = classesJSON.optJSONArray("classesString");
@@ -260,6 +260,5 @@ public class Schedule {
             return null;
         }
     }
-
 }
 

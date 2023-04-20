@@ -60,6 +60,7 @@ class ScheduleTest {
         try {
             assertEquals(schedName, Schedule.getScheduleByIDFromDB(schedTest.getId()).getName());
         } catch(Exception e){
+            System.out.println(e);
             assert false;
         }
     }
