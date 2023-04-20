@@ -40,7 +40,7 @@ public class Account {
         this.eMail = eMail;
         this.password = password;
         this.username = username;
-        this.mySchedules = new ArrayList<Schedule>();
+        this.mySchedules = new ArrayList<>();
 
         int newID = 0;
 
