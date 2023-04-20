@@ -120,7 +120,7 @@ public class CmdLineInterface {
 //                        System.out.println("- changeSemester \"NewSemester\": Changes the current schedule's year to \"NewSemester\""); // Shouldn't really be possible
                     System.out.println("- Remove \"number\": Removes the class at position \"number\" from the schedule");
                     System.out.println("- MakeSearch: Opens a search bar");
-                    System.out.println("- Back: Returns to the list fo schedules");
+                    System.out.println("- Back: Returns to the list of schedules");
                 }
                 else if(screen == Screen.SEARCH) {
                     System.out.println("Search Page Help:"); //TODO
@@ -434,6 +434,7 @@ public class CmdLineInterface {
                     str.append(" ".repeat(28));
                 }
             }
+            str.append("\n");
         }
 
         // Prints the string

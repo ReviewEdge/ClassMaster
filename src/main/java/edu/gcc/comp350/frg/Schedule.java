@@ -260,5 +260,17 @@ public class Schedule {
             return null;
         }
     }
+
+    public static void deleteScheduleByIDFromDB(int id) {
+        try {
+            Connection conn = DatabaseConnector.connect();
+
+            String sql = "DELETE FROM schedules1 WHERE ID = '" + id + "'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+        }
+    }
 }
 

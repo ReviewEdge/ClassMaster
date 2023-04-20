@@ -1,0 +1,22 @@
+How to run ClassMaster:
+
+(Building from the GitHub repo):
+   (0) Found at: https://github.com/ReviewEdge/ClassMaster
+    1) Clone the repository
+    2) Use gradle to build a jar
+    3) Move to the project head folder: ClassMaster
+        (This is so that the database file is in the right respective location)
+    4) Continue below
+
+To run ClassMaster, navigate to this folder's location in a command prompt and run:
+java -jar ClassMaster-1.0
+
+All the commands available are found by using the "help" command.
+Help will only show commands for the current "page" and will match all actions
+you can currently take. This means that on a new "page" (The words before the : will change)
+there will be a set of commands from help.
+
+Thanks!
+FRG
+
+P.S. If building from the repo, make sure the db.db file is respectively at src/main/resources

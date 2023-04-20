@@ -252,7 +252,7 @@ public class API {
      * Loads the schedules saved in the database for a given account
      */
     public void loadSavedSchedules(){
-        System.out.println("WRITE THE LOAD METHOD");
+//        System.out.println("WRITE THE LOAD METHOD");
         ArrayList<Integer> scheduleIDs = Schedule.getAllScheduleIDsFromDB();
         for(int i: scheduleIDs){
             try {
