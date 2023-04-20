@@ -18,7 +18,7 @@ public class Main {
     }
 
     public Main() {
-        this.account = new Account(-1, "User", "userX@gcc.edu", "password", "username");
+        this.account = new Account("User", "userX@gcc.edu", "password", "username");
         this.currentSchedule = null;
         this.currentSearch = null;
         this.searchHistory = new ArrayList<>();
