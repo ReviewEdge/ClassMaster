@@ -1,7 +1,6 @@
 package edu.gcc.comp350.frg;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class API {
 
@@ -286,18 +285,24 @@ public class API {
         }
     }
 
-    public void loadAccount(String username, String password){
+    public void loginAccount(String username, String password) throws Exception{
+        ArrayList<Account> accounts = new ArrayList<>();
         try {
-            ArrayList<Account> accounts = Account.getAccountsByUsernameFromDB(username);
-            for(int i = 0; i < accounts.size(); i++){
-                if(accounts.get(i).login(password)){
-                    main.changeAccount(accounts.get(i));
-                    return;
-                }
-            }
+            accounts = Account.getAccountsByUsernameFromDB(username);
         } catch(Exception e){
-            System.out.println(e.toString());
+            throw e;
         }
+        if(accounts.size() < 1){
+            throw new Exception("No accounts exist with the name: " + username);
+        }
+
+        for(int i = 0; i < accounts.size(); i++){
+            if(accounts.get(i).login(password)){
+                main.changeAccount(accounts.get(i));
+                return;
+            }
+        }
+        throw new Exception("Incorrect Password, please try again");
     }
 
     public void logout() {

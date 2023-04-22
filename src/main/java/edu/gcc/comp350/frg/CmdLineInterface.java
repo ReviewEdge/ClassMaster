@@ -1,9 +1,6 @@
 package edu.gcc.comp350.frg;
 
-import org.apache.tools.ant.taskdefs.modules.Link;
-
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class CmdLineInterface {
@@ -61,7 +58,7 @@ public class CmdLineInterface {
 
     public void runInterface(){
 
-        boolean accountFlag = true;
+        boolean accountFlag = false;
 
         System.out.println("Welcome to ClassMaster!");
 //        System.out.println("Your Journey starts at edu.gcc.comp350.frg");
@@ -101,7 +98,7 @@ public class CmdLineInterface {
                 inputSymbol = "Search Command Bar";
             }
             else if (screen == Screen.ACCOUNT){
-                inputSymbol = "Please enter your login information or sign up: (Type help for commands & syntax)";
+                inputSymbol = "Please enter your login information or sign up: (Type help for commands & syntax)\n";
             }
 
             //Prompts the user for their next command
@@ -255,9 +252,8 @@ public class CmdLineInterface {
     private void handleAccountScreen(String[] cmdSplit) {
         //handles the viewSchedule command: returns to the calendar view and displays the current schedule
         if (cmdSplit[0].toLowerCase().contains("login")){
-            System.out.println("Logging in...");
+            System.out.println("Verifying...");
             handleLogin(cmdSplit);
-            screen = Screen.CALENDAR;
         }
         //Handles the search command: makes a search for the parameter
         else if (cmdSplit[0].toLowerCase().contains("search")){
@@ -281,14 +277,13 @@ public class CmdLineInterface {
         String username = cmdSplit[1];
         String password = cmdSplit[2];
         try{
-            api.loadAccount(username, password);
-
+            api.loginAccount(username, password);
             api.loadSavedSchedules();
             screen = Screen.SCHEDULE_LIST;
             displayScheduleList();
         }
         catch(Exception e){
-            System.out.println("No accounts exist with the name: " + username);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -296,7 +291,9 @@ public class CmdLineInterface {
      * Handles the logout process
      */
     private void handleLogout() {
+        System.out.println("Logging out");
         api.logout();
+        screen = Screen.ACCOUNT;
     }
 
     /**
@@ -315,7 +312,7 @@ public class CmdLineInterface {
                         api.addClass(i);
                         System.out.println("Class Added");
                     } catch (Exception e) {
-                        System.out.println(e.toString());
+                        System.out.println(e.getMessage());
                     }
                 } catch (Exception e) {
                     System.out.println("Could not interpret second argument as a number, Please try again");
@@ -377,7 +374,7 @@ public class CmdLineInterface {
                 api.makeSearch(s.toString());
                 displaySearch();
             } catch (Exception e){
-                System.out.println(e.toString());
+                System.out.println(e.getMessage());
             }
         }
         else{
@@ -446,7 +443,7 @@ public class CmdLineInterface {
                 screen = Screen.CALENDAR;
 
             } catch(Exception e){
-                System.out.println(e.toString());
+                System.out.println(e.getMessage());
             }
         }
         else {
@@ -488,6 +485,8 @@ public class CmdLineInterface {
         else if(screen == Screen.ACCOUNT) {
             System.out.println("Account Page Help:");
             System.out.println("- Login \"Username\" \"Password\": Logs in to the account \"username\" with the password \"Password\"");
+            System.out.println("- createAccount \"Username\" \"Password\": Creates an account with a username \"username\" and password \"Password\"");
+            System.out.println("  (Account creation currently not supported, Will be available at 6:00pm Thursday night on myGCC");
         }
         System.out.println("- Quit: Exits the program");
 
@@ -517,7 +516,7 @@ public class CmdLineInterface {
                 screen = Screen.CALENDAR;
                 displayCalendar(api.getCurrentSchedule());
             } catch (Exception e) {
-                System.out.println(e.toString());
+                System.out.println(e.getMessage());
             }
         }
         else {
