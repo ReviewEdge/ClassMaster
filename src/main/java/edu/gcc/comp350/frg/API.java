@@ -318,7 +318,6 @@ public class API {
 
         main.changeAccount(newAccount);
         newAccount.saveOrUpdateAccount();
-
     }
 
     public void deleteCurrentAccount(){

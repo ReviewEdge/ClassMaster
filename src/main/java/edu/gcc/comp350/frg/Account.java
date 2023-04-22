@@ -142,8 +142,6 @@ public class Account {
             JSONObject json = new JSONObject();
             JSONArray scheduleJSONArray = new JSONArray();
 
-            System.out.println(mySchedules);
-
             if (this.mySchedules != null) {
                 for (int i = 0; i < this.mySchedules.size(); i++) {
                     scheduleJSONArray.put(this.mySchedules.get(i).getId());
