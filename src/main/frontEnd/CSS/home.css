@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+}
+
+input,textarea {
+    /*width:100%;*/
+    /*display:block;*/
+}
+
+.home-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.flex-item-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-item-right {
+    flex: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.hamburger-menu {
+    background-color: cadetblue;
+    color: cadetblue;
+    min-width: 4rem;
+    height:100vh;
+}
+
+
+.active {
+    min-width: 10rem;
+}
+
+@media (max-width: 812px) {
+    .hamburger-menu.active{
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .hamburger-menu {
+        height: auto;
+    }
+}
+
+.header {
+    background-color: cadetblue;
+    padding: 1rem;
+}
+
+.search {
+}
+
+#class-search-bar {
+}
+
+#search-submit-button {
+    display: inline;
+}
+
+#filters-button {
+    max-width: 4rem;
+    margin-top: 2px;
+}
+
+#hamburger-button {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+}
+
+#login-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
+.schedule-classes-list {
+    padding: 1rem;
+    line-height: 20%;
+}
+
+.calendar-view {
+    border: black solid;
+    padding: 1rem;
+    margin: 8px;
+}
