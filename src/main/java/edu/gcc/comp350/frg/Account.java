@@ -121,6 +121,10 @@ public class Account {
         mySchedules.add(sch);
     }
 
+    public void removeSchedule(int i){
+        mySchedules.remove(i);
+    }
+
     // commit account to database
     public void saveOrUpdateAccount() throws SQLException {
 
@@ -137,6 +141,8 @@ public class Account {
 
             JSONObject json = new JSONObject();
             JSONArray scheduleJSONArray = new JSONArray();
+
+            System.out.println(mySchedules);
 
             if (this.mySchedules != null) {
                 for (int i = 0; i < this.mySchedules.size(); i++) {
@@ -240,4 +246,35 @@ public class Account {
             throw new RuntimeException(e);
         }
     }
+
+    public static void deleteAccountByIDFromDB(int id) {
+        try {
+            //Deletes associated Schedules
+            Account account = getAccountByIdFromDB(id);
+            if(account == null){
+                return;
+            }
+            for(Schedule sch: account.getSchedules()){
+                Schedule.deleteScheduleByIDFromDB(sch.getId());
+            }
+
+            //Deletes account
+            Connection conn = DatabaseConnector.connect();
+            String sql = "DELETE FROM accounts1 WHERE ID = '" + id + "'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+        }
+    }
+
+//    public static void main(String[] args){
+//        for(int i = 0; i < 100; i++){
+//            try{
+//                deleteAccountByIDFromDB(i);
+//            } catch (Exception e){
+//
+//            }
+//        }
+//    }
 }

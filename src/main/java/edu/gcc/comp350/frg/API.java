@@ -1,6 +1,5 @@
 package edu.gcc.comp350.frg;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class API {
@@ -249,26 +248,6 @@ public class API {
     }
 
     /**
-     * Loads the schedules saved in the database for a given account
-     */
-    public void loadSavedSchedules(){
-        ArrayList<Integer> scheduleIDs = Schedule.getAllScheduleIDsFromDB();
-        for(int i: scheduleIDs){
-            try {
-                main.getAccount().addSchedule(Schedule.getScheduleByIDFromDB(i));
-            } catch (Exception e){
-
-            }
-        }
-    }
-
-
-
-
-
-
-
-    /**
      * Handles quiting/closing things in the api
      */
 
@@ -276,15 +255,21 @@ public class API {
         //TODO Make sure that everything closes nicely?... KEEP Checking
         if(!testing) {
             if(main.getAccount() != null) {
-                saveSchedules();
+                saveEverything();
             }
         }
     }
 
-    private void saveSchedules(){
+    private void saveEverything(){
+        System.out.println("Saving Schedules");
         ArrayList<Schedule> schedules = main.getAccount().getSchedules();
         for (Schedule sch : schedules) {
             sch.saveSchedule();
+        }
+        try {
+            main.getAccount().saveOrUpdateAccount();
+        } catch(Exception e){
+            System.out.println(e.toString());
         }
     }
 
@@ -314,7 +299,7 @@ public class API {
 
     public void logout() {
         if(main.getAccount() != null) {
-            saveSchedules();
+            saveEverything();
             main.changeAccount(null);
         }
     }
@@ -334,5 +319,16 @@ public class API {
         main.changeAccount(newAccount);
         newAccount.saveOrUpdateAccount();
 
+    }
+
+    public void deleteCurrentAccount(){
+        Account.deleteAccountByIDFromDB(main.getAccount().getId());
+        main.changeAccount(null);
+    }
+
+    public void deleteSchedule(int i){
+        Schedule.deleteScheduleByIDFromDB(i);
+        main.changeCurrentSchedule(null);
+        main.getAccount().removeSchedule(i-1);
     }
 }

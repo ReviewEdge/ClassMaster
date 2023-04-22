@@ -61,6 +61,7 @@ public class CmdLineInterface {
         boolean accountFlag = true;
 
         System.out.println("Welcome to ClassMaster!");
+
 //        System.out.println("Your Journey starts at edu.gcc.comp350.frg");
 //        System.out.println("And Its COMPLETELY FREE, until you bribe us");
 
@@ -72,9 +73,6 @@ public class CmdLineInterface {
             //ONLY IF ACCOUNTS ARE DISABLED, Else see above
             api.setDummyAccount();
 
-            if(!testing) {
-                api.loadSavedSchedules();
-            }
             screen = Screen.SCHEDULE_LIST;
             displayScheduleList();
         }
@@ -153,9 +151,17 @@ public class CmdLineInterface {
         else if (cmdSplit[0].toLowerCase().contains("viewschedules")){
             displayScheduleList();
         }
+        // Handles deleting a schedule
+        else if (cmdSplit[0].toLowerCase().contains("deleteschedule")){
+            handleScheduleDeletion(cmdSplit);
+        }
         // Handles the viewSchedule Command: Displaying all schedules for the account
-        else if (cmdSplit[0].toLowerCase().contains("logout")){
+        else if (cmdSplit[0].toLowerCase().contains("logout") || cmdSplit[0].equalsIgnoreCase("back")){
             handleLogout();
+        }
+        // Handles deleting an account
+        else if (cmdSplit[0].toLowerCase().contains("deleteaccount")){
+            handleAccountDeletion();
         }
         // If the command is unknown, show an error msg
         else{
@@ -279,7 +285,6 @@ public class CmdLineInterface {
         String password = cmdSplit[2];
         try{
             api.createAccount(username, password);
-            api.loadSavedSchedules();
             screen = Screen.SCHEDULE_LIST;
             displayScheduleList();
         }
@@ -287,6 +292,45 @@ public class CmdLineInterface {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    private void handleScheduleDeletion(String[] cmdSplit){
+        int i = 0;
+        try{
+            i = Integer.parseInt(cmdSplit[1]);
+            if(i > api.getNumSchedules() || i <= 0){
+                throw new Exception("Out of Schedule num abounds");
+            }
+        } catch (Exception e){
+            System.out.println("Invalid command parameters, please enter a number");
+        }
+
+        String in = getInput("Are you Sure you want to delete schedule " + api.getSchedules().get(i-1).getName() + "?\n Type: yes \n:");
+        if(!in.equalsIgnoreCase("yes")){
+            System.out.println("Not yes, Not Deleting.");
+            return;
+        }
+        System.out.println("Deleting schedule...");
+        api.deleteSchedule(i);
+
+        displayScheduleList();
+
+    }
+
+    /**
+     *  Handles deleting the current account, double checks that the user really wants to
+     */
+    private void handleAccountDeletion(){
+        String in = getInput("Are you Sure? Type: yes \n:");
+        if(!in.equalsIgnoreCase("yes")){
+            System.out.println("Not yes, Not Deleting.");
+            return;
+        }
+        System.out.println("Deleting account...");
+        api.deleteCurrentAccount();
+
+        System.out.println("Returning to Login screen...");
+        screen = Screen.ACCOUNT;
     }
 
     /**
@@ -302,7 +346,6 @@ public class CmdLineInterface {
         String password = cmdSplit[2];
         try{
             api.loginAccount(username, password);
-            api.loadSavedSchedules();
             screen = Screen.SCHEDULE_LIST;
             displayScheduleList();
         }
@@ -483,9 +526,11 @@ public class CmdLineInterface {
         if(screen == Screen.SCHEDULE_LIST) {
             System.out.println("Schedule Page Help:");
             System.out.println("- CreateSchedule \"Name\": Creates a schedule with the given name, and semester: (in the form: spring 2023)");
+            System.out.println("- DeleteSchedule \"number\": Deletes the schedule of the given corresponding number forever, Will ask for verification");
             System.out.println("- ViewSchedules: Shows the list of all your schedules");
             System.out.println("- Load \"number\": Loads the schedule of the given corresponding number from the list");
             System.out.println("- Logout: Logs out of the current Account");
+            System.out.println("- DeleteAccount: Deletes the current logged in account, Will ask for verification");
         }
         else if(screen == Screen.CALENDAR) {
             System.out.println("Calendar Page Help:");
