@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -97,9 +96,9 @@ class AccountTest {
 
         System.out.println(accountsFromDB);
         assertEquals(accountsFromDB.size(), 2);
-        assertTrue(accountsFromDB.get(0).login("pw"));
-        assertFalse(accountsFromDB.get(0).login("pswd"));
-        assertTrue(accountsFromDB.get(1).login("pswd"));
+        assertTrue(accountsFromDB.get(0).validatePassword("pw"));
+        assertFalse(accountsFromDB.get(0).validatePassword("pswd"));
+        assertTrue(accountsFromDB.get(1).validatePassword("pswd"));
 
 
 

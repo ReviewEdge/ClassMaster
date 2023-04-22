@@ -3,8 +3,10 @@ package edu.gcc.comp350.frg;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class Account {
 
@@ -35,10 +37,18 @@ public class Account {
     private String username;
     private ArrayList<Schedule> mySchedules;
 
+    /**
+     *  Constructor used for initial account creation, Hashes password and generates a new ID
+     *
+     * @param name
+     * @param eMail
+     * @param password
+     * @param username
+     */
     public Account(String name, String eMail, String password, String username) {
         this.name = name;
         this.eMail = eMail;
-        this.password = password;
+        this.password = Account.to_SHA256(password);
         this.username = username;
         this.mySchedules = new ArrayList<>();
 
@@ -58,6 +68,16 @@ public class Account {
         this.id = newID;
     }
 
+    /**
+     * Constructor that takes every variable as input (Primarily used for database retrievals)
+     *
+     * @param id
+     * @param name
+     * @param eMail
+     * @param password
+     * @param username
+     * @param mySchedules
+     */
     public Account(int id, String name, String eMail, String password, String username, ArrayList<Schedule> mySchedules) {
         this.id = id;
         this.name = name;
@@ -67,13 +87,30 @@ public class Account {
         this.mySchedules = mySchedules;
     }
 
-    public boolean login(String checkPassword){
-        String passwordHash = checkPassword;
-//        System.out.println("LOGIN???");
-        return passwordHash.equals(password);
+    public boolean validatePassword(String checkPassword){
+
+        String checkPasswordEncoding = Account.to_SHA256(checkPassword);
+
+        return password.equals(checkPasswordEncoding);
     }
-    public boolean logout(){
-        return false;
+
+    /**
+     * Converts the str to be hashed using SHA-256, and then converted
+     * back to a string with Base64 Encoding
+     *
+     * @param str String to be converted
+     * @return the str after hashing and encoding
+     */
+
+    public static String to_SHA256(String str) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] strHash = digest.digest(str.getBytes("UTF-8"));
+            return Base64.getEncoder().encodeToString(strHash);
+        } catch(Exception e){
+            System.out.println(e.toString());
+        }
+        return "";
     }
 
     public ArrayList<Schedule> getSchedules(){

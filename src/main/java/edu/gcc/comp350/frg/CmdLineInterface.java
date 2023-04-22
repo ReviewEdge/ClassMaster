@@ -256,13 +256,37 @@ public class CmdLineInterface {
             handleLogin(cmdSplit);
         }
         //Handles the search command: makes a search for the parameter
-        else if (cmdSplit[0].toLowerCase().contains("search")){
-            handleSearch(cmdSplit);
+        else if (cmdSplit[0].toLowerCase().contains("createaccount")){
+            System.out.println("Creating Account...");
+            handleAccountCreation(cmdSplit);
         }
         // If the command is unknown, show an error msg
         else{
             System.out.println("Unknown Command, Type \"Help\" for a list of commands");
         }
+    }
+
+    /**
+     * Handles the account creation process
+     *
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleAccountCreation(String[] cmdSplit) {
+        if(cmdSplit.length < 3){
+            System.out.println("Invalid createAccount command, Type \"Help\" for proper syntax");
+        }
+        String username = cmdSplit[1];
+        String password = cmdSplit[2];
+        try{
+            api.createAccount(username, password);
+            api.loadSavedSchedules();
+            screen = Screen.SCHEDULE_LIST;
+            displayScheduleList();
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
     }
 
     /**
@@ -486,7 +510,7 @@ public class CmdLineInterface {
             System.out.println("Account Page Help:");
             System.out.println("- Login \"Username\" \"Password\": Logs in to the account \"username\" with the password \"Password\"");
             System.out.println("- createAccount \"Username\" \"Password\": Creates an account with a username \"username\" and password \"Password\"");
-            System.out.println("  (Account creation currently not supported, Will be available at 6:00pm Thursday night on myGCC");
+//            System.out.println("  (Account creation currently not supported, Will be available at 6:00pm Thursday night on myGCC");
         }
         System.out.println("- Quit: Exits the program");
 

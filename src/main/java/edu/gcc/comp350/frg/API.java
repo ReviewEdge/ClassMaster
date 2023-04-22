@@ -1,5 +1,6 @@
 package edu.gcc.comp350.frg;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class API {
@@ -288,6 +289,10 @@ public class API {
     }
 
     public void loginAccount(String username, String password) throws Exception{
+        if(main.getAccount() != null){
+            throw new Exception("An Account is already logged in");
+        }
+
         ArrayList<Account> accounts = new ArrayList<>();
         try {
             accounts = Account.getAccountsByUsernameFromDB(username);
@@ -299,7 +304,7 @@ public class API {
         }
 
         for(int i = 0; i < accounts.size(); i++){
-            if(accounts.get(i).login(password)){
+            if(accounts.get(i).validatePassword(password)){
                 main.changeAccount(accounts.get(i));
                 return;
             }
@@ -308,11 +313,26 @@ public class API {
     }
 
     public void logout() {
-        saveSchedules();
-        main.changeAccount(null);
+        if(main.getAccount() != null) {
+            saveSchedules();
+            main.changeAccount(null);
+        }
     }
 
     public void setDummyAccount(){
         main.changeAccount(new Account("DummyAccount", "user@gcc.edu", "dummyPassword", "dummyUsername"));
+    }
+
+    public void createAccount(String username, String password) throws Exception{
+        Account newAccount = new Account(username, "NoEmailSupportYet", password, username);
+        ArrayList<Account> conficts = Account.getAccountsByUsernameFromDB(username);
+
+        if(conficts.size() > 0){
+            throw new Exception("Account Creation Failed, username already taken");
+        }
+
+        main.changeAccount(newAccount);
+        newAccount.saveOrUpdateAccount();
+
     }
 }
