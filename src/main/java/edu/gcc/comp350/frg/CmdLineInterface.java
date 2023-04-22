@@ -18,15 +18,15 @@ public class CmdLineInterface {
     enum Screen {
         SCHEDULE_LIST,
         CALENDAR,
-        SEARCH
+        SEARCH,
+        ACCOUNT
     }
 
     public CmdLineInterface(API api){
         this.api = api;
         this.testing = false;
 
-        //Sets the current Screen, screen to be the list of loaded schedules initially
-        screen = Screen.SCHEDULE_LIST;
+        screen = null;
     }
 
     /** Create a CLI object with optional testing parameters
@@ -48,8 +48,7 @@ public class CmdLineInterface {
                 return;
             }
         }
-        //Sets the current Screen, screen to be the list of loaded schedules initially
-        screen = Screen.SCHEDULE_LIST;
+        screen = null;
     }
 
     /**
@@ -62,16 +61,26 @@ public class CmdLineInterface {
 
     public void runInterface(){
 
-        //Loads schedules which have been saved to the database (ignored if testing)
-        if(!testing) {
-            api.loadSavedSchedules();
-        }
+        boolean accountFlag = true;
 
         System.out.println("Welcome to ClassMaster!");
 //        System.out.println("Your Journey starts at edu.gcc.comp350.frg");
 //        System.out.println("And Its COMPLETELY FREE, until you bribe us");
 
-        displayScheduleList();
+        if(accountFlag){
+            screen = Screen.ACCOUNT;
+        }
+        else {
+            //Loads schedules which have been saved to the database (ignored if testing)
+            //ONLY IF ACCOUNTS ARE DISABLED, Else see above
+            api.setDummyAccount();
+
+            if(!testing) {
+                api.loadSavedSchedules();
+            }
+            screen = Screen.SCHEDULE_LIST;
+            displayScheduleList();
+        }
 
         //This is the input loop. While the user doesn't quit it will keep looping
         boolean notQuit = true;
@@ -90,6 +99,9 @@ public class CmdLineInterface {
             }
             else if (screen == Screen.SEARCH){
                 inputSymbol = "Search Command Bar";
+            }
+            else if (screen == Screen.ACCOUNT){
+                inputSymbol = "Please enter your login information or sign up: (Type help for commands & syntax)";
             }
 
             //Prompts the user for their next command
@@ -112,7 +124,6 @@ public class CmdLineInterface {
             else if(cmdSplit[0].toLowerCase().contains("help")) {
                 displayHelp();
             }
-
             else if(screen == Screen.SCHEDULE_LIST){
                 handleScheduleListScreen(cmdSplit);
             }
@@ -121,6 +132,9 @@ public class CmdLineInterface {
             }
             else if(screen == Screen.SEARCH){
                 handleSearchScreen(cmdSplit);
+            }
+            else if(screen == Screen.ACCOUNT){
+                handleAccountScreen(cmdSplit);
             }
         }
     }
@@ -141,6 +155,10 @@ public class CmdLineInterface {
         // Handles the viewSchedule Command: Displaying all schedules for the account
         else if (cmdSplit[0].toLowerCase().contains("viewschedules")){
             displayScheduleList();
+        }
+        // Handles the viewSchedule Command: Displaying all schedules for the account
+        else if (cmdSplit[0].toLowerCase().contains("logout")){
+            handleLogout();
         }
         // If the command is unknown, show an error msg
         else{
@@ -228,6 +246,57 @@ public class CmdLineInterface {
         else{
             System.out.println("Unknown Command, Type \"Help\" for a list of commands");
         }
+    }
+
+    /**
+     * Handles determining the command for the Account screen
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleAccountScreen(String[] cmdSplit) {
+        //handles the viewSchedule command: returns to the calendar view and displays the current schedule
+        if (cmdSplit[0].toLowerCase().contains("login")){
+            System.out.println("Logging in...");
+            handleLogin(cmdSplit);
+            screen = Screen.CALENDAR;
+        }
+        //Handles the search command: makes a search for the parameter
+        else if (cmdSplit[0].toLowerCase().contains("search")){
+            handleSearch(cmdSplit);
+        }
+        // If the command is unknown, show an error msg
+        else{
+            System.out.println("Unknown Command, Type \"Help\" for a list of commands");
+        }
+    }
+
+    /**
+     * Handles the login process
+     *
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleLogin(String[] cmdSplit){
+        if(cmdSplit.length < 3){
+            System.out.println("Invalid login command, Type \"Help\" for proper syntax");
+        }
+        String username = cmdSplit[1];
+        String password = cmdSplit[2];
+        try{
+            api.loadAccount(username, password);
+
+            api.loadSavedSchedules();
+            screen = Screen.SCHEDULE_LIST;
+            displayScheduleList();
+        }
+        catch(Exception e){
+            System.out.println("No accounts exist with the name: " + username);
+        }
+    }
+
+    /**
+     * Handles the logout process
+     */
+    private void handleLogout() {
+        api.logout();
     }
 
     /**
@@ -395,6 +464,7 @@ public class CmdLineInterface {
             System.out.println("- CreateSchedule \"Name\": Creates a schedule with the given name, and semester: (in the form: spring 2023)");
             System.out.println("- ViewSchedules: Shows the list of all your schedules");
             System.out.println("- Load \"number\": Loads the schedule of the given corresponding number from the list");
+            System.out.println("- Logout: Logs out of the current Account");
         }
         else if(screen == Screen.CALENDAR) {
             System.out.println("Calendar Page Help:");
@@ -407,14 +477,20 @@ public class CmdLineInterface {
             System.out.println("- Back: Returns to the list of schedules");
         }
         else if(screen == Screen.SEARCH) {
-            System.out.println("Search Page Help:"); //TODO
+            System.out.println("Search Page Help:");
             System.out.println("- Search \"SearchTerms\": Makes a search for the \"SearchTerms\"");
             System.out.println("- AddClass \"number\": Adds the class at position \"number\" to the Schedule");
-            System.out.println("- AddFilter \"hypothetical Parameters\": WIP");
-            System.out.println("- RemoveFilter \"hypothetical Parameters\": WIP");
-            System.out.println("- ClearFilter \"hypothetical Parameters\": WIP");
+            System.out.println("- AddFilter : Adds a filter (Prompts for which filter/ parameters)");
+            System.out.println("- RemoveFilter: Removes a single filter type (Prompts for which filter type)");
+            System.out.println("- ClearFilter: Removes all current filters");
             System.out.println("- Back: Returns to the Calendar");
         }
+        else if(screen == Screen.ACCOUNT) {
+            System.out.println("Account Page Help:");
+            System.out.println("- Login \"Username\" \"Password\": Logs in to the account \"username\" with the password \"Password\"");
+        }
+        System.out.println("- Quit: Exits the program");
+
     }
 
     /**

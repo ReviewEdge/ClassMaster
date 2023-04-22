@@ -82,4 +82,29 @@ class AccountTest {
         assertEquals(accountName, retreiveAccount.getName());
         assertEquals(retreiveAccount.getSchedules().get(0).toString(), testSched.toString());
     }
+
+    @Test
+    void getAccountsByUsernameFromDBTest() throws Exception {
+        System.out.println("Running UsernameTest");
+        Account newAccount1 = new Account("1", "userX@gcc.edu", "pw", "user");
+        newAccount1.saveOrUpdateAccount();
+        Account newAccount2 = new Account("2", "userY@gcc.edu", "pswd", "user");
+        newAccount2.saveOrUpdateAccount();
+        Account newAccount3 = new Account("3", "userZ@gcc.edu", "Pass", "notusername");
+        newAccount3.saveOrUpdateAccount();
+
+        ArrayList<Account> accountsFromDB = Account.getAccountsByUsernameFromDB("user");
+
+        System.out.println(accountsFromDB);
+        assertEquals(accountsFromDB.size(), 2);
+        assertTrue(accountsFromDB.get(0).login("pw"));
+        assertFalse(accountsFromDB.get(0).login("pswd"));
+        assertTrue(accountsFromDB.get(1).login("pswd"));
+
+
+
+
+
+    }
+
 }

@@ -252,7 +252,6 @@ public class API {
      * Loads the schedules saved in the database for a given account
      */
     public void loadSavedSchedules(){
-//        System.out.println("WRITE THE LOAD METHOD");
         ArrayList<Integer> scheduleIDs = Schedule.getAllScheduleIDsFromDB();
         for(int i: scheduleIDs){
             try {
@@ -263,6 +262,12 @@ public class API {
         }
     }
 
+
+
+
+
+
+
     /**
      * Handles quiting/closing things in the api
      */
@@ -270,27 +275,37 @@ public class API {
     public void quit(boolean testing){
         //TODO Make sure that everything closes nicely?... KEEP Checking
         if(!testing) {
-            ArrayList<Schedule> schedules = main.getAccount().getSchedules();
-            for (Schedule sch : schedules) {
-                sch.saveSchedule();
-            }
+            saveSchedules();
         }
     }
 
+    private void saveSchedules(){
+        ArrayList<Schedule> schedules = main.getAccount().getSchedules();
+        for (Schedule sch : schedules) {
+            sch.saveSchedule();
+        }
+    }
 
+    public void loadAccount(String username, String password){
+        try {
+            ArrayList<Account> accounts = Account.getAccountsByUsernameFromDB(username);
+            for(int i = 0; i < accounts.size(); i++){
+                if(accounts.get(i).login(password)){
+                    main.changeAccount(accounts.get(i));
+                    return;
+                }
+            }
+        } catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
 
+    public void logout() {
+        saveSchedules();
+        main.changeAccount(null);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void setDummyAccount(){
+        main.changeAccount(new Account("DummyAccount", "user@gcc.edu", "dummyPassword", "dummyUsername"));
+    }
 }

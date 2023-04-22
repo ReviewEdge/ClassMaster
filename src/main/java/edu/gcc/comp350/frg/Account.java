@@ -68,6 +68,7 @@ public class Account {
     }
 
     public boolean login(String checkPassword){
+//        System.out.println("LOGIN???");
         return false;
     }
     public boolean logout(){
@@ -155,8 +156,50 @@ public class Account {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
+    public static ArrayList<Account> getAccountsByUsernameFromDB(String username) throws Exception{
+        String sql = "SELECT * FROM accounts1 WHERE username = ?";
+
+        try (Connection conn = DatabaseConnector.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            ArrayList<Account> accounts = new ArrayList<>();
+
+            while(rs.next()) {
+                String schedulesString = rs.getString("schedules");
+
+                JSONObject schedulesJSON = new JSONObject(schedulesString);
+                JSONArray schedulesJSONArray = schedulesJSON.optJSONArray("schedulesString");
+
+                ArrayList<Schedule> newSchedules = new ArrayList<>();
+                if (schedulesJSONArray != null) {
+                    for (int i = 0; i < schedulesJSONArray.length(); i++) {
+                        newSchedules.add(Schedule.getScheduleByIDFromDB((Integer) schedulesJSONArray.get(i)));
+                    }
+                }
+
+                accounts.add(new Account(
+                        rs.getInt("ID"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("username"),
+                        newSchedules
+                ));
+            }
+
+            conn.close();
+            return accounts;
+
+        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            return null;
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
