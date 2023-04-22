@@ -1,12 +1,17 @@
 package edu.gcc.comp350.frg;
 
+import org.apache.tools.ant.taskdefs.modules.Link;
+
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class CmdLineInterface {
 
-    //Scanner for user input
-    private static Scanner scn;
+    private Scanner scn;
+    private API api;
+    private boolean testing;
+    private Screen screen;
 
     // Enum used to determine which "Screen" the user is looking at
     // This defines what actions they can take and what each action does
@@ -16,13 +21,35 @@ public class CmdLineInterface {
         SEARCH
     }
 
-    /**
-     //Used to run the interface without testing
-     //Mainly a helper method so other coders don't need to know what to put in for normal use
+    public CmdLineInterface(API api){
+        this.api = api;
+        this.testing = false;
+
+        //Sets the current Screen, screen to be the list of loaded schedules initially
+        screen = Screen.SCHEDULE_LIST;
+    }
+
+    /** Create a CLI object with optional testing parameters
+     *
      * @param api is the interface which allows the front-end to talk to the actual structures
+     * @param testing is a boolean variable to delineate if it should take user input or read from a file
+     * @param filename is the file which has preloaded commands
      */
-    public static void runInterface(API api){
-        runInterface(api, false, "");
+    public CmdLineInterface(API api, boolean testing, String filename){
+        this.api = api;
+        //For testing, Initiates a new scanner and sets it to reading from testFile
+        this.testing = testing;
+        if(testing){
+            try {
+                scn = new Scanner(new File(filename));
+            } catch(Exception e){
+                System.out.println(e.toString());
+                System.out.println("Test File not found");
+                return;
+            }
+        }
+        //Sets the current Screen, screen to be the list of loaded schedules initially
+        screen = Screen.SCHEDULE_LIST;
     }
 
     /**
@@ -31,23 +58,9 @@ public class CmdLineInterface {
      *      The Schedule List Screen is where they can view the list of schedules they've made and (WIP) make changes to their account
      *      The Calendar Screen is where the user can view the classes for a schedule, remove classes and start a search
      *      The Search Screen is where the user can make searches and add filters to their search
-     *
-     * @param api is the interface which allows the front-end to talk to the actual structures
-     * @param testing is a boolean variable to delineate if it should take user input or read from a file
-     * @param testFile is the file which has preloaded commands
      */
 
-    public static void runInterface(API api, boolean testing, String testFile){
-        //For testing, Initiates a new scanner and sets it to reading from testFile
-        if(testing){
-            try {
-                scn = new Scanner(new File(testFile));
-            } catch(Exception e){
-                System.out.println(e);
-                System.out.println("Test File not found");
-                return;
-            }
-        }
+    public void runInterface(){
 
         //Loads schedules which have been saved to the database (ignored if testing)
         if(!testing) {
@@ -58,11 +71,7 @@ public class CmdLineInterface {
 //        System.out.println("Your Journey starts at edu.gcc.comp350.frg");
 //        System.out.println("And Its COMPLETELY FREE, until you bribe us");
 
-
-        //Sets the current Screen, screen to be the list of loaded schedules initially
-        Screen screen = Screen.SCHEDULE_LIST;
-
-        displayScheduleList(api.getSchedules());
+        displayScheduleList();
 
         //This is the input loop. While the user doesn't quit it will keep looping
         boolean notQuit = true;
@@ -84,7 +93,7 @@ public class CmdLineInterface {
             }
 
             //Prompts the user for their next command
-            cmd = getInput("" + inputSymbol + ": ", testing);
+            cmd = getInput("" + inputSymbol + ": ");
             //Parses it in to be read as commands and parameters
             String[] cmdSplit = cmd.split(" ");
 
@@ -96,250 +105,347 @@ public class CmdLineInterface {
             // Quits if "quit" is entered
             if(cmdSplit[0].toLowerCase().contains("quit")){
                 notQuit = false;
-                System.out.println("Thank you for using ClassMaster");
-                api.quit(testing);
-                if(testing){
-                    scn.close();
-                }
-                continue;
+                handleQuitting();
             }
 
             // Handles the Help Cmd for each screen, outputting legal commands for the given screen
-            if(cmdSplit[0].toLowerCase().contains("help")) {
-                if(screen == Screen.SCHEDULE_LIST) {
-                    System.out.println("Schedule Page Help:");
-                    System.out.println("- CreateSchedule \"Name\": Creates a schedule with the given name, and semester: (in the form: spring 2023)");
-                    System.out.println("- ViewSchedules: Shows the list of all your schedules");
-                    System.out.println("- Load \"number\": Loads the schedule of the given corresponding number from the list");
-                }
-                else if(screen == Screen.CALENDAR) {
-                    System.out.println("Calendar Page Help:");
-                    System.out.println("- ViewCalendar: Displays the list of classes");
-                    System.out.println("- GetDescription \"number\": Displays the description of the class at position \"number\"");
-                    System.out.println("- RenameSchedule \"NewName\": Changes the current schedule's name to \"NewName\"");
-//                        System.out.println("- changeSemester \"NewSemester\": Changes the current schedule's year to \"NewSemester\""); // Shouldn't really be possible
-                    System.out.println("- Remove \"number\": Removes the class at position \"number\" from the schedule");
-                    System.out.println("- MakeSearch: Opens a search bar");
-                    System.out.println("- Back: Returns to the list of schedules");
-                }
-                else if(screen == Screen.SEARCH) {
-                    System.out.println("Search Page Help:"); //TODO
-                    System.out.println("- Search \"SearchTerms\": Makes a search for the \"SearchTerms\"");
-                    System.out.println("- AddClass \"number\": Adds the class at position \"number\" to the Schedule");
-                    System.out.println("- AddFilter \"hypothetical Parameters\": WIP");
-                    System.out.println("- RemoveFilter \"hypothetical Parameters\": WIP");
-                    System.out.println("- ClearFilter \"hypothetical Parameters\": WIP");
-                    System.out.println("- Back: Returns to the Calendar");
-                }
+            else if(cmdSplit[0].toLowerCase().contains("help")) {
+                displayHelp();
             }
 
-            //Handles all the schedule list commands
             else if(screen == Screen.SCHEDULE_LIST){
-                // Loads the selected Schedule and activates the calendar view screen
-                if (cmdSplit[0].toLowerCase().contains("load")){
-                    //Errors if the command wasn't format correctly, then loops
-                    if(cmdSplit.length > 1) {
-                        int i = Integer.parseInt(cmdSplit[1]);
-                        try {
-                            api.loadSchedule(i);
-                            screen = Screen.CALENDAR;
-                            displayCalendar(api.getCurrentSchedule());
-                        } catch (Exception e) {
-                            System.out.println(e.toString());
-                        }
-                    }
-                    else {
-                        System.out.println("Invalid Load Parameter, Please use a number");
-                    }
-                }
-                // Handles the createSchedule command: creates a schedule with parameters "name" and "semester"
-                else if (cmdSplit[0].toLowerCase().contains("createschedule")){
-                    if(cmdSplit.length >= 4){ // Change this from a try catch to normal if, Why'd I do that
-                        String semester = cmdSplit[2] + " " + cmdSplit[3];
-                        try {
-                            Schedule sch = api.createSchedule(cmdSplit[1], semester);
-                            api.loadSchedule(api.getNumSchedules()); //Could be faster by passing in a Schedule, here at least
-                            displayCalendar(sch);
-                            screen = Screen.CALENDAR;
-
-                        } catch(Exception e){
-                            System.out.println(e.toString());
-                        }
-                    }
-                    else {
-                        System.out.println("Invalid createSchedule Parameter, Please include a name and semester");
-                        System.out.println("All possible semesters are: " + Term.getValidSemesters());
-                    }
-                }
-                // Handles the viewSchedule Command: Displaying all schedules for the account
-                else if (cmdSplit[0].toLowerCase().contains("viewschedules")){
-                    displayScheduleList(api.getSchedules());
-                }
-                // If the command is unknown, show an error msg
-                else{
-                    System.out.println("Unknown Command, Type \"Help\" for a list of commands");
-                }
+                handleScheduleListScreen(cmdSplit);
             }
-            //Handles all calendar commands
             else if(screen == Screen.CALENDAR){
-                // Handles the makeSearch command: moves the current screen to search
-                if (cmdSplit[0].toLowerCase().contains("makesearch")){
-                    screen = Screen.SEARCH;
-                }
-                //Handles the viewCalendar command: Displays the current calendar again
-                else if (cmdSplit[0].toLowerCase().contains("viewcalendar")){
-                    displayCalendar(api.getCurrentSchedule());
-
-                }
-                //Handles the getDescription # command: Prints the description of the # class
-                else if (cmdSplit[0].toLowerCase().contains("getdescription")){ // Make Exception messages clearer
-                    try {
-
-                        System.out.println("Getting Description: ");
-                        int i = Integer.parseInt(cmdSplit[1]);
-                        System.out.println(api.getClassInfo(i));
-                    }catch(Exception e){
-                        System.out.println("Invalid getDescription Parameter, Please include a valid index number for the class");
-                    }
-                }
-                //Handles the remove # command: removes class # from the schedule
-                else if (cmdSplit[0].toLowerCase().contains("remove")){ // Make Exception messages clearer
-                    try {
-                        int i = Integer.parseInt(cmdSplit[1]);
-                        System.out.println("Removing Class " + i +": ");
-                        api.removeClass(i-1);
-                        displayCalendar(api.getCurrentSchedule());
-                    }catch(Exception e){
-                        System.out.println("Invalid remove Parameter, Please include a valid index number for the class");
-                    }
-                }
-                //Handles renaming the Schedule
-                else if (cmdSplit[0].toLowerCase().contains("renameschedule")){
-                    try {
-                        String name = cmdSplit[1];
-                        System.out.println("Renaming schedule to " + name);
-                        api.renameCurrentSchedule(name);
-                        displayCalendar(api.getCurrentSchedule());
-                    }catch(Exception e){
-                        System.out.println("Invalid renameSchedule Parameter, Please include a new name");
-                    }
-                }
-                // Shouldn't really be possible, so for now its Not
-//                else if (cmdSplit[0].toLowerCase().contains("changesemester")){
-//                    try {
-//                        String semester = cmdSplit[1]; // Interpret as a Semester
-//                        System.out.println("Changing semester to " + semester);
-//                        api.changeCurrentSCheduleSemester(name);
-//                    }catch(Exception e){
-//                        System.out.println("Invalid changeSemester Parameter, Please include a new semester");
-//                    }
-//                }
-                // Handles the back command: Returns to the Schedule List screen
-                else if (cmdSplit[0].toLowerCase().contains("back")){
-                    System.out.println("Returning to Schedule List");
-                    displayScheduleList(api.getSchedules());
-                    screen = Screen.SCHEDULE_LIST;
-                }
-                // If the command is unknown, show an error msg
-                else{
-                    System.out.println("Unknown Command, Type \"Help\" for a list of commands");
-                }
+                handleCalendarScreen(cmdSplit);
             }
-            //Handles all Search commands
             else if(screen == Screen.SEARCH){
-                //handles the viewSchedule command: returns to the calendar view and displays the current schedule
-                if (cmdSplit[0].toLowerCase().contains("viewschedule")){
-                    System.out.println("Returning to Calendar: ");
-                    displayCalendar(api.getCurrentSchedule());
-                    screen = Screen.CALENDAR;
-                }
-                //Handles the search command: makes a search for the parameter
-                else if (cmdSplit[0].toLowerCase().contains("search")){
-                    if(cmdSplit.length > 1){
-                        StringBuilder s = new StringBuilder();
-                        for(int i  = 1; i < cmdSplit.length; i++){
-                            s.append(cmdSplit[i]);
-                            if(i < cmdSplit.length - 1){
-                                s.append(" ");
-                            }
-                        }
-                        try {
-                            api.makeSearch(s.toString());
-                            displaySearch(api.getSearchResults());
-                        } catch (Exception e){
-                            System.out.println(e.toString());
-                        }
-                    }
-                    else{
-                        System.out.println("Invalid Search parameters, Please try again or use Help");
-                    }
-                }
-                // Handles addFilter command: delegated to the helper method
-                else if (cmdSplit[0].toLowerCase().contains("addfilter")){
-                    handleAddFilter(api, testing);
-                }
-                // Handles the clearFilter command: clears all current filters
-                else if (cmdSplit[0].toLowerCase().contains("clearfilter")){
-                    System.out.println("ClearingFilter");
-                    api.clearFilters();
-                }
-                // Handles the removeFilter command: Removes all filters of a certain type
-                else if (cmdSplit[0].toLowerCase().contains("removefilter")){
-                    System.out.println("\nWhat type of filter would you like to remove: ");
-                    System.out.println("Will Remove ALL filters of that type");
-                    System.out.println("1: Course Name (Any fragment)");
-                    System.out.println("2: Course Code (Any fragment, ie. ACCT 201, or COMP)");
-                    System.out.println("3: Timeslots (ie. Only classes that are held during 10:00am-3:00pm on Monday");
-                    System.out.println("4: Professor");
-//                    System.out.println("5: Credits (ie. No more than 3, No less than 2)"); //TODO WIP/Future issue
-                    System.out.println("Back: return to Search");
-                    try {
-                        String outputFilterType = getInput("Enter a number: ", testing);
-                        System.out.println();
-                        if(outputFilterType.equalsIgnoreCase("quit") || outputFilterType.equalsIgnoreCase("back")){
-                            return;
-                        }
-                        int num = Integer.parseInt(outputFilterType);
-                        api.removeFilter(num);
-                    } catch(Exception e){
-                        System.out.println("Please enter a valid number between 1 and 6");
+                handleSearchScreen(cmdSplit);
+            }
+        }
+    }
 
+    /**
+     * Handles determining the command for the Schedule screen
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleScheduleListScreen(String[] cmdSplit) {
+        // Loads the selected Schedule and activates the calendar view screen
+        if (cmdSplit[0].toLowerCase().contains("load")){
+            loadSchedule(cmdSplit);
+        }
+        // Handles the createSchedule command: creates a schedule with parameters "name" and "semester"
+        else if (cmdSplit[0].toLowerCase().contains("createschedule")){
+            handleScheduleCreation(cmdSplit);
+        }
+        // Handles the viewSchedule Command: Displaying all schedules for the account
+        else if (cmdSplit[0].toLowerCase().contains("viewschedules")){
+            displayScheduleList();
+        }
+        // If the command is unknown, show an error msg
+        else{
+            System.out.println("Unknown Command, Type \"Help\" for a list of commands");
+        }
+    }
+
+    /**
+     * Handles determining the command for the Calendar screen
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleCalendarScreen(String[] cmdSplit) {
+        // Handles the makeSearch command: moves the current screen to search
+        if (cmdSplit[0].toLowerCase().contains("makesearch")){
+            screen = Screen.SEARCH;
+        }
+        //Handles the viewCalendar command: Displays the current calendar again
+        else if (cmdSplit[0].toLowerCase().contains("viewcalendar")){
+            displayCalendar(api.getCurrentSchedule());
+
+        }
+        //Handles the getDescription # command: Prints the description of the # class
+        else if (cmdSplit[0].toLowerCase().contains("getdescription")){ // Make Exception messages clearer
+            getCourseDescription(cmdSplit);
+        }
+        //Handles the remove # command: removes class # from the schedule
+        else if (cmdSplit[0].toLowerCase().contains("remove")){ // Make Exception messages clearer
+            handleRemoveCourse(cmdSplit);
+        }
+        //Handles renaming the Schedule
+        else if (cmdSplit[0].toLowerCase().contains("renameschedule")){
+            handleRenamingSchedule(cmdSplit);
+        }
+        // Handles the back command: Returns to the Schedule List screen
+        else if (cmdSplit[0].toLowerCase().contains("back")){
+            System.out.println("Returning to Schedule List");
+            displayScheduleList();
+            screen = Screen.SCHEDULE_LIST;
+        }
+        // If the command is unknown, show an error msg
+        else{
+            System.out.println("Unknown Command, Type \"Help\" for a list of commands");
+        }
+    }
+
+    /**
+     * Handles determining the command for the Search screen
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleSearchScreen(String[] cmdSplit) {
+        //handles the viewSchedule command: returns to the calendar view and displays the current schedule
+        if (cmdSplit[0].toLowerCase().contains("viewschedule")){
+            System.out.println("Returning to Calendar: ");
+            displayCalendar(api.getCurrentSchedule());
+            screen = Screen.CALENDAR;
+        }
+        //Handles the search command: makes a search for the parameter
+        else if (cmdSplit[0].toLowerCase().contains("search")){
+            handleSearch(cmdSplit);
+        }
+        // Handles addFilter command: delegated to the helper method
+        else if (cmdSplit[0].toLowerCase().contains("addfilter")){
+            handleAddFilter();
+        }
+        // Handles the clearFilter command: clears all current filters
+        else if (cmdSplit[0].toLowerCase().contains("clearfilter")){
+            System.out.println("ClearingFilter");
+            api.clearFilters();
+        }
+        // Handles the removeFilter command: Removes all filters of a certain type
+        else if (cmdSplit[0].toLowerCase().contains("removefilter")){
+            handleRemovingFilter();
+        }
+        // Handles the addClass command: adds the class at position # to the current schedule
+        else if (cmdSplit[0].toLowerCase().contains("addclass")){
+            handleAddClass(cmdSplit);
+        }
+        // Handles the back command: returns to the calendar view screen
+        else if (cmdSplit[0].toLowerCase().contains("back")){
+            System.out.println("Returning to Calendar View");
+            displayCalendar(api.getCurrentSchedule());
+            screen = Screen.CALENDAR;
+        }
+        // If the command is unknown, show an error msg
+        else{
+            System.out.println("Unknown Command, Type \"Help\" for a list of commands");
+        }
+    }
+
+    /**
+     * Handles adding a class to the schedule by parsing the user input and telling the api
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleAddClass(String[] cmdSplit) {
+        if(!api.hasCurrentSearch()){
+            System.out.println("Make a search first, before trying to add a class");
+        }
+        else {
+            if (cmdSplit.length > 1) {
+                try {
+                    int i = Integer.parseInt(cmdSplit[1]) - 1;
+                    try {
+                        api.addClass(i);
+                        System.out.println("Class Added");
+                    } catch (Exception e) {
+                        System.out.println(e.toString());
                     }
+                } catch (Exception e) {
+                    System.out.println("Could not interpret second argument as a number, Please try again");
                 }
-                // Handles the addClass command: adds the class at position # to the current schedule
-                else if (cmdSplit[0].toLowerCase().contains("addclass")){
-                    if(!api.hasCurrentSearch()){
-                        System.out.println("Make a search first, before trying to add a class");
-                    }
-                    else {
-                        if (cmdSplit.length > 1) {
-                            try {
-                                int i = Integer.parseInt(cmdSplit[1]) - 1;
-                                try {
-                                    api.addClass(i);
-                                    System.out.println("Class Added");
-                                } catch (Exception e) {
-                                    System.out.println(e.toString());
-                                }
-                            } catch (Exception e) {
-                                System.out.println("Could not interpret second argument as a number, Please try again");
-                            }
-                        } else {
-                            System.out.println("Invalid addClass parameters, Please try again or use Help");
-                        }
-                    }
+            } else {
+                System.out.println("Invalid addClass parameters, Please try again or use Help");
+            }
+        }
+    }
+
+    /**
+     * Handles removing a filter, getting correct user input and telling the api
+     */
+    private void handleRemovingFilter() {
+        System.out.println("\nWhat type of filter would you like to remove: ");
+        System.out.println("Will Remove ALL filters of that type");
+        System.out.println("1: Course Name (Any fragment)");
+        System.out.println("2: Course Code (Any fragment, ie. ACCT 201, or COMP)");
+        System.out.println("3: Timeslots (ie. Only classes that are held during 10:00am-3:00pm on Monday");
+        System.out.println("4: Professor");
+//        System.out.println("5: Credits (ie. No more than 3, No less than 2)"); //TODO WIP/Future issue
+        // Change error Message when changing these
+        System.out.println("Back: return to Search");
+        while(true) {
+            try {
+                String outputFilterType = getInput("Enter a number: ");
+                System.out.println();
+                if (outputFilterType.equalsIgnoreCase("quit") || outputFilterType.equalsIgnoreCase("back")) {
+                    System.out.println("Returning to search");
+                    return;
                 }
-                // Handles the back command: returns to the calendar view screen
-                else if (cmdSplit[0].toLowerCase().contains("back")){
-                    System.out.println("Returning to Calendar View");
-                    displayCalendar(api.getCurrentSchedule());
-                    screen = Screen.CALENDAR;
-                }
-                // If the command is unknown, show an error msg
-                else{
-                    System.out.println("Unknown Command, Type \"Help\" for a list of commands");
+                int num = Integer.parseInt(outputFilterType);
+                api.removeFilter(num);
+                System.out.println("Filter Removed, Returning to search");
+                return;
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number between 1 and 4");
+
+            }
+        }
+    }
+
+    /**
+     * Handles searching: parsing the search and sending it to the api.
+     * Then printing the latest search results
+     *
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleSearch(String[] cmdSplit) {
+        if(cmdSplit.length > 1){
+            StringBuilder s = new StringBuilder();
+            for(int i = 1; i < cmdSplit.length; i++){
+                s.append(cmdSplit[i]);
+                if(i < cmdSplit.length - 1){
+                    s.append(" ");
                 }
             }
+            try {
+                api.makeSearch(s.toString());
+                displaySearch();
+            } catch (Exception e){
+                System.out.println(e.toString());
+            }
+        }
+        else{
+            System.out.println("Invalid Search parameters, Please try again or use Help");
+        }
+    }
+
+    /** Handles renaming a schedule, aka parsing user input and telling the api
+     *
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleRenamingSchedule(String[] cmdSplit) {
+        try {
+            String name = cmdSplit[1];
+            System.out.println("Renaming schedule to " + name);
+            api.renameCurrentSchedule(name);
+            displayCalendar(api.getCurrentSchedule());
+        }catch(Exception e){
+            System.out.println("Invalid renameSchedule Parameter, Please include a new name");
+        }
+    }
+
+    /**
+     * Handles removing a course from the current schedule
+     *
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleRemoveCourse(String[] cmdSplit) {
+        try {
+            int i = Integer.parseInt(cmdSplit[1]);
+            System.out.println("Removing Class " + i +": ");
+            api.removeClass(i-1);
+            displayCalendar(api.getCurrentSchedule());
+        }catch(Exception e){
+            System.out.println("Invalid remove Parameter, Please include a valid index number for the class");
+        }
+    }
+
+    /**
+     * Prints the description for the course corresponding to the user input
+     *
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void getCourseDescription(String[] cmdSplit) {
+        try {
+            System.out.println("Getting Description: ");
+            int i = Integer.parseInt(cmdSplit[1]);
+            System.out.println(api.getClassInfo(i));
+        }catch(Exception e){
+            System.out.println("Invalid getDescription Parameter, Please include a valid index number for the class");
+        }
+    }
+
+    /** Handles reading in the user input for schedule creation and
+     *  communicating with the API
+     *
+     * @param cmdSplit Array of User input split on spaces
+     */
+    private void handleScheduleCreation(String[] cmdSplit) {
+        if(cmdSplit.length >= 4){ // Change this from a try catch to normal if, Why'd I do that
+            String semester = cmdSplit[2] + " " + cmdSplit[3];
+            try {
+                Schedule sch = api.createSchedule(cmdSplit[1], semester);
+                api.loadSchedule(api.getNumSchedules()); //Could be faster by passing in a Schedule, here at least
+                displayCalendar(sch);
+                screen = Screen.CALENDAR;
+
+            } catch(Exception e){
+                System.out.println(e.toString());
+            }
+        }
+        else {
+            System.out.println("Invalid createSchedule Parameter, Please include a name and semester");
+            System.out.println("All possible semesters are: " + Term.getValidSemesters());
+        }
+    }
+
+    /**
+     * Displays all the commands possible for the current screen the user's viewing
+     */
+    private void displayHelp() {
+        if(screen == Screen.SCHEDULE_LIST) {
+            System.out.println("Schedule Page Help:");
+            System.out.println("- CreateSchedule \"Name\": Creates a schedule with the given name, and semester: (in the form: spring 2023)");
+            System.out.println("- ViewSchedules: Shows the list of all your schedules");
+            System.out.println("- Load \"number\": Loads the schedule of the given corresponding number from the list");
+        }
+        else if(screen == Screen.CALENDAR) {
+            System.out.println("Calendar Page Help:");
+            System.out.println("- ViewCalendar: Displays the list of classes");
+            System.out.println("- GetDescription \"number\": Displays the description of the class at position \"number\"");
+            System.out.println("- RenameSchedule \"NewName\": Changes the current schedule's name to \"NewName\"");
+//                        System.out.println("- changeSemester \"NewSemester\": Changes the current schedule's year to \"NewSemester\""); // Shouldn't really be possible
+            System.out.println("- Remove \"number\": Removes the class at position \"number\" from the schedule");
+            System.out.println("- MakeSearch: Opens a search bar");
+            System.out.println("- Back: Returns to the list of schedules");
+        }
+        else if(screen == Screen.SEARCH) {
+            System.out.println("Search Page Help:"); //TODO
+            System.out.println("- Search \"SearchTerms\": Makes a search for the \"SearchTerms\"");
+            System.out.println("- AddClass \"number\": Adds the class at position \"number\" to the Schedule");
+            System.out.println("- AddFilter \"hypothetical Parameters\": WIP");
+            System.out.println("- RemoveFilter \"hypothetical Parameters\": WIP");
+            System.out.println("- ClearFilter \"hypothetical Parameters\": WIP");
+            System.out.println("- Back: Returns to the Calendar");
+        }
+    }
+
+    /**
+     * Handles anything that needs to be done upon quitting the application
+     */
+    private void handleQuitting() {
+        System.out.println("Thank you for using ClassMaster");
+        api.quit(testing);
+        if(testing){
+            scn.close();
+        }
+    }
+
+    /** Loads the schedule specified by the user input
+     *
+     * @param cmdSplit Array of user input split on spaces
+     */
+    private void loadSchedule(String[] cmdSplit) {
+        //Errors if the command wasn't format correctly, then loops
+        if(cmdSplit.length > 1) {
+            int i = Integer.parseInt(cmdSplit[1]);
+            try {
+                api.loadSchedule(i);
+                screen = Screen.CALENDAR;
+                displayCalendar(api.getCurrentSchedule());
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        }
+        else {
+            System.out.println("Invalid Load Parameter, Please use a number");
         }
     }
 
@@ -347,10 +453,9 @@ public class CmdLineInterface {
      *  This method prompts the user for input and returns the next line they enter
      *
      * @param s The string to print out as a prompt for user entry
-     * @param testing whether or not to read
      * @return the next command to run
      */
-    public static String getInput(String s, boolean testing){
+    public String getInput(String s){
         System.out.print(s);
         if(!testing) {
             Scanner scn = new Scanner(System.in);
@@ -367,7 +472,7 @@ public class CmdLineInterface {
      *
      * @return the next command to be run
      */
-    public static String askTest(){
+    public String askTest(){
         if(scn.hasNextLine()){
             String str = scn.nextLine();
             System.out.println("(Test) -> " + str);
@@ -384,7 +489,8 @@ public class CmdLineInterface {
      * @param schedule The schedule to print to the console
      */
 
-    public static void displayCalendar(Schedule schedule){ //TODO make it clearer which classes are which index for remove
+    public void displayCalendar(Schedule schedule){
+        //TODO make it clearer which classes are which index for remove
         // Prints the header
         System.out.println();
         System.out.println(schedule.toString());
@@ -401,7 +507,6 @@ public class CmdLineInterface {
         ArrayList<Class> cls = schedule.getClasses();
 
         // Determines what classes meet on what days of the week
-        //TODO Figure out a way to sort classes in the list
         ArrayList<LinkedList<Class>> daysOfTheWeek = new ArrayList<>();
         for(int i = 0; i < 5; i++){
             daysOfTheWeek.add(new LinkedList<>());
@@ -412,6 +517,8 @@ public class CmdLineInterface {
                 daysOfTheWeek.get(t.getDay().ordinal() - 1).add(c);
             }
         }
+
+        daysOfTheWeek = sortDaysByTime(daysOfTheWeek);
 
         // Adds the classes in a row based on time
         for(int i = 0; i < cls.size(); i++){
@@ -442,11 +549,44 @@ public class CmdLineInterface {
     }
 
     /**
-     * Prints the schedules in the list with index markers
-     *
-     * @param schedules is the list of schedules in the account
+     *  Sorts each day's classes by time
+     * @param days The ArrayList of LinkedLists which holds all the classes in the schedule that match that day's index
+     * @return the new days array
      */
-    public static void displayScheduleList(ArrayList<Schedule> schedules){
+    private ArrayList<LinkedList<Class>> sortDaysByTime(ArrayList<LinkedList<Class>> days){
+
+        for(int i = 0 ; i < days.size(); i++){
+            // Create a copy and then sort it
+            LinkedList<Class> sortedDay = new LinkedList<>();
+            LinkedList<Class> dayOfInterest = new LinkedList<>();
+            for(Class c: days.get(i)){
+                dayOfInterest.add(new Class(c));
+            }
+            int k = 0;
+            while(k < dayOfInterest.size()){
+                int nextClass = 0;
+                Timeslot earliest = dayOfInterest.get(nextClass).getTimeOnDay(i+1);
+                for(int j = 0; j < dayOfInterest.size(); j++){
+                    Timeslot ts = dayOfInterest.get(j).getTimeOnDay(i+1);
+                    if(ts.compareTo(earliest) < 0) {
+                        earliest = ts;
+                        nextClass = j;
+                    }
+                }
+                sortedDay.add(dayOfInterest.remove(nextClass));
+            }
+            days.set(i, sortedDay);
+        }
+
+
+        return days;
+    }
+
+    /**
+     * Prints the schedules in the list with index markers
+     */
+    public void displayScheduleList(){
+        ArrayList<Schedule> schedules = api.getSchedules();
         System.out.println("Schedules:");
         for(int i = 1; i <= schedules.size(); i++){
             System.out.println(i + ": " + schedules.get(i-1).getName());
@@ -454,10 +594,9 @@ public class CmdLineInterface {
 
     /**
      *  Displays the list of classes with index markers
-     *
-     * @param classes a list of classes returned from a search
      */
-    public static void displaySearch(ArrayList<Class> classes){
+    public void displaySearch(){
+        ArrayList<Class> classes = api.getSearchResults();
         System.out.println("Search Results:");
         for(int i = 1; i <= classes.size(); i++){
             System.out.println(i + ": " + classes.get(i-1));
@@ -470,10 +609,8 @@ public class CmdLineInterface {
      * the arguments for the filter. It loops until "quit" or "back" so that
      * the user can enter multiple filters or correct for poor input
      *
-     * @param api is the api which the interface is working through
-     * @param testing if the program is being run through an automated test
      */
-    public static void handleAddFilter(API api, boolean testing){
+    public void handleAddFilter(){
         while(true) {
             // Prints out filter options
             System.out.println("\nWhat type of filter would you like to add: ");
@@ -486,7 +623,7 @@ public class CmdLineInterface {
             System.out.println("Back: return to Search");
             try {
                 //Gets the filter type the user wants to use
-                String outputFilterType = getInput("Enter a number: ", testing);
+                String outputFilterType = getInput("Enter a number: ");
                 System.out.println();
                 if(outputFilterType.equalsIgnoreCase("quit") || outputFilterType.equalsIgnoreCase("back")){
                     return;
@@ -496,12 +633,12 @@ public class CmdLineInterface {
                 //These handle each type of filter to be added
                 if(num == 1){
                     System.out.println("Please enter the Course Name to filter by: ");
-                    String courseName = getInput(": ",testing);
+                    String courseName = getInput(": ");
                     api.addFilter(1, courseName);
                 }
                 else if (num == 2) {
                     System.out.println("Please enter the Course code to filter by: ");
-                    String courseCode = getInput(": ",testing);
+                    String courseCode = getInput(": ");
                     api.addFilter(2, courseCode);
                 }
                 else if (num == 3) {
@@ -511,7 +648,7 @@ public class CmdLineInterface {
                     System.out.println("Example (Monday from 12:00pm-3:30pm): M 12:00-15:30");
                     try {
                         //This formats the string entered for the api
-                        String in = getInput(": ", testing);
+                        String in = getInput(": ");
                         String day = in.split(" ")[0];
                         String startTime = in.split(" ")[1].split("-")[0];
                         String endTime = in.split(" ")[1].split("-")[1];
@@ -522,7 +659,7 @@ public class CmdLineInterface {
                 }
                 else if (num == 4){
                     System.out.println("Please enter the Professor to filter by: ");
-                    String prof = getInput(": ",testing);
+                    String prof = getInput(": ");
                     api.addFilter(4, prof);
                 }
                 else if (num == 5){

@@ -76,6 +76,7 @@ public class Main {
         Main main = new Main();
         API api = new API(main);
 
-        CmdLineInterface.runInterface(api);
+        CmdLineInterface CLI = new CmdLineInterface(api);
+        CLI.runInterface();
     }
 }

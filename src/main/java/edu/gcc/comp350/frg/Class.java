@@ -21,11 +21,15 @@ public class Class {
     private String description;
 
     //TODO: is this doing a proper deep copy?
+    // @Person: I think so, I changed to loop through timeslots -Casey
     public Class(Class c) {
         this.code = c.getCode();
         this.title = c.getTitle();
         this.referenceNum = c.getReferenceNum();
-        this.timeSlots = c.getTimeSlots();
+        timeSlots = new ArrayList<>();
+        for(Timeslot t: c.getTimeSlots()){
+            timeSlots.add(new Timeslot(t));
+        }
         this.term = c.getTerm();
         this.professor = c.getProfessor();
         this.department = c.getDepartment();
@@ -230,6 +234,15 @@ public class Class {
 
     public ArrayList<Timeslot> getTimeSlots() {
         return timeSlots;
+    }
+
+    public Timeslot getTimeOnDay(int day){
+        for(Timeslot t: timeSlots){
+            if(t.getDay().ordinal() == day){
+                return t;
+            }
+        }
+        return null;
     }
 
     public Term getTerm() {
