@@ -68,8 +68,9 @@ public class Account {
     }
 
     public boolean login(String checkPassword){
+        String passwordHash = checkPassword;
 //        System.out.println("LOGIN???");
-        return false;
+        return passwordHash.equals(password);
     }
     public boolean logout(){
         return false;

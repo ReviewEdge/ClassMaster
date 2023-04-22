@@ -58,7 +58,7 @@ public class CmdLineInterface {
 
     public void runInterface(){
 
-        boolean accountFlag = false;
+        boolean accountFlag = true;
 
         System.out.println("Welcome to ClassMaster!");
 //        System.out.println("Your Journey starts at edu.gcc.comp350.frg");

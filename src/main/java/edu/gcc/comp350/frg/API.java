@@ -274,7 +274,9 @@ public class API {
     public void quit(boolean testing){
         //TODO Make sure that everything closes nicely?... KEEP Checking
         if(!testing) {
-            saveSchedules();
+            if(main.getAccount() != null) {
+                saveSchedules();
+            }
         }
     }
 
