@@ -1,3 +1,4 @@
+createAccount addFiltersTest password
 createSchedule sc Spring 2021
 makeSearch
 addFilter

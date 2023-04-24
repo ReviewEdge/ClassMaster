@@ -1,3 +1,4 @@
+createAccount MultipleSchedulesTest password
 createSchedule 1st Spring 2021
 makeSearch
 Search ACCT 201 A
@@ -11,3 +12,7 @@ makeSearch
 Search ACCT 201 B
 addclass 1
 back
+back
+deleteAccount
+yes
+quit

@@ -1,3 +1,4 @@
+createAccount classConflictTest password
 createSchedule 1st Fall 2020
 makeSearch
 Search ACCT 201 A
@@ -6,4 +7,8 @@ back
 makeSearch
 Search General Biology
 addClass 1
+back
+back
+deleteAccount
+yes
 quit

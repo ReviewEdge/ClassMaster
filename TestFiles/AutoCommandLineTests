@@ -1,3 +1,4 @@
+createAccount AutoCommandLineTests password
 createSchedule Name Fall 2020
 makeSearch
 Search ACCT 201 A
@@ -11,6 +12,14 @@ addClass 1
 Search ACCT 402 A
 addClass 1
 back
+makeSearch
+Search comp
+addClass 1
+addClass 4
+back
+back
+deleteAccount
+yes
 quit
 
 

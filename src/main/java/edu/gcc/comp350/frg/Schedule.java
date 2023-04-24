@@ -272,5 +272,16 @@ public class Schedule {
 //            System.out.println(e.getMessage());
         }
     }
+
+//    public static void main(String[] args){
+//        for(int i = 0; i < 100; i++){
+//            try{
+//                deleteScheduleByIDFromDB(i);
+//            } catch (Exception e){
+//
+//            }
+//        }
+//    }
+
 }
 

@@ -63,6 +63,12 @@ public class Timeslot implements Comparable<Timeslot>{
         this.day = day;
     }
 
+    public Timeslot(Timeslot t) {
+        this.start = t.start;
+        this.end = t.end;
+        this.day = t.day;
+    }
+
     @Override
     public String toString(){
         String startTime = start.toString().substring(0, 5);//HH:MM
