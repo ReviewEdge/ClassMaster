@@ -18,7 +18,8 @@ public class Main {
     }
 
     public Main() {
-        this.account = new Account("User", "userX@gcc.edu", "password", "username");
+//        this.account = new Account("User", "userX@gcc.edu", "password", "username");
+        this.account = null;
         this.currentSchedule = null;
         this.currentSearch = null;
         this.searchHistory = new ArrayList<>();
@@ -76,6 +77,7 @@ public class Main {
         Main main = new Main();
         API api = new API(main);
 
-        CmdLineInterface.runInterface(api);
+        CmdLineInterface CLI = new CmdLineInterface(api);
+        CLI.runInterface();
     }
 }

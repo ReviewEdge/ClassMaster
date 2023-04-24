@@ -1,7 +1,6 @@
 package edu.gcc.comp350.frg;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class API {
 
@@ -249,48 +248,86 @@ public class API {
     }
 
     /**
-     * Loads the schedules saved in the database for a given account
-     */
-    public void loadSavedSchedules(){
-//        System.out.println("WRITE THE LOAD METHOD");
-        ArrayList<Integer> scheduleIDs = Schedule.getAllScheduleIDsFromDB();
-        for(int i: scheduleIDs){
-            try {
-                main.getAccount().addSchedule(Schedule.getScheduleByIDFromDB(i));
-            } catch (Exception e){
-
-            }
-        }
-    }
-
-    /**
      * Handles quiting/closing things in the api
      */
 
     public void quit(boolean testing){
         //TODO Make sure that everything closes nicely?... KEEP Checking
         if(!testing) {
-            ArrayList<Schedule> schedules = main.getAccount().getSchedules();
-            for (Schedule sch : schedules) {
-                sch.saveSchedule();
+            if(main.getAccount() != null) {
+                saveEverything();
             }
         }
     }
 
+    private void saveEverything(){
+        System.out.println("Saving Schedules");
+        ArrayList<Schedule> schedules = main.getAccount().getSchedules();
+        for (Schedule sch : schedules) {
+            sch.saveSchedule();
+        }
+        try {
+            main.getAccount().saveOrUpdateAccount();
+        } catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
 
+    public void loginAccount(String username, String password) throws Exception{
+        if(main.getAccount() != null){
+            throw new Exception("An Account is already logged in");
+        }
 
+        ArrayList<Account> accounts = new ArrayList<>();
+        try {
+            accounts = Account.getAccountsByUsernameFromDB(username);
+        } catch(Exception e){
+            throw e;
+        }
+        if(accounts.size() < 1){
+            throw new Exception("No accounts exist with the name: " + username);
+        }
 
+        for(int i = 0; i < accounts.size(); i++){
+            if(accounts.get(i).validatePassword(password)){
+                main.changeAccount(accounts.get(i));
+                return;
+            }
+        }
+        throw new Exception("Incorrect Password, please try again");
+    }
 
+    public void logout() {
+        if(main.getAccount() != null) {
+            saveEverything();
+            main.changeAccount(null);
+        }
+    }
 
+    public void setDummyAccount(){
+        main.changeAccount(new Account("DummyAccount", "user@gcc.edu", "dummyPassword", "dummyUsername"));
+    }
 
+    public void createAccount(String username, String password) throws Exception{
+        Account newAccount = new Account(username, "NoEmailSupportYet", password, username);
+        ArrayList<Account> conficts = Account.getAccountsByUsernameFromDB(username);
 
+        if(conficts.size() > 0){
+            throw new Exception("Account Creation Failed, username already taken");
+        }
 
+        main.changeAccount(newAccount);
+        newAccount.saveOrUpdateAccount();
+    }
 
+    public void deleteCurrentAccount(){
+        Account.deleteAccountByIDFromDB(main.getAccount().getId());
+        main.changeAccount(null);
+    }
 
-
-
-
-
-
-
+    public void deleteSchedule(int i){
+        Schedule.deleteScheduleByIDFromDB(i);
+        main.changeCurrentSchedule(null);
+        main.getAccount().removeSchedule(i-1);
+    }
 }

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -54,6 +53,9 @@ class AccountTest {
         newAccount.saveOrUpdateAccount();
 
         assertEquals(accountName, newAccount.getName());
+
+        Account.deleteAccountByIDFromDB(newAccount.getId());
+
     }
 
     @Test
@@ -81,5 +83,30 @@ class AccountTest {
 
         assertEquals(accountName, retreiveAccount.getName());
         assertEquals(retreiveAccount.getSchedules().get(0).toString(), testSched.toString());
+
+        Account.deleteAccountByIDFromDB(newAccount.getId());
     }
+
+    @Test
+    void getAccountsByUsernameFromDBTest() throws Exception {
+//        System.out.println("Running UsernameTest");
+        Account newAccount1 = new Account("1", "userX@gcc.edu", "pw", "user");
+        newAccount1.saveOrUpdateAccount();
+        Account newAccount2 = new Account("2", "userY@gcc.edu", "pswd", "users");
+        newAccount2.saveOrUpdateAccount();
+        Account newAccount3 = new Account("3", "userZ@gcc.edu", "Pass", "notusername");
+        newAccount3.saveOrUpdateAccount();
+
+        ArrayList<Account> accountsFromDB = Account.getAccountsByUsernameFromDB("user");
+
+//        System.out.println(accountsFromDB);
+        assertEquals(1,accountsFromDB.size() );
+        assertTrue(accountsFromDB.get(0).validatePassword("pw"));
+        assertFalse(accountsFromDB.get(0).validatePassword("pswd"));
+
+        Account.deleteAccountByIDFromDB(newAccount1.getId());
+        Account.deleteAccountByIDFromDB(newAccount2.getId());
+        Account.deleteAccountByIDFromDB(newAccount3.getId());
+    }
+
 }
