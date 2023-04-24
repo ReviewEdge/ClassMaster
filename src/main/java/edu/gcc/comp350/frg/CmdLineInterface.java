@@ -34,7 +34,7 @@ public class CmdLineInterface {
      *
      * @param api is the interface which allows the front-end to talk to the actual structures
      * @param testing is a boolean variable to delineate if it should take user input or read from a file
-     * @param testFile is the file which has pre-loaded commands
+     * @param testFile is the file which has preloaded commands
      */
 
     public static void runInterface(API api, boolean testing, String testFile){
@@ -70,7 +70,7 @@ public class CmdLineInterface {
             System.out.println();
 
             // Sets the correct location for before the command entry point ie: Calendar View:
-            // Simillar to how the command line functions with its document structure
+            // Similar to how the command line functions with its document structure
             String cmd;
             String inputSymbol = "\n";
             if(screen == Screen.SCHEDULE_LIST) {
@@ -83,13 +83,13 @@ public class CmdLineInterface {
                 inputSymbol = "Search Command Bar";
             }
 
-            //Promtps the user for their next command
+            //Prompts the user for their next command
             cmd = getInput("" + inputSymbol + ": ", testing);
             //Parses it in to be read as commands and parameters
             String[] cmdSplit = cmd.split(" ");
 
             // Loop if there was no command entered
-            if(cmdSplit.length <= 0){
+            if(cmdSplit.length == 0){
                 continue;
             }
 
@@ -97,7 +97,7 @@ public class CmdLineInterface {
             if(cmdSplit[0].toLowerCase().contains("quit")){
                 notQuit = false;
                 System.out.println("Thank you for using ClassMaster");
-                api.quit();
+                api.quit(testing);
                 if(testing){
                     scn.close();
                 }
@@ -120,7 +120,7 @@ public class CmdLineInterface {
 //                        System.out.println("- changeSemester \"NewSemester\": Changes the current schedule's year to \"NewSemester\""); // Shouldn't really be possible
                     System.out.println("- Remove \"number\": Removes the class at position \"number\" from the schedule");
                     System.out.println("- MakeSearch: Opens a search bar");
-                    System.out.println("- Back: Returns to the list fo schedules");
+                    System.out.println("- Back: Returns to the list of schedules");
                 }
                 else if(screen == Screen.SEARCH) {
                     System.out.println("Search Page Help:"); //TODO
@@ -154,8 +154,8 @@ public class CmdLineInterface {
                 }
                 // Handles the createSchedule command: creates a schedule with parameters "name" and "semester"
                 else if (cmdSplit[0].toLowerCase().contains("createschedule")){
-                    try { // Change this from a try catch to normal if, Why'd I do that
-                        String semester = cmdSplit[2]; //TODO once we have semester
+                    if(cmdSplit.length >= 4){ // Change this from a try catch to normal if, Why'd I do that
+                        String semester = cmdSplit[2] + " " + cmdSplit[3];
                         try {
                             Schedule sch = api.createSchedule(cmdSplit[1], semester);
                             api.loadSchedule(api.getNumSchedules()); //Could be faster by passing in a Schedule, here at least
@@ -166,8 +166,9 @@ public class CmdLineInterface {
                             System.out.println(e.toString());
                         }
                     }
-                    catch(Exception e){
+                    else {
                         System.out.println("Invalid createSchedule Parameter, Please include a name and semester");
+                        System.out.println("All possible semesters are: " + Term.getValidSemesters());
                     }
                 }
                 // Handles the viewSchedule Command: Displaying all schedules for the account
@@ -389,7 +390,7 @@ public class CmdLineInterface {
         System.out.println(schedule.toString());
         System.out.println("Weekly View: ");
         StringBuilder str = new StringBuilder();
-        str.append("Monday").append(" ".repeat(20));
+        str.append("Monday").append(" ".repeat(22));
         str.append("Tuesday").append(" ".repeat(20));
         str.append("Wednesday").append(" ".repeat(20));
         str.append("Thursday").append(" ".repeat(20));
@@ -417,7 +418,7 @@ public class CmdLineInterface {
             for (int d = 1; d <= daysOfTheWeek.size(); d++) {
                 if (daysOfTheWeek.get(d-1).size() > 0) {
                     Class cl = daysOfTheWeek.get(d-1).poll();
-                    str.append(cl.getCode());
+                    str.append(cl.getCourseCodeWithoutTerm());
                     str.append(" @");
                     for(Timeslot t: cl.getTimeSlots()) {
                         if (t.getDay().ordinal()== d) {
@@ -433,6 +434,7 @@ public class CmdLineInterface {
                     str.append(" ".repeat(28));
                 }
             }
+            str.append("\n");
         }
 
         // Prints the string

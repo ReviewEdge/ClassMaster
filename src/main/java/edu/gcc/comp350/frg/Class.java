@@ -58,29 +58,17 @@ public class Class {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            // returns null if no class was found
-            if (rs.getString("course_code") == null) {
+            // returns null if no classes were found
+            if (rs.getString("unique_code") == null) {
                 return null;
             }
 
             ArrayList<Class> classesResults = new ArrayList<>();
-
             while (rs.next()) {
-                Term classTerm = new Term(rs.getInt("trm_cde"), null);
-                Class newClass = new Class(
-                        rs.getString("course_code"),
-                        rs.getString("crs_title"),
-                        0,  // we don't actually have this data
-                        getTimeslotsFromClassRow(rs),
-                        classTerm,
-                        rs.getString("first_name") + " " + rs.getString("last_name"),
-                        rs.getString("crs_comp1"),
-                        rs.getInt("credit_hrs"),
-                        null,
-                        rs.getString("comment_txt")
-                );
-
-                classesResults.add(newClass);
+                Class newClass = makeNewClassFromRS(rs);
+                if (newClass != null) {
+                    classesResults.add(newClass);
+                }
             }
 
             conn.close();
@@ -96,33 +84,14 @@ public class Class {
 
     public static Class getClassFromDBbyCourseCode(String courseCode) {
         try {
-
             Connection conn = DatabaseConnector.connect();
 
-            String sql = "SELECT * FROM classes20to21v4 WHERE course_code LIKE '" + courseCode + "'";
+            String sql = "SELECT * FROM classes20to21v4 WHERE unique_code LIKE '" + courseCode + "'";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            // returns null if no class was found
-            if (rs.getString("course_code") == null) {
-                return null;
-            }
-
-            Term classTerm = new Term(rs.getInt("trm_cde"), null);
-
-            Class newClass = new Class(
-                    rs.getString("course_code"),
-                    rs.getString("crs_title"),
-                    0,  // we don't ac
-                    getTimeslotsFromClassRow(rs),
-                    classTerm,
-                    rs.getString("first_name") + " " + rs.getString("last_name"),
-                    rs.getString("crs_comp1"),
-                    rs.getInt("credit_hrs"),
-                    null,
-                    rs.getString("comment_txt")
-            );
+            Class newClass = makeNewClassFromRS(rs);
 
             conn.close();
 
@@ -132,6 +101,33 @@ public class Class {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+
+    private static Class makeNewClassFromRS(ResultSet rs) throws SQLException {
+        // returns null if no class was found
+        if (rs.getString("unique_code") == null) {
+            return null;
+        }
+        Term classTerm = null;
+        // checks if the class has a term
+        if (rs.getInt("trm_cde") != 0) {
+            classTerm = new Term(rs.getInt("trm_cde"));
+        }
+        Class newClass = new Class(
+                rs.getString("unique_code"),
+                rs.getString("crs_title"),
+                0,  // we don't ac
+                getTimeslotsFromClassRow(rs),
+                classTerm,
+                rs.getString("first_name") + " " + rs.getString("last_name"),
+                rs.getString("crs_comp1"),
+                rs.getInt("credit_hrs"),
+                null,
+                rs.getString("comment_txt")
+        );
+
+        return newClass;
     }
 
 
@@ -176,7 +172,9 @@ public class Class {
         if (timeAndAMorPm[1].equals("PM")) {
             String[] timeNums = timeAndAMorPm[0].split(":");
             int tfHour = Integer.parseInt(timeNums[0]) + 12;
-
+            if(tfHour == 24){
+                tfHour -= 12;
+            }
             return tfHour + ":" + timeNums[1] + ":" + timeNums[2];
         }
 
@@ -184,17 +182,29 @@ public class Class {
     }
 
 
+    public String getCourseCodeWithoutTerm() {
+        String[] partsOfCC = this.code.split(" ");
+        String courseCodeWithoutTerm = partsOfCC[2] + " " + partsOfCC[3] + " " + partsOfCC[4];
+        return courseCodeWithoutTerm;
+    }
+
+
     @Override
     public String toString(){
         StringBuilder classString = new StringBuilder();
-        classString.append(this.code+", ");
+        classString.append(getCourseCodeWithoutTerm()+", ");
         classString.append(this.title+", ");
-        if(this.timeSlots != null) {
-            classString.append(this.timeSlots.toString());
+        if(this.term != null) {
+            classString.append(this.term + ", ");
         } else {
-            classString.append("No Timeslot");
+            classString.append("No Term" + ", ");
         }
-        classString.append(", "+ this.professor);
+        if(this.timeSlots != null) {
+            classString.append(this.timeSlots + ", ");
+        } else {
+            classString.append("No Timeslot" + ", ");
+        }
+        classString.append(this.professor);
         return classString.toString();
     }
 

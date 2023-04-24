@@ -40,4 +40,17 @@ class CmdLineInterfaceTest {
         API api = new API(main);
         CmdLineInterface.runInterface(api, true, "TestFiles/addFiltersTest");
     }
+
+    @Test
+    void classConflictTest(){
+        Main main = new Main();
+        API api = new API(main);
+        CmdLineInterface.runInterface(api, true, "TestFiles/classConflictTest");
+    }
+
+    //Only used for cleaning up the database... NOT ACTUALLY A TEST, Just needed a way to run the cmd
+//    @Test
+//    void deleteScheduleCmd(){
+//        Schedule.deleteScheduleByIDFromDB(1);
+//    }
 }

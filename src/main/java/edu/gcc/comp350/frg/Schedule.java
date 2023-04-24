@@ -98,6 +98,10 @@ public class Schedule {
     }
 
     public void addClass (Class toAdd) throws Exception{
+        if (!toAdd.getTerm().equals(this.term)) {
+            throw new Exception("class term is different from your schedule's term");
+        }
+
         if (currentcredits + toAdd.getCredits() >= 21){
             System.out.println("Your schedule has over 20 credits!");
 //            throw new Exception("too many credits!");
@@ -173,7 +177,7 @@ public class Schedule {
     // commit schedule to database
     public void saveSchedule() {
 
-        String sql = "INSERT INTO schedules1(ID,term,name,classes) VALUES(?,?,?,?)";
+        String sql = "REPLACE INTO schedules1(ID,term,name,classes) VALUES(?,?,?,?)";
 
         try (Connection conn = DatabaseConnector.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -200,13 +204,34 @@ public class Schedule {
     }
 
 
-    public static Schedule getScheduleByIDFromDB(int id) {
+    public static ArrayList<Integer> getAllScheduleIDsFromDB() {
         try {
             Connection conn = DatabaseConnector.connect();
 
-            String sql = "SELECT * FROM schedules1 WHERE ID LIKE '" + id + "'";
+            String sql = "SELECT * FROM schedules1";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
+
+            ArrayList<Integer> schedIDs = new ArrayList<>();
+            while (rs.next()) {
+                schedIDs.add(rs.getInt("ID"));
+            }
+            conn.close();
+            return schedIDs;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+
+    public static Schedule getScheduleByIDFromDB(int id) throws Exception{
+        String sql = "SELECT * FROM schedules1 WHERE ID = ?";
+
+        try (Connection conn = DatabaseConnector.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
             String classesString = rs.getString("Classes");
             JSONObject classesJSON = new JSONObject(classesString);
             JSONArray classesJSONArray = classesJSON.optJSONArray("classesString");
@@ -219,10 +244,11 @@ public class Schedule {
             }
 
             //TODO: add parseMe to term so I can get term from DB
+            Term schedTerm = new Term(rs.getString("Term"));
             Schedule newSchedule = new Schedule(
                     rs.getString("Name"),
                     rs.getInt("ID"),
-                    null,
+                    schedTerm,
                     newClasses
             );
 
@@ -235,5 +261,16 @@ public class Schedule {
         }
     }
 
+    public static void deleteScheduleByIDFromDB(int id) {
+        try {
+            Connection conn = DatabaseConnector.connect();
+
+            String sql = "DELETE FROM schedules1 WHERE ID = '" + id + "'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+        }
+    }
 }
 
