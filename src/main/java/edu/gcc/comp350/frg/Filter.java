@@ -83,56 +83,41 @@ public class Filter {
     }
 
     /**
-     * adds a timeslot to the possible timeslots to choose from
+     * adds a timeslot to the possible times, merging any overlapping timeslots
      * @param timeslot the timeslot to add
      * @return true if the timeslot wasn't already added
      */
     public void addTimeslot(Timeslot timeslot) {
+        // create the timeslot holder if it doesn't exist
         if(this.timeslots == null){
             this.timeslots = new ArrayList<>();
             for(int i=0; i<7; i++){
                 this.timeslots.add(new TreeSet<Timeslot>());
             }
         }
-        /**
-         * the goal of the upcoming part is this:
-         * if you insert this:
-         *          |       timeslot        |
-         * into this:
-         * |  ts    |   |  ts   |       |  ts   |
-         * you should get this for ease of filtering:
-         * |              timeslot              |
-         * to do this, I check the slot strictly before the input to see if it overlaps
-         *      if so, use its start as the start of the combined timeslot, and remove it
-         *      otherwise just set the start as the input's start
-         * then check all timeslots that start after the input
-         *      if they overlap, add them to the merged slot and remove them from the day's slots
-         *          if they have a later end than the input, use that as the end of the new timeslot
-         * at the end I have a timeslot with the correct start and end
-         * and have removed all superfluous timeslots that would be inside of it
-         */
-        // get all timeslots this day
-        TreeSet<Timeslot> day = this.timeslots.get(timeslot.getDay().ordinal());
-        // find all timeslots that start later
-        Timeslot[] mayMerge = day.tailSet(timeslot).toArray(new Timeslot[0]);
-        // set up some variables for the end result
+
         Time start = timeslot.getStart();
         Time end = timeslot.getEnd();
-        // find the timeslot that starts before
+
+        // get all timeslots this day
+        TreeSet<Timeslot> day = this.timeslots.get(timeslot.getDay().ordinal());
+
+        // if the timeslot that starts before overlaps with the new one, merge it
         Timeslot temp = day.lower(timeslot);
-        // if it overlaps with the new timeslot, merge it in
         if (temp != null && timeslot.overlaps(temp, true)) {
             start = temp.getStart();
             day.remove(temp);
         }
-        // if there are any timeslots starting later...
+
+        // find all timeslots that start later than the inputted one
+        Timeslot[] mayMerge = day.tailSet(timeslot).toArray(new Timeslot[0]);
         if(mayMerge.length > 0) {
             for(int i=0; i<mayMerge.length; i++){
                 temp = mayMerge[i];
-                // check if this slot also needs to be absorbed
+                // check if this slot needs to be absorbed
                 if(timeslot.overlaps(temp, true)){
                     day.remove(temp);
-                    // if this one ends after the input's end, then that will be the end of the new slot
+                    // if this slot ends after the input's end, then that will be the end of the new slot
                     if(end.before(temp.getEnd())){
                         end = temp.getEnd();
                         day.remove(temp);
@@ -161,26 +146,6 @@ public class Filter {
         if (day.remove(timeslot)){
             return;
         }
-        /**
-         * the goal of the upcoming part is this:
-         * what if you remove this:
-         *          |       timeslot   |
-         * from this:
-         * |  ts        |       |          ts   |
-         * or this:
-         * |               timeslot             |
-         * you should get this:
-         * |  ts    |                  |   ts   |
-         * to do this, I check the slot strictly before the input to see if the input is in it
-         *    - if so, split it up into 2 chunks without the middle area
-         *    - otherwise, check if it overlaps
-         *          if so, set its end time to be equal to the removed slot's start
-         * then check all timeslots that start after the input for being contained in the removed time
-         *    - if so, remove them from the day's slots
-         *    - otherwise, check to see if they overlap
-         *        - if so, set their start to be the end of the removed time
-         * at the end I have removed all time that ovelaps with the input
-         */
         // find all timeslots that start later
         Timeslot[] mayRem = day.tailSet(timeslot).toArray(new Timeslot[0]);
         // find the timeslot that starts before
