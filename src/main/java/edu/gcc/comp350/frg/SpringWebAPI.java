@@ -28,9 +28,15 @@ public class SpringWebAPI {
     public ArrayList<String> search(@RequestParam(value = "query", defaultValue = "") String query) {
 
         Filter f = new Filter();  //TODO: get the current filter
+        ArrayList<String> searchResultStrings = new ArrayList<>();
         Search newSearch = new Search(query, f);
 
-        ArrayList<String> searchResultStrings = new ArrayList<>();
+        try {
+            newSearch.runQuery();
+        } catch (NullPointerException e) {
+            System.out.println("no search results for " + query);
+            return searchResultStrings;
+        }
 
         for (Class c : newSearch.getCurrentResults() ) {
             searchResultStrings.add(c.toString());
