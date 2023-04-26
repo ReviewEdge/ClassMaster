@@ -5,6 +5,7 @@
   <title>ClassMaster</title>
   <link rel="stylesheet" href="CSS/home.css">
   <script src="js/collapsible.js"></script>
+  <script src="js/schedule.js"></script>
 </head>
 <body>
   <div class="home-flex-container">
@@ -26,13 +27,15 @@
 
       <div class="schedule-display">
         <div class="schedule-classes-list">
-          <h4>My Schedule - Fall 2020</h4>
+          <h4>My Schedule - <span id="curr-sched-term-name">TERM</span></h4>
           <p>class 1</p>
           <p>class 2</p>
           <p>class 3</p>
           <p>class 4</p>
           <p>class 5</p>
         </div>
+
+        <button id="test-get">Test GET</button>
 
         <div class="calendar-view">
           <h1>The Calendar View</h1>
