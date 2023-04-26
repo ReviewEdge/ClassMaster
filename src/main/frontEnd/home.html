@@ -39,8 +39,134 @@
 
         <div class="calendar-view">
           <h1>The Calendar View</h1>
-          <br />
-          <br />
+          <h3>This is all just text,
+            need to find way to actually add timeslots</h3>
+
+          <style>
+           body {
+            margin-top: 0px;
+            padding-top: 0px;
+            text-align: top;
+            border-collapse: collapse;
+          }
+          table{
+            margin-top: 0px;
+            border:1px solid black;
+            text-align: center;
+            border-collapse: collapse;
+          }
+
+          td#naglowek { /*  ???  */
+            font-family: sans;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            background-color: black;
+            color: white;
+          }
+
+          td:first-child { /*    */
+            font-family: sans;
+            font-size: 14px;
+            text-align: center;
+          }
+
+          td { /*  Sun-Sat  */
+          font-family: sans;
+          font-size: 14px;
+          text-align: center;
+          padding-top: 2px;
+          padding-bottom: 2px;
+          }
+
+          th { /*  days of the week  */
+          padding-top: 10px;
+          font-family: papyrus; /*  lol  */
+          font-size: 19px;
+          font-weight: bold;
+          border-bottom: solid 0px black;
+          text-align: center;
+          }
+
+
+          table {
+          overflow: hidden;
+          }
+          tr:nth-child(2n+1) td:first-child {
+          position: relative;
+          }
+          tr:nth-child(2n+1) td:first-child:after {
+          content: ' ';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 100vw;
+          background-color: rgb(240, 240, 240);
+          z-index: -1;
+          }
+            </style>
+          <table style="width:100%">
+            <tr>
+              <th>  </th>
+              <th>Sunday</th>
+              <th>Monday</th>
+              <th>Tuesday</th>
+              <th>Wednesday</th>
+              <th>Thursday</th>
+              <th>Friday</th>
+              <th>Saturday</th>
+            </tr>
+            <tr>
+              <td>8:00 AM - 9:00 AM</td>
+
+            </tr>
+            <tr>
+              <td>9:00 AM - 10:00 AM</td>
+
+            </tr>
+            <tr>
+              <td>10:00 AM - 11:00 AM</td>
+
+            </tr>
+            <tr>
+              <td>11:00 AM - 12:00 PM</td>
+
+            </tr>
+            <tr>
+              <td>12:00 PM - 1:00 PM</td>
+
+            </tr>
+            <tr>
+              <td>1:00 PM - 2:00 PM</td>
+
+            </tr>
+            <tr>
+              <td>2:00 PM - 3:00 PM</td>
+
+            </tr>
+            <tr>
+              <td>3:00 PM - 4:00 PM</td>
+
+            </tr>
+            <tr>
+              <td>4:00 PM - 5:00 PM</td>
+
+            </tr>
+            <tr>
+              <td>5:00 PM - 6:00 PM</td>
+
+            </tr>
+            <tr>
+              <td>6:00 PM - 7:00 PM</td>
+
+
+            </tr>
+            <tr>
+              <td>7:00 PM - 8:00 PM</td>
+
+            </tr>
+          </table>
           <br />
           <br />
         </div>
