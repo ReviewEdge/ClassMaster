@@ -6,26 +6,23 @@ window.addEventListener("DOMContentLoaded", function() {
         const searchQuery = searchBar.value;
         const container = document.getElementById("search-results");
 
-        console.log(container);
-
-
         const getSearchURL = `http://localhost:8080/search?query=` + searchQuery;
         fetch(getSearchURL)
             .then(data => {
                 data.json().then((data) => {
-                    console.log(data);
-
-
-                    for (const c of data) {
-
-                        console.log(c);
-
-                        const p = document.createElement("p");
-                        p.innerText = c;
-                        container.append(p);
+                    if (data.length === 0) {
+                        container.innerHTML = "<p>No search results</p>";
+                    } else {
+                        container.innerHTML = "";
+                        for (const c of data) {
+                            const p = document.createElement("p");
+                            p.innerText = c;
+                            container.append(p);
+                        }
                     }
 
                 });
             });
+
     });
 });

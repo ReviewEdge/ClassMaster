@@ -12,7 +12,6 @@ public class Search {
         this.query = query;
         this.filter = filter;
         currentResults = new ArrayList<>();
-        runQuery();
     }
 
     public String getQuery() {
