@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ClassMaster</title>
+    <link rel="stylesheet" href="CSS/home.css">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="home-flex-container">
+        <div class="hamburger-menu flex-item-left">
+            <button id="hamburger-button">SM</button>
+        </div>
+
+        <div class="flex-item-right">
+            <div class="header">
+                <h1>ClassMaster</h1>
+                <button id="login-button">Login</button>
+                <div class="container">
+                    <div class="input-group">
+                        <input type="text" class="col-10" placeholder="Try searching for a class name, time, or course code">
+                        <select class="col-2" aria-label="Default select example">
+                            <option selected>Departments...</option>
+                            <option disabled>──────────</option>
+                            <option value="COMP">Computer Science</option>
+                            <option value="HUMA">Humanities</option>
+                            <option value="WRIT">Writing</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="container">
+                    <p>
+                        <button type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">Filters</button>
+                    </p>
+                    <div class="collapse" id="filterCollapse">
+                        <div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="termDesc">Term:</span>
+                                        <input type="text" class="form-control" placeholder="Term..." aria-label="term" aria-describedby="termDesc">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="codeDesc">Code:</span>
+                                        <input type="text" class="form-control" placeholder="Code..." aria-label="code" aria-describedby="codeDesc">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="minDesc">Minimum Credits:</span>
+                                        <input type="number" class="form-control" aria-label="" aria-describedby="minDesc">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="maxDesc">Maximum Credits:</span>
+                                        <input type="number" class="form-control" aria-label="" aria-describedby="maxDesc">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="profDesc">Professor:</span>
+                                <input type="text" class="form-control" placeholder="Professor..." aria-label="professor" aria-describedby="profDesc">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="schedule-display">
+                <div class="schedule-classes-list">
+                    <h4>My Schedule - Fall 2020</h4>
+                    <p>class 1</p>
+                    <p>class 2</p>
+                    <p>class 3</p>
+                    <p>class 4</p>
+                    <p>class 5</p>
+                </div>
+
+                <div class="calendar-view">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
