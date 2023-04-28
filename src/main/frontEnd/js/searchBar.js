@@ -1,5 +1,6 @@
 window.addEventListener("DOMContentLoaded", function() {
     const searchButton = document.getElementById("search-submit-button");
+    const coFactory = new classObjectFactory()
 
     searchButton.addEventListener("click", function() {
         const searchBar = document.getElementById("class-search-bar");
@@ -15,8 +16,7 @@ window.addEventListener("DOMContentLoaded", function() {
                     } else {
                         container.innerHTML = "";
                         for (const c of data) {
-                            const p = document.createElement("p");
-                            p.innerText = c;
+                            const p = coFactory.createClassObject(c)
                             container.append(p);
                         }
                     }
