@@ -12,27 +12,42 @@ public class SpringWebAPI {
 //    private final AtomicLong counter = new AtomicLong();
 
     @CrossOrigin
-    @GetMapping("/calendar")
+    @GetMapping("/term-test")
     @ResponseBody
-    public ArrayList<String> calendar(@RequestParam(value = "id", defaultValue = "") String acct) {
-//        System.out.println(acct);
-        try {
-            if(acct.equals("")){
-                throw new Exception("id left to default value");
-            }
-            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(acct));
-            System.out.println("sending calendar results for id=" + acct);
+    public Term termTest() {
+        Term sendTerm = new Term(10);
 
-            ArrayList<String> scheduleResultString = new ArrayList<>();
-            for (Class c : sch.getClasses()) {
-                System.out.println(sch.toString());
-                scheduleResultString.add(c.toString());
-            }
-            return scheduleResultString;
-        } catch (Exception e){
-            System.out.println("SpringWebAPI requested for invalid calendar id");
-            System.out.println(e.toString());
-            return null;
-        }
+        System.out.println("SENDING TERM OBJECT: " + sendTerm);
+
+        return sendTerm;
     }
+
+    @CrossOrigin
+    @GetMapping("/search")
+    @ResponseBody
+    public ArrayList<String> search(@RequestParam(value = "query", defaultValue = "") String query) {
+
+        Filter f = new Filter();  //TODO: get the current filter
+        ArrayList<String> searchResultStrings = new ArrayList<>();
+        Search newSearch = new Search(query, f);
+
+        try {
+            newSearch.runQuery();
+        } catch (NullPointerException e) {
+            System.out.println("no search results for " + query);
+            return searchResultStrings;
+        }
+
+        for (Class c : newSearch.getCurrentResults() ) {
+            searchResultStrings.add(c.toString());
+        }
+
+        System.out.println("sending search results for " + query);
+
+        return searchResultStrings;
+    }
+
+
+
+
 }
