@@ -289,15 +289,7 @@ public class Schedule {
         }
     }
 
-//    public static void main(String[] args){
-//        for(int i = 0; i < 100; i++){
-//            try{
-//                deleteScheduleByIDFromDB(i);
-//            } catch (Exception e){
 //
-//            }
-//        }
-//    }
 
 }
 

@@ -24,7 +24,7 @@ input,textarea {
 }
 
 .hamburger-menu {
-    background-color: crimson;
+    background-color: #dc1433;
     color: #5C0000;
     min-width: 4rem;
     height:100vh;
@@ -48,7 +48,7 @@ input,textarea {
 }
 
 .header {
-    background-color: crimson;
+    background-color: #dc1433;
     padding: 1rem;
 }
 
