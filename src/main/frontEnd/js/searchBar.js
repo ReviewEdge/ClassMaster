@@ -1,7 +1,5 @@
 window.addEventListener("DOMContentLoaded", function() {
     const searchButton = document.getElementById("search-submit-button");
-    const coFactory = new classObjectFactory()
-
     searchButton.addEventListener("click", function() {
         const searchBar = document.getElementById("class-search-bar");
         const searchQuery = searchBar.value;

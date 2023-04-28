@@ -81,7 +81,7 @@ input,textarea {
 
 .schedule-classes-list {
     padding: 1rem;
-    line-height: 20%;
+    /* line-height: 20%; */
 }
 
 .calendar-view {
@@ -101,15 +101,16 @@ input,textarea {
 /* The actual popup (appears on top) */
 .classText .classInfoText {
   visibility: hidden;
-  width: 160px;
-  background-color: #0000ff;
-  color: #fff;
+  width: 250px;
+  background-color: #F0F8FF;
+  color: black;
   text-align: center;
   border-radius: 6px;
+  border-color: black;
   padding: 8px 0;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
+  bottom: 100%;
   left: 50%;
   margin-left: -80px;
 }

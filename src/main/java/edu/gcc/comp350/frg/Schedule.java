@@ -273,6 +273,14 @@ public class Schedule {
         }
     }
 
+//    @Override
+//    public String toJSON(){
+//        StringBuilder scheduleString = new StringBuilder();
+
+//        return scheduleString.toString();
+//    }
+
+
 //    public static void main(String[] args){
 //        for(int i = 0; i < 100; i++){
 //            try{

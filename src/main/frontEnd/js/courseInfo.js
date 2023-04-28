@@ -5,8 +5,9 @@ function clickMoreInfo(val) {
 }
 
 
+
 var coFactoryExists = false;
-var coFactory = null;
+var coFactory_master = null;
 
 class classObjectFactory {
 
@@ -14,7 +15,7 @@ class classObjectFactory {
 
     constructor(){
         if(coFactoryExists){
-            return coFactory;
+            return coFactory_master;
         }
         this.nextUniqueID = 1;
         coFactoryExists = true;
@@ -37,7 +38,6 @@ class classObjectFactory {
         this.nextUniqueID++;
         return p;
     }
-
-
-
 }
+
+coFactory = new classObjectFactory();
