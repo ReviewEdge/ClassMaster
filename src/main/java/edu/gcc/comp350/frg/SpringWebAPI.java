@@ -1,5 +1,6 @@
 package edu.gcc.comp350.frg;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.web.bind.annotation.*;
@@ -20,5 +21,33 @@ public class SpringWebAPI {
 
         return sendTerm;
     }
+
+    @CrossOrigin
+    @GetMapping("/search")
+    @ResponseBody
+    public ArrayList<String> search(@RequestParam(value = "query", defaultValue = "") String query) {
+
+        Filter f = new Filter();  //TODO: get the current filter
+        ArrayList<String> searchResultStrings = new ArrayList<>();
+        Search newSearch = new Search(query, f);
+
+        try {
+            newSearch.runQuery();
+        } catch (NullPointerException e) {
+            System.out.println("no search results for " + query);
+            return searchResultStrings;
+        }
+
+        for (Class c : newSearch.getCurrentResults() ) {
+            searchResultStrings.add(c.toString());
+        }
+
+        System.out.println("sending search results for " + query);
+
+        return searchResultStrings;
+    }
+
+
+
 
 }

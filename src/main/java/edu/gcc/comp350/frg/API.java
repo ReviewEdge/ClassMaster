@@ -121,6 +121,7 @@ public class API {
      */
     public void makeSearch(String query) throws Exception{
         Search s = new Search(query, filter); // Should validate that it Can make a search from that? //TODO
+        s.runQuery();
         main.makeNewSearch(s);
     }
 
