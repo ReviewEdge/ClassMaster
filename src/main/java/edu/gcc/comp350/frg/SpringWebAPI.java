@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SpringWebAPI {
+    private ArrayList<Integer> loggedInUsers = new ArrayList<>();
+//    private final AtomicLong sessionID = new AtomicLong();
+
 
 //    private static final String template = "Hello, %s!";
 //    private final AtomicLong counter = new AtomicLong();
@@ -48,6 +51,33 @@ public class SpringWebAPI {
     }
 
 
+    @CrossOrigin
+    @PostMapping("/login")
+    @ResponseBody
+    public Account login(@RequestBody LoginForm loginForm) {
+        Account emptyAccount = new Account(-1, null, null, null, null, null);
 
+        try {
+            Account realAccount = Account.getAccountByEmailFromDB(loginForm.getEmail());
+
+            System.out.println("login attempt for: " + realAccount);
+
+            if (realAccount == null) {
+                return emptyAccount;
+            }
+
+            if (realAccount.validatePassword(loginForm.getPassword())) {
+                loggedInUsers.add(realAccount.getId());
+                System.out.println("logged in user " + realAccount.getId());
+                return realAccount;
+            } else {
+                return emptyAccount;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return emptyAccount;
+        }
+    }
 
 }
