@@ -50,6 +50,31 @@ public class SpringWebAPI {
         return searchResultStrings;
     }
 
+    @CrossOrigin
+    @GetMapping("/calendar")
+    @ResponseBody
+    public ArrayList<String> calendar(@RequestParam(value = "id", defaultValue = "") String acct) {
+//        System.out.println(acct);
+        try {
+            if(acct.equals("")){
+                throw new Exception("id left to default value");
+            }
+            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(acct));
+            System.out.println("sending calendar results for id=" + acct);
+
+            ArrayList<String> scheduleResultString = new ArrayList<>();
+            for (Class c : sch.getClasses()) {
+                System.out.println(sch.toString());
+                scheduleResultString.add(c.toString());
+            }
+            return scheduleResultString;
+        } catch (Exception e){
+            System.out.println("SpringWebAPI requested for invalid calendar id");
+            System.out.println(e.toString());
+            return null;
+        }
+    }
+
 
     @CrossOrigin
     @PostMapping("/login")

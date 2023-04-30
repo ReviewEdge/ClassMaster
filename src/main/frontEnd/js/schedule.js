@@ -9,3 +9,35 @@ window.addEventListener("DOMContentLoaded", function() {
             });
         });
 });
+
+
+window.addEventListener("DOMContentLoaded",function() {
+    updateSchedule()
+});
+
+function updateSchedule(){
+    getCurrentSchedule()
+}
+
+function getCurrentSchedule(){
+    
+    const getScheduleURL = `http://localhost:8080/calendar?id=` + 1;
+
+    const container = document.getElementById("schedule-classes-list");
+
+
+    fetch(getScheduleURL)
+        .then(data => {
+        data.json().then((data) => {
+            if (data.length === 0) {
+                container.innerHTML = "<p>Schedule empty</p>";
+            } else {
+                for (const c of data) {
+                    const p = coFactory.createClassObject(c)
+                    container.append(p);
+                }
+            }
+
+        });
+    });
+}

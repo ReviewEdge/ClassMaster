@@ -81,11 +81,55 @@ input,textarea {
 
 .schedule-classes-list {
     padding: 1rem;
-    line-height: 20%;
+    /* line-height: 20%; */
 }
 
 .calendar-view {
     border: black solid;
     padding: 1rem;
     margin: 8px;
+}
+
+
+
+.classText {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.classText .classInfoText {
+  visibility: hidden;
+  width: 250px;
+  background-color: #F0F8FF;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  border-color: black;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+/*
+.classText .classInfoText::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #black solid;
+}
+*/
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.classText .show {
+  visibility: visible;
 }
