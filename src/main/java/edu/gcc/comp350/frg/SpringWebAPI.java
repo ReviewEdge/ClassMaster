@@ -34,7 +34,6 @@ public class SpringWebAPI {
     public ArrayList<String> search(@RequestParam(value = "query", defaultValue = "") String query) {
         System.out.println("\n---------------------\n");
 
-        Filter f = new Filter();  //TODO: get the current filter
         ArrayList<String> searchResultStrings = new ArrayList<>();
         Search newSearch = new Search(query, f);
 
@@ -81,15 +80,38 @@ public class SpringWebAPI {
 
     @CrossOrigin
     @PostMapping("/API/setFilter")
-    public void setFilter(@RequestBody FilterForm filterForm) {
+    @ResponseBody
+    public ArrayList<String> setFilter(@RequestBody FilterForm filterForm) {
         f.setProfessor(filterForm.getProfessor());//sets it to null if empty
         f.setCode(filterForm.getCode());//sets it to null if empty
         f.setMinCredits(filterForm.getMinimum());//sets it to -1 if empty
         f.setMaxCredits(filterForm.getMaximum());//sets it to -1 if empty
         f.setDepartment(filterForm.getDepartment());//sets it to null if empty
+        //reset the timeslots to match what was sent
+        f.removeAllTimeslots();
         for(Timeslot t : filterForm.getTimeslots()){
             f.addTimeslot(t);
         }
+
+        System.out.println("\n---------------------\n");
+
+        ArrayList<String> searchResultStrings = new ArrayList<>();
+        Search newSearch = new Search("", f);
+
+        try {
+            newSearch.runQuery();
+        } catch (NullPointerException e) {
+            System.out.println("no search results for this filter");
+            return searchResultStrings;
+        }
+
+        for (Class c : newSearch.getCurrentResults() ) {
+            searchResultStrings.add(c.toString());
+        }
+
+        System.out.println("sending search results for this filter");
+
+        return searchResultStrings;
     }
 
     @CrossOrigin
