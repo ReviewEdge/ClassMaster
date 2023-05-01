@@ -26,8 +26,8 @@
 		<div class="search container">
 			<div class="input-group">
 				<input type="text" class="col-10" id="class-search-bar" placeholder="Try searching for a class name, time, or course code">
-				<select class="col-2">
-					<option selected>Departments...</option>
+				<select class="col-2" id="dept-in">
+					<option value="NONE" selected>Departments...</option>
 					<option disabled>──────────</option>
 					<option value="COMP">Computer Science</option>
 					<option value="HUMA">Humanities</option>
@@ -46,37 +46,37 @@
 							<div class="col-4">
 								<div class="input-group input-group-sm mb-1">
 									<span class="input-group-text" id="profDesc">Professor:</span>
-									<input type="text" class="form-control" placeholder="Professor..." aria-label="professor" aria-describedby="profDesc">
+									<input type="text" class="form-control" placeholder="Professor..." id="prof-in" aria-label="professor" aria-describedby="profDesc">
 								</div>
 							</div>
 							<div class="col-2">
 								<div class="input-group input-group-sm mb-1">
 									<span class="input-group-text" id="codeDesc">Code:</span>
-									<input type="text" class="form-control" placeholder="Code..." aria-label="code" aria-describedby="codeDesc">
+									<input type="text" class="form-control" placeholder="Code..." id="code-in" aria-label="course code" aria-describedby="codeDesc">
 								</div>
 							</div>
 							<div class="col-3">
 								<div class="input-group input-group-sm mb-1">
 									<span class="input-group-text" id="minDesc">Minimum Credits:</span>
-									<input type="number" class="form-control" aria-label="" aria-describedby="minDesc">
+									<input type="number" class="form-control" id="min-cred-in" aria-label="minimum credits" aria-describedby="minDesc">
 								</div>
 							</div>
 							<div class="col-3">
 								<div class="input-group input-group-sm mb-1">
 									<span class="input-group-text" id="maxDesc">Maximum Credits:</span>
-									<input type="number" class="form-control" aria-label="" aria-describedby="maxDesc">
+									<input type="number" class="form-control" id="max-cred-in"aria-label="maximum credits" aria-describedby="maxDesc">
 								</div>
 							</div>
 						</div>
-						<div class="col-6">
-							<div class="mb-1">
-								<button class="btn-primary">Add Time Restriction</button>
-								<button class="btn-primary">Clear Time Restrictions</button>
-							</div>
+						<div class="mb-1">
+							<button class="btn-primary">Add Time Restriction</button>
+							<button class="btn-primary">Clear Time Restrictions</button>
+						</div>
+						<div class="col-6" id="timeslots">
 							<div class="input-group input-group-sm mb-1" id="timeslot-hidden" hidden>
 								<button type="button" class="btn-close" aria-label="Close"></button>
 								<select>
-									<option selected value="ALL">Any Day</option>
+									<option selected value="NONE">All Days</option>
 									<option disabled>──────────</option>
 									<!--<option value="Sunday">Sunday</option>-->
 									<option value="Monday">Monday</option>
@@ -86,6 +86,7 @@
 									<option value="Friday">Friday</option>
 									<!--<option value="Saturday">Saturday</option>-->
 								</select>
+								<span class="input-group-text">from</span>
 								<input type="time" class="form-control" min="08:00" max="22:00" required>
 								<span class="input-group-text">to</span>
 								<input type="time" class="form-control" min="08:00" max="22:00" required>

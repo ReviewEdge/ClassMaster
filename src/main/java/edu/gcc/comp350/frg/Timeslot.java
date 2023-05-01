@@ -63,6 +63,16 @@ public class Timeslot implements Comparable<Timeslot>{
         this.day = day;
     }
 
+    /**
+     * @param timeslot a timeslot in string format (from toString, "Day HH:MM - HH:MM")
+     */
+    public Timeslot(String timeslot) {
+        String[] ts = timeslot.split(" ");// [Day, start, -, end]
+        this.start = Time.valueOf(ts[1]+":00");
+        this.end = Time.valueOf(ts[3]+":00");
+        this.day = Day.valueOf(ts[0]);
+    }
+
     public Timeslot(Timeslot t) {
         this.start = t.start;
         this.end = t.end;
