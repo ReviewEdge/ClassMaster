@@ -62,6 +62,10 @@ input,textarea {
     display: inline;
 }
 
+#search-results{
+    background-color: lightgray;
+}
+
 #filters-button {
     max-width: 4rem;
     margin-top: 2px;
