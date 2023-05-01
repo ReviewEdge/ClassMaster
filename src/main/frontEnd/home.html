@@ -114,7 +114,7 @@
 			<h3>This is all just text,
 				need to find way to actually add timeslots</h3>
 
-			<table style="width:100%">
+			<table style="width:100%" id = calendar-view-table>
 				<colgroup>
 					<col span="1" style="background-color: cadetblue">
 				</colgroup>
@@ -129,52 +129,264 @@
 					<th>Saturday</th>
 				</tr>
 				<tr id ='8am-calendar'>
-					<td>8:00 AM - 9:00 AM</td>
+					<td>8:00 AM - 8:30 AM</td>
 					<td id='8sunday-calendar'></td>
-					<td>hi</td>
+					<td id='8monday-calendar'></td>
+					<td id='8tuesday-calendar'></td>
+					<td id='8wednesday-calendar'></td>
+					<td id='8thursday-calendar'></td>
+					<td id='8friday-calendar'></td>
+					<td id='8saturday-calendar'></td>
+				</tr>
+				<tr id ='830am-calendar'>
+					<td>8:30 AM - 9:00 AM</td>
+					<td id='830sunday-calendar'></td>
+					<td id='830monday-calendar'></td>
+					<td id='830tuesday-calendar'></td>
+					<td id='830wednesday-calendar'></td>
+					<td id='830thursday-calendar'></td>
+					<td id='830friday-calendar'></td>
+					<td id='830saturday-calendar'></td>
 				</tr>
 				<tr id ='9am-calendar'>
-					<td>9:00 AM - 10:00 AM</td>
+					<td>9:00 AM - 9:30 AM</td>
+					<td id='9sunday-calendar'></td>
+					<td id='9monday-calendar'></td>
+					<td id='9tuesday-calendar'></td>
+					<td id='9wednesday-calendar'></td>
+					<td id='9thursday-calendar'></td>
+					<td id='9friday-calendar'></td>
+					<td id='9saturday-calendar'></td>
+
+				</tr>
+				<tr id ='930am-calendar'>
+					<td>9:30 AM - 10:00 AM</td>
+					<td id='930sunday-calendar'></td>
+					<td id='930monday-calendar'></td>
+					<td id='930tuesday-calendar'></td>
+					<td id='930wednesday-calendar'></td>
+					<td id='930thursday-calendar'></td>
+					<td id='930friday-calendar'></td>
+					<td id='930saturday-calendar'></td>
 
 				</tr>
 				<tr id ='10am-calendar'>
-					<td>10:00 AM - 11:00 AM</td>
+					<td>10:00 AM - 10:30 AM</td>
+					<td id='10sunday-calendar'></td>
+					<td id='10monday-calendar'></td>
+					<td id='10tuesday-calendar'></td>
+					<td id='10wednesday-calendar'></td>
+					<td id='10thursday-calendar'></td>
+					<td id='10friday-calendar'></td>
+					<td id='10saturday-calendar'></td>
+
+				</tr>
+				<tr id ='1030am-calendar'>
+					<td>10:30 AM - 11:00 AM</td>
+					<td id='1030sunday-calendar'></td>
+					<td id='1030monday-calendar'></td>
+					<td id='1030tuesday-calendar'></td>
+					<td id='1030wednesday-calendar'></td>
+					<td id='1030thursday-calendar'></td>
+					<td id='1030friday-calendar'></td>
+					<td id='1030saturday-calendar'></td>
 
 				</tr>
 				<tr id ='11am-calendar'>
-					<td>11:00 AM - 12:00 PM</td>
+					<td>11:00 AM - 11:30 AM</td>
+					<td id='11sunday-calendar'></td>
+					<td id='11monday-calendar'></td>
+					<td id='11tuesday-calendar'></td>
+					<td id='11wednesday-calendar'></td>
+					<td id='11thursday-calendar'></td>
+					<td id='11friday-calendar'></td>
+					<td id='11saturday-calendar'></td>
+
+				</tr>
+				<tr id ='1130am-calendar'>
+					<td>11:00 AM - 11:30 AM</td>
+					<td id='1130sunday-calendar'></td>
+					<td id='1130monday-calendar'></td>
+					<td id='1130tuesday-calendar'></td>
+					<td id='1130wednesday-calendar'></td>
+					<td id='1130thursday-calendar'></td>
+					<td id='1130friday-calendar'></td>
+					<td id='1130saturday-calendar'></td>
 
 				</tr>
 				<tr id ='12pm-calendar'>
-					<td>12:00 PM - 1:00 PM</td>
+					<td>12:00 PM - 12:30 PM</td>
+					<td id='12sunday-calendar'></td>
+					<td id='12monday-calendar'></td>
+					<td id='12tuesday-calendar'></td>
+					<td id='12wednesday-calendar'></td>
+					<td id='12thursday-calendar'></td>
+					<td id='12friday-calendar'></td>
+					<td id='12saturday-calendar'></td>
+				</tr>
+				<tr id ='1230pm-calendar'>
+					<td>12:30 PM - 1:00 PM</td>
+					<td id='1230sunday-calendar'></td>
+					<td id='1230monday-calendar'></td>
+					<td id='1230tuesday-calendar'></td>
+					<td id='1230wednesday-calendar'></td>
+					<td id='1230thursday-calendar'></td>
+					<td id='1230friday-calendar'></td>
+					<td id='1230saturday-calendar'></td>
 				</tr>
 
 				<tr id ='1pm-calendar'>
-					<td>1:00 PM - 2:00 PM</td>
+					<td>1:00 PM - 1:30 PM</td>
+					<td id='1sunday-calendar'></td>
+					<td id='1monday-calendar'></td>
+					<td id='1tuesday-calendar'></td>
+					<td id='1wednesday-calendar'></td>
+					<td id='1thursday-calendar'></td>
+					<td id='1friday-calendar'></td>
+					<td id='1saturday-calendar'></td>
+				</tr>
+
+				<tr id ='130pm-calendar'>
+					<td>1:00 PM - 1:30 PM</td>
+					<td id='130sunday-calendar'></td>
+					<td id='130monday-calendar'></td>
+					<td id='130tuesday-calendar'></td>
+					<td id='130wednesday-calendar'></td>
+					<td id='130thursday-calendar'></td>
+					<td id='130friday-calendar'></td>
+					<td id='130saturday-calendar'></td>
 				</tr>
 
 				<tr id ='2pm-calendar'>
-					<td>2:00 PM - 3:00 PM</td>
+					<td>2:00 PM - 2:30 PM</td>
+					<td id='2sunday-calendar'></td>
+					<td id='2monday-calendar'></td>
+					<td id='2tuesday-calendar'></td>
+					<td id='2wednesday-calendar'></td>
+					<td id='2thursday-calendar'></td>
+					<td id='2friday-calendar'></td>
+					<td id='2saturday-calendar'></td>
+				</tr>
+
+				<tr id ='230pm-calendar'>
+					<td>2:00 PM - 2:30 PM</td>
+					<td id='230sunday-calendar'></td>
+					<td id='230monday-calendar'></td>
+					<td id='230tuesday-calendar'></td>
+					<td id='230wednesday-calendar'></td>
+					<td id='230thursday-calendar'></td>
+					<td id='230friday-calendar'></td>
+					<td id='230saturday-calendar'></td>
 				</tr>
 
 				<tr id ='3pm-calendar'>
-					<td>3:00 PM - 4:00 PM</td>
+					<td>3:00 PM - 3:30 PM</td>
+					<td id='3sunday-calendar'></td>
+					<td id='3monday-calendar'></td>
+					<td id='3tuesday-calendar'></td>
+					<td id='3wednesday-calendar'></td>
+					<td id='3thursday-calendar'></td>
+					<td id='3friday-calendar'></td>
+					<td id='3saturday-calendar'></td>
+				</tr>
+
+				<tr id ='330pm-calendar'>
+					<td>3:30 PM - 4:00 PM</td>
+					<td id='330sunday-calendar'></td>
+					<td id='330monday-calendar'></td>
+					<td id='330tuesday-calendar'></td>
+					<td id='330wednesday-calendar'></td>
+					<td id='330thursday-calendar'></td>
+					<td id='330friday-calendar'></td>
+					<td id='330saturday-calendar'></td>
 				</tr>
 
 				<tr id ='4pm-calendar'>
-					<td>4:00 PM - 5:00 PM</td>
+					<td>4:00 PM - 4:30 PM</td>
+					<td id='4sunday-calendar'></td>
+					<td id='4monday-calendar'></td>
+					<td id='4tuesday-calendar'></td>
+					<td id='4wednesday-calendar'></td>
+					<td id='4thursday-calendar'></td>
+					<td id='4friday-calendar'></td>
+					<td id='4saturday-calendar'></td>
+				</tr>
+
+				<tr id ='430pm-calendar'>
+					<td>4:30 PM - 5:00 PM</td>
+					<td id='430sunday-calendar'></td>
+					<td id='430monday-calendar'></td>
+					<td id='430tuesday-calendar'></td>
+					<td id='430wednesday-calendar'></td>
+					<td id='430thursday-calendar'></td>
+					<td id='430friday-calendar'></td>
+					<td id='430saturday-calendar'></td>
 				</tr>
 
 				<tr id ='5pm-calendar'>
-					<td>5:00 PM - 6:00 PM</td>
+					<td>5:00 PM - 5:30 PM</td>
+					<td id='5sunday-calendar'></td>
+					<td id='5monday-calendar'></td>
+					<td id='5tuesday-calendar'></td>
+					<td id='5wednesday-calendar'></td>
+					<td id='5thursday-calendar'></td>
+					<td id='5friday-calendar'></td>
+					<td id='5saturday-calendar'></td>
+				</tr>
+
+				<tr id ='530pm-calendar'>
+					<td>5:00 PM - 5:30 PM</td>
+					<td id='530sunday-calendar'></td>
+					<td id='530monday-calendar'></td>
+					<td id='530tuesday-calendar'></td>
+					<td id='530wednesday-calendar'></td>
+					<td id='530thursday-calendar'></td>
+					<td id='530friday-calendar'></td>
+					<td id='530saturday-calendar'></td>
 				</tr>
 
 				<tr id ='6pm-calendar'>
-					<td>6:00 PM - 7:00 PM</td>
+					<td>6:00 PM - 6:30 PM</td>
+					<td id='6sunday-calendar'></td>
+					<td id='6monday-calendar'></td>
+					<td id='6tuesday-calendar'></td>
+					<td id='6wednesday-calendar'></td>
+					<td id='6thursday-calendar'></td>
+					<td id='6friday-calendar'></td>
+					<td id='6saturday-calendar'></td>
+				</tr>
+
+				<tr id ='630pm-calendar'>
+					<td>6:30 PM - 7:00 PM</td>
+					<td id='630sunday-calendar'></td>
+					<td id='630monday-calendar'></td>
+					<td id='630tuesday-calendar'></td>
+					<td id='630wednesday-calendar'></td>
+					<td id='630thursday-calendar'></td>
+					<td id='630friday-calendar'></td>
+					<td id='630saturday-calendar'></td>
 				</tr>
 
 				<tr id ='7pm-calendar'>
-					<td>7:00 PM - 8:00 PM</td>
+					<td>7:00 PM - 7:30 PM</td>
+					<td id='7sunday-calendar'></td>
+					<td id='7monday-calendar'></td>
+					<td id='7tuesday-calendar'></td>
+					<td id='7wednesday-calendar'></td>
+					<td id='7thursday-calendar'></td>
+					<td id='7friday-calendar'></td>
+					<td id='7saturday-calendar'></td>
+				</tr>
+
+				<tr id ='730pm-calendar'>
+					<td>7:30 PM - 8:00 PM</td>
+					<td id='730sunday-calendar'></td>
+					<td id='730monday-calendar'></td>
+					<td id='730tuesday-calendar'></td>
+					<td id='730wednesday-calendar'></td>
+					<td id='730thursday-calendar'></td>
+					<td id='730friday-calendar'></td>
+					<td id='730saturday-calendar'></td>
 				</tr>
 			</table>
 			<br />
