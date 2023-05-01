@@ -35,7 +35,9 @@ function getCurrentSchedule(){
         .then(data => {
         data.json().then((data) => {
             if (data.length === 0) {
-                container.innerHTML = "<p>Schedule empty</p>";
+                const sch = document.createElement("p");
+                sch.innerText = "Schedule empty";
+                container.append(sch)
             } else {
                 for (const c of data) {
                     const p = coFactory.createClassObject(c)

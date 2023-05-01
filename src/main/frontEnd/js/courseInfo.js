@@ -41,14 +41,14 @@ class classObjectFactory {
         var classInfoSplit = classInfo.split(",");
 
         const addButton = document.createElement("span");
-        // addButton.className = 'classText';
+        addButton.className = 'addClassButton';
         addButton.id ='addClassButton' + this.nextUniqueID;
         addButton.innerText = "(Click to add Class)";
         addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoSplit[0] +'")');
         p.append(addButton)
 
         const removeButton = document.createElement("span");
-        // removeButton.className = 'classText';
+        removeButton.className = 'removeClassButton';
         removeButton.id ='removeClassButton' + this.nextUniqueID;
         removeButton.innerText = "(Click to remove Class)";
         removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoSplit[0] +'")');
