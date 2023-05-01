@@ -90,7 +90,20 @@ public class SpringWebAPI {
     @ResponseBody
     public String schedName() {
         String help = "help me homie";
-        return "{'name': 'hewwo uwu', 'body': 'Notice my data senpai plss'}";
+        return "{'name': 'hello?', 'body': 'Notice my data pls'}";
+    }
+
+    @CrossOrigin
+    @GetMapping("/class-list")
+    @ResponseBody
+    public String classList() {
+        ArrayList<Class> testClasses = new ArrayList<>();
+        Class acct = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 A");
+        Class acct2 = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 B");
+        testClasses.add(acct);
+        testClasses.add(acct2);
+
+        return  new Schedule("testSched", new Term(10), testClasses).toString();
     }
 
 

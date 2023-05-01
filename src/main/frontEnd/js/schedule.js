@@ -9,19 +9,22 @@ window.addEventListener("DOMContentLoaded", function() {
                 termSpan.innerText = data.name;
             });
         });
-        fetch('http://localhost:8080/schedule-name')
-            .then(response => {
-            console.log(response);
-            response.json())
-            }}
-
-              .then(data => {
-                schedName.innerText = data.name;
               })
                .catch(error => {
                console.log(error);
                     schedName.innerText = "yikes";
                 });
+
+    const classList = document.getElementById("curr-class-list");
+    classList.innerText = 'help me'
+    const getClassListURL = `http://localhost:8080/class-list`;
+     fetch(getClassListURL)
+        .then(response => { return response.json() })
+        .then(data => classList.innerText = data)
+        .catch(error => {
+                       console.log(error);
+                            classList.innerText = "there's nothing here!!!";
+                        });
 });
 window.addEventListener("DOMContentLoaded", updateSchedule());
 
@@ -31,7 +34,7 @@ function updateSchedule(){
 }
 
 function getCurrentSchedule(){
-    const getSearchURL = `http://localhost:8080/schedule?query=` + searchQuery; TODO fix this url
+    const getSearchURL = `http://localhost:8080/schedule?query=` + searchQuery; 
     const container = document.getElementById("schedule-classes-list"); //this is how you pull from html
     let schedule = "";
     fetch(getSearchURL)
