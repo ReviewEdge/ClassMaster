@@ -21,8 +21,9 @@
     <div class="flex-item-right">
       <div class="header">
         <h1>ClassMaster</h1>
-        <button id="login-button" onclick="window.location.href='/login.html';">Login</button>
-        <div class="search container">
+        <!-- <button id="login-button" onclick="window.location.href='/login.html';">Login</button> -->
+        <button id="login-button">Login</button>
+		<div class="search container">
 			<div class="input-group">
 				<input type="text" class="col-10" id="class-search-bar" placeholder="Try searching for a class name, time, or course code">
 				<select class="col-2" id="dept-in">
@@ -100,22 +101,13 @@
       </div>
 
       <div class="schedule-display">
-<!--        <div class="classText" onclick="clickMoreInfo()">Click me to toggle the popup!-->
-<!--          <span class="classInfoText" id="classInfoText">A Simple Popup!</span>-->
-<!--        </div>-->
-
         <div class="schedule-classes-list" id="schedule-classes-list">CLASSES
-          <h4>My Schedule - <span id="curr-sched-term-name">TERM</span></h4>
-          <!-- <div class="classText" onclick="clickMoreInfo(2000)">Class 1
-            <p class="classInfoText" id="classInfoText2000">courseText</p>
-          </div>
-          <p></p>
-          <div class="classText" onclick="clickMoreInfo(1000)">Class 2
-            <div class="classInfoText" id="classInfoText1000">Class 2 Info</div>
-          </div>
-          <p>class 3</p>
-          <p>class 4</p>
-          <p>class 5</p> -->
+          <h4 id="schedule-display-header">My Schedule - <span id="curr-sched-term-name">TERM</span></h4>
+			<!-- <p class="classText" id="classText1000"> TESTING COMP 141 A, COMP PROGRAMMING I, Spring 2021, [Monday 13:00 - 13:50, Wednesday 13:00 - 13:50, Friday 13:00 - 13:50], David Valentine 
+				<viewdetailsbutton id="detailsButton1000" onclick="clickMoreInfo(1)">(Click for Details)</viewdetailsbutton>
+				<p id="addClassButton1000" onclick="addClassToSchedule(1234)">(Click to add Class)</p>
+				<p class="classInfoText" id="classInfoText1000">Get Description Information: WIP</p>
+			</p> -->
         </div>
 
         <div class="calendar-view">
