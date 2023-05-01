@@ -46,7 +46,52 @@ public class SpringWebAPI {
 
         return searchResultStrings;
     }
+    @CrossOrigin
+    @GetMapping("/schedule")
+    @ResponseBody
+    public Schedule schedule(@RequestParam(value = "query", defaultValue = "") String query) throws Exception {
 
+        Schedule mySchedule = null;
+
+        if (query.equals("")){
+            ArrayList<Class> someclasses = new ArrayList<>();
+             mySchedule = new Schedule("my schedule",new Term(10),someclasses);
+        }
+
+
+        /*
+        Search newSearch = new Search(query, f);
+
+        try {
+            newSearch.runQuery();
+        } catch (NullPointerException e) {
+            System.out.println("no search results for " + query);
+            return searchResultStrings;
+        }
+
+        for (Class c : newSearch.getCurrentResults() ) {
+            searchResultStrings.add(c.toString());
+        }
+
+        System.out.println("sending search results for " + query);
+        */
+
+        ArrayList<Class> testClasses = new ArrayList<>();
+        Class acct = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 A");
+        Class acct2 = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 B");
+        testClasses.add(acct);
+        testClasses.add(acct2);
+
+        return  new Schedule("testSched", new Term("Spring 2020"), testClasses);
+    }
+
+    @CrossOrigin
+    @GetMapping("/schedule-name")
+    @ResponseBody
+    public String schedName() {
+        String help = "help me homie";
+        return "{'name': 'hewwo uwu', 'body': 'Notice my data senpai plss'}";
+    }
 
 
 

@@ -83,12 +83,12 @@ public class Schedule {
 //            this.classes.add(new Class(c));
 //        }
 //    }
-    public String toString(){
+    public String toString(){ //displays credit count, classes, and times of classes
         StringBuilder scheduleString = new StringBuilder();
         scheduleString.append(name).append(" for semester ").append(term).append(" has ").append(currentcredits).append(" credits\n");
         for(int i = 0; i < classes.size(); i++){
             scheduleString.append(i+1).append( ": ");
-            scheduleString.append(classes.get(i)).append("\n");
+            scheduleString.append(classes.get(i)).append("- ").append(classes.get(i).getTimeSlots().toString()).append("\n");
         }
         return scheduleString.toString();
     }

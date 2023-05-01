@@ -1,7 +1,7 @@
+edu/gcc/comp350/frg/Application.java
+ edu.gcc.comp350.frg.Application
 edu/gcc/comp350/frg/DatabaseConnector.java
  edu.gcc.comp350.frg.DatabaseConnector
-edu/gcc/comp350/frg/DBTesting.java
- edu.gcc.comp350.frg.DBTesting
 edu/gcc/comp350/frg/Search.java
  edu.gcc.comp350.frg.Search
 edu/gcc/comp350/frg/Class.java
@@ -27,3 +27,5 @@ edu/gcc/comp350/frg/Schedule.java
  edu.gcc.comp350.frg.Schedule
 edu/gcc/comp350/frg/Main.java
  edu.gcc.comp350.frg.Main
+edu/gcc/comp350/frg/SpringWebAPI.java
+ edu.gcc.comp350.frg.SpringWebAPI

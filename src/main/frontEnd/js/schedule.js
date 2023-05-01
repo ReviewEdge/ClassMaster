@@ -1,5 +1,6 @@
 window.addEventListener("DOMContentLoaded", function() {
     const termSpan = document.getElementById("curr-sched-term-name");
+    const schedName = document.getElementById("curr-sched-name");
     const courseList = document.getElementById("course-list");
     const getTermURL = `http://localhost:8080/term-test`;
     fetch(getTermURL)
@@ -8,6 +9,19 @@ window.addEventListener("DOMContentLoaded", function() {
                 termSpan.innerText = data.name;
             });
         });
+        fetch('http://localhost:8080/schedule-name')
+            .then(response => {
+            console.log(response);
+            response.json())
+            }}
+
+              .then(data => {
+                schedName.innerText = data.name;
+              })
+               .catch(error => {
+               console.log(error);
+                    schedName.innerText = "yikes";
+                });
 });
 window.addEventListener("DOMContentLoaded", updateSchedule());
 
@@ -17,25 +31,10 @@ function updateSchedule(){
 }
 
 function getCurrentSchedule(){
-
-    const getSearchURL = http://localhost:8080/calendar?id= + 1;
-    const container = document.getElementById("schedule-classes-list");
-
+    const getSearchURL = `http://localhost:8080/schedule?query=` + searchQuery; TODO fix this url
+    const container = document.getElementById("schedule-classes-list"); //this is how you pull from html
+    let schedule = "";
     fetch(getSearchURL)
-        .then(data => {
-        data.json().then((data) => {
-            console.log(data)
-            if (data.length === 0) {
-                console.log()
-                container.innerHTML = "<p>Schedule empty</p>";
-            } else {
-                container.innerHTML = "My Schedule";
-                for (const c of data) {
-                    const p = coFactory.createClassObject(c)
-                    container.append(p);
-                }
-            }
-
-        });
-    });
+    .then(response => { return response.json() })
+    .then(data => schedule = data)
 }

@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", function() {
         const searchQuery = searchBar.value;
         const container = document.getElementById("search-results");
 
-        const getSearchURL = `http://localhost:8080/search?query=` + searchQuery;
+        const getSearchURL = `http://localhost:8080/search?query=' + ;
         fetch(getSearchURL)
             .then(data => {
                 data.json().then((data) => {
