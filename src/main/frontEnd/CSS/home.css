@@ -83,6 +83,10 @@ input,textarea {
     right: 12px;
 }
 
+#search-results {
+    background-color: lightgray;
+}
+
 .schedule-classes-list {
     padding: 1rem;
     /* line-height: 20%; */

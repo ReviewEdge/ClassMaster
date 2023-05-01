@@ -21,12 +21,13 @@ function updateSchedule(){
     container.innerText = 'Classes'
     container.innerHTML = ''
     container.append(scheduleHeader)
-    getCurrentSchedule()
+    var schedule = getCurrentSchedule()
+    updateClassDisplayList(schedule)
 }
 
 function getCurrentSchedule(){
     
-    const getScheduleURL = `http://localhost:8080/calendar?id=` + 1;
+    const getScheduleURL = `http://localhost:8080/getSchedule?id=` + 1;
 
     const container = document.getElementById("schedule-classes-list");
 
@@ -47,6 +48,10 @@ function getCurrentSchedule(){
 
         });
     });
+}
+
+function updateClassDisplayList(schedule){
+    
 }
 
 function addClassToSchedule(courseCode){

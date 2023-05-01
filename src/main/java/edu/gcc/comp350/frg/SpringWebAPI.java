@@ -54,9 +54,9 @@ public class SpringWebAPI {
     }
 
     @CrossOrigin
-    @GetMapping("/calendar")
+    @GetMapping("/getSchedule")
     @ResponseBody
-    public ArrayList<String> calendar(@RequestParam(value = "id", defaultValue = "") String acct) {
+    public ArrayList<String> getSchedule(@RequestParam(value = "id", defaultValue = "") String acct) {
         System.out.println("\n---------------------\n");
         try {
             if(acct.equals("")){
