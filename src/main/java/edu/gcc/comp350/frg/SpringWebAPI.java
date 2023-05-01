@@ -3,6 +3,7 @@ package edu.gcc.comp350.frg;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,7 +19,8 @@ public class SpringWebAPI {
     @GetMapping("/term-test")
     @ResponseBody
     public Term termTest() {
-        Term sendTerm = new Term(10);
+        System.out.println("\n---------------------\n");
+        Term sendTerm = new Term(30);
 
         System.out.println("SENDING TERM OBJECT: " + sendTerm);
 
@@ -29,6 +31,7 @@ public class SpringWebAPI {
     @GetMapping("/search")
     @ResponseBody
     public ArrayList<String> search(@RequestParam(value = "query", defaultValue = "") String query) {
+        System.out.println("\n---------------------\n");
 
         Filter f = new Filter();  //TODO: get the current filter
         ArrayList<String> searchResultStrings = new ArrayList<>();
@@ -54,7 +57,7 @@ public class SpringWebAPI {
     @GetMapping("/calendar")
     @ResponseBody
     public ArrayList<String> calendar(@RequestParam(value = "id", defaultValue = "") String acct) {
-//        System.out.println(acct);
+        System.out.println("\n---------------------\n");
         try {
             if(acct.equals("")){
                 throw new Exception("id left to default value");
@@ -64,7 +67,7 @@ public class SpringWebAPI {
 
             ArrayList<String> scheduleResultString = new ArrayList<>();
             for (Class c : sch.getClasses()) {
-                System.out.println(sch.toString());
+//                System.out.println(sch.toString());
                 scheduleResultString.add(c.toString());
             }
             return scheduleResultString;
@@ -80,6 +83,7 @@ public class SpringWebAPI {
     @PostMapping("/login")
     @ResponseBody
     public Account login(@RequestBody LoginForm loginForm) {
+        System.out.println("\n---------------------\n");
         Account emptyAccount = new Account(-1, null, null, null, null, null);
 
         try {
@@ -102,6 +106,85 @@ public class SpringWebAPI {
         } catch (Exception e) {
             System.out.println(e);
             return emptyAccount;
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/addClass")
+    @ResponseBody
+    public ArrayList<Boolean> addClass(@RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
+                                       @RequestParam(value = "dept", defaultValue = "") String dept,
+                                       @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
+                                       @RequestParam(value = "section", defaultValue = "") String section,
+                                       @RequestParam(value = "year", defaultValue = "") String year,
+                                       @RequestParam(value = "term", defaultValue = "") String term){
+        System.out.println("\n---------------------\n");
+        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
+        System.out.println("Request Recieved to add " +  courseCode + " to schedule " + scheduleID);
+        ArrayList<Boolean> result = new ArrayList<>();
+
+
+        if(scheduleID.equals("") || courseCode.equals("    ")){
+            System.out.println("Failed to add class due to lack of parameters");
+            result.add(false);
+            return result;
+        }
+        try {
+            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
+            Class cls = Class.getClassFromDBbyCourseCode(courseCode);
+            sch.addClass(cls);
+            sch.saveSchedule();
+            System.out.println("Course Added");
+            result.add(true);
+            return result;
+
+        } catch (Exception e){
+            System.out.println("Failed to add to schedule");
+            System.out.println(e.toString());
+            result.add(false);
+            return result;
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/removeClass")
+    @ResponseBody
+    public ArrayList<Boolean> removeClass(@RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
+                                       @RequestParam(value = "dept", defaultValue = "") String dept,
+                                       @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
+                                       @RequestParam(value = "section", defaultValue = "") String section,
+                                          @RequestParam(value = "year", defaultValue = "") String year,
+                                          @RequestParam(value = "term", defaultValue = "") String term){
+        System.out.println("\n---------------------\n");
+        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
+        System.out.println("Request Recieved to remove " +  courseCode + "from schedule " + scheduleID);
+        ArrayList<Boolean> result = new ArrayList<>();
+
+
+        if(scheduleID.equals("") || courseCode.equals("    ")){
+            System.out.println("Failed to remove class due to lack of parameters");
+            result.add(false);
+            return result;
+        }
+        try {
+            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
+            ArrayList<Class> classes = sch.getClasses();
+            for(int i  = 0; i < classes.size(); i++){
+                if(classes.get(i).getCode().equals(courseCode)){
+                    sch.removeClass(i);
+                    sch.saveSchedule();
+                    System.out.println("Course removed");
+                    result.add(true);
+                    return result;
+                }
+            }
+            throw new Exception("No matching class in the schedule");
+
+        } catch (Exception e){
+            System.out.println("Failed to remove class schedule");
+            System.out.println(e.toString());
+            result.add(false);
+            return result;
         }
     }
 

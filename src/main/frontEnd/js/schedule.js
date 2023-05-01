@@ -16,6 +16,11 @@ window.addEventListener("DOMContentLoaded",function() {
 });
 
 function updateSchedule(){
+    const container = document.getElementById("schedule-classes-list");
+    const scheduleHeader = document.getElementById("schedule-display-header");
+    container.innerText = 'Classes'
+    container.innerHTML = ''
+    container.append(scheduleHeader)
     getCurrentSchedule()
 }
 
@@ -41,3 +46,52 @@ function getCurrentSchedule(){
         });
     });
 }
+
+function addClassToSchedule(courseCode){
+
+    var currentSchedule = 1;
+    var ccSplit = courseCode.split(" ")
+    console.log(courseCode)
+    console.log(ccSplit)
+
+    const addClassURL = `http://localhost:8080/addClass?` +
+        `scheduleID=` + currentSchedule +
+        `&dept=` + ccSplit[0] + 
+        `&courseNum=` + ccSplit[1] + 
+        `&section=` + ccSplit[2] +
+        `&year=2020` + 
+        `&term=30`;
+    console.log(addClassURL)
+
+
+    fetch(addClassURL)
+        .then(data => {
+        data.json().then((data) => {
+            updateSchedule()
+        });
+    });
+}
+
+function removeClassFromSchedule(courseCode){
+
+    var currentSchedule = 1;
+    var ccSplit = courseCode.split(" ")
+    console.log(courseCode)
+    console.log(ccSplit)
+
+    const addClassURL = `http://localhost:8080/removeClass?` +
+        `scheduleID=` + currentSchedule +
+        `&dept=` + ccSplit[0] + 
+        `&courseNum=` + ccSplit[1] + 
+        `&section=` + ccSplit[2] + 
+        `&year=2020` + 
+        `&term=30`;
+    console.log(addClassURL)
+
+    fetch(addClassURL)
+        .then(data => {
+        data.json().then((data) => {
+            updateSchedule()
+        });
+    });
+};
