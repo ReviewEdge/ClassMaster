@@ -74,35 +74,46 @@ public class SpringWebAPI {
         }
     }
 
+    @CrossOrigin
+    @PostMapping("/API/setFilter")
+    public void setFilter(@RequestBody FilterForm filterForm) {
+        f.setProfessor(filterForm.getProfessor());//sets it to null if empty
+        f.setCode(filterForm.getCode());//sets it to null if empty
+        f.setMinCredits(filterForm.getMinimum());//sets it to -1 if empty
+        f.setMaxCredits(filterForm.getMaximum());//sets it to -1 if empty
+        f.setDepartment(filterForm.getDepartment());//sets it to null if empty
+        for(Timeslot t : filterForm.getTimeslots()){
+            f.addTimeslot(t);
+        }
+    }
 
+    @CrossOrigin
+    @PostMapping("/login")
+    @ResponseBody
+    public Account login(@RequestBody LoginForm loginForm) {
+        Account emptyAccount = new Account(-1, null, null, null, null, null);
 
-//    @CrossOrigin
-//    @PostMapping("/login")
-//    @ResponseBody
-//    public Account login(@RequestBody LoginForm loginForm) {
-//        Account emptyAccount = new Account(-1, null, null, null, null, null);
-//
-//        try {
-//            Account realAccount = Account.getAccountByEmailFromDB(loginForm.getEmail());
-//
-//            System.out.println("login attempt for: " + realAccount);
-//
-//            if (realAccount == null) {
-//                return emptyAccount;
-//            }
-//
-//            if (realAccount.validatePassword(loginForm.getPassword())) {
-//                loggedInUsers.add(realAccount.getId());
-//                System.out.println("logged in user " + realAccount.getId());
-//                return realAccount;
-//            } else {
-//                return emptyAccount;
-//            }
-//
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            return emptyAccount;
-//        }
-//    }
+        try {
+            Account realAccount = Account.getAccountByEmailFromDB(loginForm.getEmail());
+
+            System.out.println("login attempt for: " + realAccount);
+
+            if (realAccount == null) {
+                return emptyAccount;
+            }
+
+            if (realAccount.validatePassword(loginForm.getPassword())) {
+                loggedInUsers.add(realAccount.getId());
+                System.out.println("logged in user " + realAccount.getId());
+                return realAccount;
+            } else {
+                return emptyAccount;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return emptyAccount;
+        }
+    }
 
 }
