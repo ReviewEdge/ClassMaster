@@ -1,21 +1,33 @@
-let classes;//store a list of classes from last time filter got ran
+let classes = null;//store a list of classes from last time filter got ran
 
 window.addEventListener("DOMContentLoaded", function() {
     // attach an event listener to the search bar for dynamic updates
-    // const searchBar = document.getElementById("class-search-bar");
-    // commentButton.addEventListener("input", onType);
+    const searchBar = document.getElementById("class-search-bar");
+    commentButton.addEventListener("input", onType);
 });
 
 function onType(){
     //close and submit the filter if it hasn't been submitted already
     if(document.getElementById("filterCollapse").classList.contains("show")){
         document.getElementById("filters-button").click();
+        updateFilter();
+        return;
     }
     //filter the currently stored classes however they are stored
-
+    if(classes === null){
+        return;
+    }
+    const container = document.getElementById("search-results");
+    const search = document.getElementById("class-search-bar").value;
+    container.innerHTML = "";
+    for (const c of classes) {
+        if(!c.includes(search)) continue;
+        const p = coFactory.createClassObject(c)
+        container.append(p);
+    }
 }
 
-function onFilterClose(){
+function updateFilter(){
     const prof = document.getElementById("prof-in").value;
     const code = document.getElementById("code-in").value;
     const min = document.getElementById("min-cred-in").value;
@@ -69,7 +81,12 @@ function onFilterClose(){
             "department":dept,
             "timeslots":JSON.stringify(timeslots)
         })
-    });
+    })
+        .then(validateJSON)
+        //get all classes
+        .then(data => {
+            classes = data.classes;
+        });
 }
 
 /**
