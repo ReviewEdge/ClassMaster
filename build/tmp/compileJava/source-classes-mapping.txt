@@ -1,11 +1,14 @@
-edu/gcc/comp350/frg/Application.java
- edu.gcc.comp350.frg.Application
-edu/gcc/comp350/frg/DatabaseConnector.java
- edu.gcc.comp350.frg.DatabaseConnector
+edu/gcc/comp350/frg/API.java
+ edu.gcc.comp350.frg.API
+edu/gcc/comp350/frg/CmdLineInterface.java
+ edu.gcc.comp350.frg.CmdLineInterface
+ edu.gcc.comp350.frg.CmdLineInterface$Screen
+edu/gcc/comp350/frg/LoginForm.java
+ edu.gcc.comp350.frg.LoginForm
 edu/gcc/comp350/frg/Search.java
  edu.gcc.comp350.frg.Search
-edu/gcc/comp350/frg/Class.java
- edu.gcc.comp350.frg.Class
+edu/gcc/comp350/frg/Account.java
+ edu.gcc.comp350.frg.Account
 edu/gcc/comp350/frg/Term.java
  edu.gcc.comp350.frg.Term
 edu/gcc/comp350/frg/Day.java
@@ -16,16 +19,17 @@ edu/gcc/comp350/frg/Timeslot.java
  edu.gcc.comp350.frg.Timeslot
 edu/gcc/comp350/frg/Department.java
  edu.gcc.comp350.frg.Department
-edu/gcc/comp350/frg/API.java
- edu.gcc.comp350.frg.API
-edu/gcc/comp350/frg/CmdLineInterface.java
- edu.gcc.comp350.frg.CmdLineInterface
- edu.gcc.comp350.frg.CmdLineInterface$Screen
-edu/gcc/comp350/frg/Account.java
- edu.gcc.comp350.frg.Account
+edu/gcc/comp350/frg/LoginResponse.java
+ edu.gcc.comp350.frg.LoginResponse
+edu/gcc/comp350/frg/Application.java
+ edu.gcc.comp350.frg.Application
 edu/gcc/comp350/frg/Schedule.java
  edu.gcc.comp350.frg.Schedule
+edu/gcc/comp350/frg/Class.java
+ edu.gcc.comp350.frg.Class
 edu/gcc/comp350/frg/Main.java
  edu.gcc.comp350.frg.Main
+edu/gcc/comp350/frg/DatabaseConnector.java
+ edu.gcc.comp350.frg.DatabaseConnector
 edu/gcc/comp350/frg/SpringWebAPI.java
  edu.gcc.comp350.frg.SpringWebAPI
