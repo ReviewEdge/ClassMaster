@@ -24,8 +24,8 @@ input,textarea {
 }
 
 .hamburger-menu {
-    background-color: #dc1433;
-    color: #5C0000;
+    background-color: cadetblue;
+    color: cadetblue;
     min-width: 4rem;
     height:100vh;
 }
@@ -48,7 +48,7 @@ input,textarea {
 }
 
 .header {
-    background-color: #dc1433;
+    background-color: cadetblue;
     padding: 1rem;
 }
 
@@ -81,7 +81,7 @@ input,textarea {
 
 .schedule-classes-list {
     padding: 1rem;
-    line-height: 20%;
+    /* line-height: 20%; */
 }
 
 .calendar-view {
@@ -90,65 +90,43 @@ input,textarea {
     margin: 8px;
 }
 
- body {
-            margin-top: 0px;
-            padding-top: 0px;
-            text-align: top;
-            border-collapse: collapse;
-          }
-          table{
-            margin-top: 0px;
-            border:1px solid black;
-            text-align: center;
-            border-collapse: collapse;
-          }
-
-          td#naglowek { /*  ???  */
-            font-family: sans;
-            font-size: 30px;
-            font-weight: bold;
-            text-align: center;
-            background-color: black;
-            color: white;
-          }
-
-          td:first-child { /*    */
-            font-family: sans;
-            font-size: 14px;
-            text-align: center;
-          }
-
-          td { /*  Sun-Sat  */
-          font-family: sans;
-          font-size: 14px;
-          text-align: center;
-          padding-top: 2px;
-          padding-bottom: 2px;
-          }
-
-          th { /*  days of the week  */
-            padding-top: 10px;
-            font-family: Comic Sans MS; /*  lol  */
-            font-size: 19px;
-            font-weight: bold;
-            border-bottom: solid 0px black;
-            text-align: center;
-          }
 
 
-          table {
-            overflow: hidden;
-          }
-          tr:nth-child(2n+1) td:first-child {
-            position: relative;
-          }
-          tr:nth-child(2n+1) td:first-child:after {
-            content: ' ';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 100vw;
-            background-color: rgb(240, 240, 240);
-            z-index: -1;
-          }
+.classText {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.classText .classInfoText {
+  visibility: hidden;
+  width: 250px;
+  background-color: #F0F8FF;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  border-color: black;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.classText .show {
+  visibility: visible;
+}
+
+.addClassButton {
+    background-color: green;
+    border: black solid;
+}
+
+.removeClassButton {
+    background-color: red;
+    border: black solid;
+
+}

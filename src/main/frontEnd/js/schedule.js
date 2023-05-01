@@ -1,7 +1,6 @@
 window.addEventListener("DOMContentLoaded", function() {
     const termSpan = document.getElementById("curr-sched-term-name");
-    const schedName = document.getElementById("curr-sched-name");
-    const courseList = document.getElementById("course-list");
+
     const getTermURL = `http://localhost:8080/term-test`;
     fetch(getTermURL)
         .then(data => {
@@ -9,35 +8,92 @@ window.addEventListener("DOMContentLoaded", function() {
                 termSpan.innerText = data.name;
             });
         });
-              })
-               .catch(error => {
-               console.log(error);
-                    schedName.innerText = "yikes";
-                });
-
-    const classList = document.getElementById("curr-class-list");
-    classList.innerText = 'help me'
-    const getClassListURL = `http://localhost:8080/class-list`;
-     fetch(getClassListURL)
-        .then(response => { return response.json() })
-        .then(data => classList.innerText = data)
-        .catch(error => {
-                       console.log(error);
-                            classList.innerText = "there's nothing here!!!";
-                        });
 });
-window.addEventListener("DOMContentLoaded", updateSchedule());
 
+
+window.addEventListener("DOMContentLoaded",function() {
+    updateSchedule()
+});
 
 function updateSchedule(){
-    console.log(getCurrentSchedule())
+    const container = document.getElementById("schedule-classes-list");
+    const scheduleHeader = document.getElementById("schedule-display-header");
+    container.innerText = 'Classes'
+    container.innerHTML = ''
+    container.append(scheduleHeader)
+    getCurrentSchedule()
 }
 
 function getCurrentSchedule(){
-    const getSearchURL = `http://localhost:8080/schedule?query=` + searchQuery; 
-    const container = document.getElementById("schedule-classes-list"); //this is how you pull from html
-    let schedule = "";
-    fetch(getSearchURL)
-    .then(response => { return response.json() })
-    .then(data => schedule = data)
+    
+    const getScheduleURL = `http://localhost:8080/calendar?id=` + 1;
+
+    const container = document.getElementById("schedule-classes-list");
+
+
+    fetch(getScheduleURL)
+        .then(data => {
+        data.json().then((data) => {
+            if (data.length === 0) {
+                const sch = document.createElement("p");
+                sch.innerText = "Schedule empty";
+                container.append(sch)
+            } else {
+                for (const c of data) {
+                    const p = coFactory.createClassObject(c)
+                    container.append(p);
+                }
+            }
+
+        });
+    });
 }
+
+function addClassToSchedule(courseCode){
+
+    var currentSchedule = 1;
+    var ccSplit = courseCode.split(" ")
+    console.log(courseCode)
+    console.log(ccSplit)
+
+    const addClassURL = `http://localhost:8080/addClass?` +
+        `scheduleID=` + currentSchedule +
+        `&dept=` + ccSplit[0] + 
+        `&courseNum=` + ccSplit[1] + 
+        `&section=` + ccSplit[2] +
+        `&year=2020` + 
+        `&term=30`;
+    console.log(addClassURL)
+
+
+    fetch(addClassURL)
+        .then(data => {
+        data.json().then((data) => {
+            updateSchedule()
+        });
+    });
+}
+
+function removeClassFromSchedule(courseCode){
+
+    var currentSchedule = 1;
+    var ccSplit = courseCode.split(" ")
+    console.log(courseCode)
+    console.log(ccSplit)
+
+    const addClassURL = `http://localhost:8080/removeClass?` +
+        `scheduleID=` + currentSchedule +
+        `&dept=` + ccSplit[0] + 
+        `&courseNum=` + ccSplit[1] + 
+        `&section=` + ccSplit[2] + 
+        `&year=2020` + 
+        `&term=30`;
+    console.log(addClassURL)
+
+    fetch(addClassURL)
+        .then(data => {
+        data.json().then((data) => {
+            updateSchedule()
+        });
+    });
+};

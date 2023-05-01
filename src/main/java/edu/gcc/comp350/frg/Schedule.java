@@ -1,9 +1,5 @@
 package edu.gcc.comp350.frg;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -60,20 +56,8 @@ public class Schedule {
         this.classes = classes;
     }
 
-    public void Export( ) {
-        try {
-            System.out.println("Exporting Schedule as Text file...");
-            FileWriter writer = new FileWriter(name+".txt");
-            writer.write(toString());
-            writer.close();
-            System.out.println("Text file has been exported.");
-        } catch (IOException e) {
-            System.out.println("An error occurred while exporting the text file: " + e.getMessage());
-        }
-    }
 
-
-//dont worry about this yet pls
+    //dont worry about this yet pls
 //    public Schedule( Schedule other) {
 //        this.name = other.name;
 //        this.id = other.id;
@@ -83,12 +67,12 @@ public class Schedule {
 //            this.classes.add(new Class(c));
 //        }
 //    }
-    public String toString(){ //displays credit count, classes, and times of classes
+    public String toString(){
         StringBuilder scheduleString = new StringBuilder();
         scheduleString.append(name).append(" for semester ").append(term).append(" has ").append(currentcredits).append(" credits\n");
         for(int i = 0; i < classes.size(); i++){
             scheduleString.append(i+1).append( ": ");
-            scheduleString.append(classes.get(i)).append("- ").append(classes.get(i).getTimeSlots().toString()).append("\n");
+            scheduleString.append(classes.get(i)).append("\n");
         }
         return scheduleString.toString();
     }
@@ -289,7 +273,23 @@ public class Schedule {
         }
     }
 
+//    @Override
+//    public String toJSON(){
+//        StringBuilder scheduleString = new StringBuilder();
+
+//        return scheduleString.toString();
+//    }
+
+
+//    public static void main(String[] args){
+//        for(int i = 0; i < 100; i++){
+//            try{
+//                deleteScheduleByIDFromDB(i);
+//            } catch (Exception e){
 //
+//            }
+//        }
+//    }
 
 }
 
