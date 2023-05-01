@@ -245,6 +245,102 @@ public class Account {
         }
     }
 
+    public static Account getSingleAccountByUsernameFromDB(String username) throws Exception{
+        String sql = "SELECT * FROM accounts1 WHERE username = ?";
+
+        try (Connection conn = DatabaseConnector.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            Account gotAcc = null;
+            while (rs.next()) {
+                String schedulesString = rs.getString("schedules");
+
+                JSONObject schedulesJSON = new JSONObject(schedulesString);
+                JSONArray schedulesJSONArray = schedulesJSON.optJSONArray("schedulesString");
+
+                ArrayList<Schedule> newSchedules = new ArrayList<>();
+                if (schedulesJSONArray != null) {
+                    for (int i = 0; i < schedulesJSONArray.length(); i++) {
+                        newSchedules.add(Schedule.getScheduleByIDFromDB((Integer) schedulesJSONArray.get(i)));
+                    }
+                }
+
+                gotAcc = new Account(
+                        rs.getInt("ID"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("username"),
+                        newSchedules
+                );
+            }
+
+            conn.close();
+            return gotAcc;
+
+        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            return null;
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+
+    public static Account getAccountByEmailFromDB(String username) throws Exception{
+        String sql = "SELECT * FROM accounts1 WHERE email = ?";
+
+        try (Connection conn = DatabaseConnector.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            Account gotAcc = null;
+            while (rs.next()) {
+                String schedulesString = rs.getString("schedules");
+
+                JSONObject schedulesJSON = new JSONObject(schedulesString);
+                JSONArray schedulesJSONArray = schedulesJSON.optJSONArray("schedulesString");
+
+                ArrayList<Schedule> newSchedules = new ArrayList<>();
+                if (schedulesJSONArray != null) {
+                    for (int i = 0; i < schedulesJSONArray.length(); i++) {
+                        newSchedules.add(Schedule.getScheduleByIDFromDB((Integer) schedulesJSONArray.get(i)));
+                    }
+                }
+
+                gotAcc = new Account(
+                        rs.getInt("ID"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("username"),
+                        newSchedules
+                );
+            }
+
+            conn.close();
+            return gotAcc;
+
+        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            return null;
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+
     public static void deleteAccountByIDFromDB(int id) {
         try {
             //Deletes associated Schedules
