@@ -96,6 +96,16 @@ public class Filter {
             }
         }
 
+        //if there is no set day, add this to all days
+        if(timeslot.getDay() == Day.NONE){
+            for(Day d : Day.values()) {
+                Timeslot t = new Timeslot(timeslot);
+                t.setDay(d);
+                addTimeslot(t);
+            }
+            return;
+        }
+
         Time start = timeslot.getStart();
         Time end = timeslot.getEnd();
 
@@ -142,6 +152,16 @@ public class Filter {
      * @return true if the timeslot was in the day's set
      */
     public void removeTimeslot(Timeslot timeslot) {
+        //if there is no set day, remove this from all days
+        if(timeslot.getDay() == Day.NONE){
+            for(Day d : Day.values()) {
+                Timeslot t = new Timeslot(timeslot);
+                t.setDay(d);
+                removeTimeslot(t);
+            }
+            return;
+        }
+
         TreeSet<Timeslot> day = this.timeslots.get(timeslot.getDay().ordinal());
         if (day.remove(timeslot)){
             return;
