@@ -1,12 +1,15 @@
 package edu.gcc.comp350.frg;
 
+import com.github.javaparser.utils.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
 public class Account {
 
@@ -115,6 +118,31 @@ public class Account {
 
     public ArrayList<Schedule> getSchedules(){
         return mySchedules;
+    }
+
+    public ArrayList<Integer> getScheduleIDs() {
+        ArrayList<Integer> schedIDs = new ArrayList<>();
+        for (Schedule s : this.mySchedules) {
+            schedIDs.add(s.getId());
+        }
+        return schedIDs;
+    }
+
+
+    public ArrayList<ArrayList<String>> getMySchedulesTuples() {
+//        ArrayList<Integer> schedIDs = new ArrayList<>();
+//        ArrayList<String> schedNames = new ArrayList<>();
+
+        ArrayList<ArrayList<String>> groupy = new ArrayList<>();
+
+        for (Schedule s : this.mySchedules) {
+            ArrayList<String> sc = new ArrayList<>();
+            sc.add(Integer.toString(s.getId()));
+            sc.add(s.getName());
+            sc.add(s.getTerm().toString());
+            groupy.add(sc);
+        }
+        return groupy;
     }
 
     public void addSchedule(Schedule sch){

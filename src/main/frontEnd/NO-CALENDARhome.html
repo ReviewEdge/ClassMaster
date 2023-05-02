@@ -6,14 +6,8 @@
   <link rel="stylesheet" href="CSS/home.css">
   <script src="js/courseInfo.js"></script>
   <script src="js/collapsible.js"></script>
-<<<<<<< HEAD
-  <script src="js/schedule.js"></script>
-  <!--<script src="js/searchBar.js"></script>-->
-  <script src="js/search.js"></script>
-=======
   <script src="js/schedule.js" type="module"></script>
   <script src="js/searchBar.js"></script>
->>>>>>> master
 	<!-- Bootstrap -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
@@ -46,7 +40,7 @@
 			<div class="input-group">
 				<input type="text" class="col-10" id="class-search-bar" placeholder="Try searching for a class name, time, or course code">
 				<select class="col-2" id="dept-in">
-					<option value="" selected>Departments...</option>
+					<option value="NONE" selected>Departments...</option>
 					<option disabled>──────────</option>
 					<option value="COMP">Computer Science</option>
 					<option value="HUMA">Humanities</option>
@@ -56,7 +50,7 @@
         </div>
 			<div class = "container">
 				<p>
-					<!--<button id="search-submit-button">Search</button>-->
+					<button id="search-submit-button">Search</button>
 					<button type="button" id="filters-button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">Filters</button>
 				</p>
 				<div class="collapse" id="filterCollapse">
@@ -88,35 +82,28 @@
 							</div>
 						</div>
 						<div class="mb-1">
-							<button id="add-time">Add Time Restriction</button>
-							<button id="clear-time">Clear Time Restrictions</button>
+							<button class="btn-primary">Add Time Restriction</button>
+							<button class="btn-primary">Clear Time Restrictions</button>
 						</div>
-						<!--
-							example of timeslot
-						-->
-						<div class="input-group input-group-sm mb-1" id="timeslot-hidden" hidden>
-							<button type="button" class="btn-close" aria-label="Close"></button>
-							<select>
-								<option selected value="NONE">All Days</option>
-								<option disabled>──────────</option>
-								<!--<option value="Sunday">Sunday</option>-->
-								<option value="Monday">Monday</option>
-								<option value="Tuesday">Tuesday</option>
-								<option value="Wednesday">Wednesday</option>
-								<option value="Thursday">Thursday</option>
-								<option value="Friday">Friday</option>
-								<!--<option value="Saturday">Saturday</option>-->
-							</select>
-							<span class="input-group-text">from</span>
-							<input type="time" class="form-control" min="08:00" max="22:00" required>
-							<span class="input-group-text">to</span>
-							<input type="time" class="form-control" min="08:00" max="22:00" required>
-						</div>
-						<!--
-							example of timeslot
-						-->
 						<div class="col-6" id="timeslots">
-							
+							<div class="input-group input-group-sm mb-1" id="timeslot-hidden" hidden>
+								<button type="button" class="btn-close" aria-label="Close"></button>
+								<select>
+									<option selected value="NONE">All Days</option>
+									<option disabled>──────────</option>
+									<!--<option value="Sunday">Sunday</option>-->
+									<option value="Monday">Monday</option>
+									<option value="Tuesday">Tuesday</option>
+									<option value="Wednesday">Wednesday</option>
+									<option value="Thursday">Thursday</option>
+									<option value="Friday">Friday</option>
+									<!--<option value="Saturday">Saturday</option>-->
+								</select>
+								<span class="input-group-text">from</span>
+								<input type="time" class="form-control" min="08:00" max="22:00" required>
+								<span class="input-group-text">to</span>
+								<input type="time" class="form-control" min="08:00" max="22:00" required>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -137,77 +124,11 @@
         </div>
 
         <div class="calendar-view">
-			<h1>The Calendar View</h1>
-			<h3>This is all just text,
-				need to find way to actually add timeslots</h3>
-
-			<table style="width:100%">
-				<colgroup>
-					<col span="1" style="background-color: #eb857a">
-				</colgroup>
-				<tr>
-					<th>  </th>
-					<th>Sunday</th>
-					<th>Monday</th>
-					<th>Tuesday</th>
-					<th>Wednesday</th>
-					<th>Thursday</th>
-					<th>Friday</th>
-					<th>Saturday</th>
-				</tr>
-				<tr id ='8am-calendar'>
-					<td>8:00 AM - 9:00 AM</td>
-					<td id='8sunday-calendar'></td>
-					<td>hi</td>
-				</tr>
-				<tr>
-					<td>9:00 AM - 10:00 AM</td>
-
-				</tr>
-				<tr>
-					<td>10:00 AM - 11:00 AM</td>
-
-				</tr>
-				<tr>
-					<td>11:00 AM - 12:00 PM</td>
-
-				</tr>
-				<tr>
-					<td>12:00 PM - 1:00 PM</td>
-
-				</tr>
-				<tr>
-					<td>1:00 PM - 2:00 PM</td>
-
-				</tr>
-				<tr>
-					<td>2:00 PM - 3:00 PM</td>
-
-				</tr>
-				<tr>
-					<td>3:00 PM - 4:00 PM</td>
-
-				</tr>
-				<tr>
-					<td>4:00 PM - 5:00 PM</td>
-
-				</tr>
-				<tr>
-					<td>5:00 PM - 6:00 PM</td>
-
-				</tr>
-				<tr>
-					<td>6:00 PM - 7:00 PM</td>
-
-
-				</tr>
-				<tr>
-					<td>7:00 PM - 8:00 PM</td>
-
-				</tr>
-			</table>
-			<br />
-			<br />
+          <h1>The Calendar View</h1>
+          <br />
+          <br />
+          <br />
+          <br />
         </div>
       </div>
 

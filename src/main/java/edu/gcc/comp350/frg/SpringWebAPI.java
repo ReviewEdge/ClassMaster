@@ -1,9 +1,11 @@
 package edu.gcc.comp350.frg;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.json.JSONObject;
+import com.github.javaparser.utils.Pair;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -117,30 +119,33 @@ public class SpringWebAPI {
     @CrossOrigin
     @PostMapping("/login")
     @ResponseBody
-    public Account login(@RequestBody LoginForm loginForm) {
+    public Integer login(@RequestBody LoginForm loginForm) {
         System.out.println("\n---------------------\n");
         Account emptyAccount = new Account(-1, null, null, null, null, null);
 
+        Integer accountID = new Integer(-1);
+
         try {
             Account realAccount = Account.getAccountByEmailFromDB(loginForm.getEmail());
+            accountID = realAccount.getId();
 
             System.out.println("login attempt for: " + realAccount);
 
             if (realAccount == null) {
-                return emptyAccount;
+                return accountID;
             }
 
             if (realAccount.validatePassword(loginForm.getPassword())) {
                 loggedInUsers.add(realAccount.getId());
                 System.out.println("logged in user " + realAccount.getId());
-                return realAccount;
+                return accountID;
             } else {
-                return emptyAccount;
+                return accountID;
             }
 
         } catch (Exception e) {
             System.out.println(e);
-            return emptyAccount;
+            return accountID;
         }
     }
 
@@ -195,7 +200,6 @@ public class SpringWebAPI {
         System.out.println("Request Recieved to remove " +  courseCode + "from schedule " + scheduleID);
         ArrayList<Boolean> result = new ArrayList<>();
 
-
         if(scheduleID.equals("") || courseCode.equals("    ")){
             System.out.println("Failed to remove class due to lack of parameters");
             result.add(false);
@@ -204,6 +208,7 @@ public class SpringWebAPI {
         try {
             Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
             ArrayList<Class> classes = sch.getClasses();
+
             for(int i  = 0; i < classes.size(); i++){
                 if(classes.get(i).getCode().equals(courseCode)){
                     sch.removeClass(i);
@@ -222,5 +227,85 @@ public class SpringWebAPI {
             return result;
         }
     }
+
+
+
+
+
+
+    @CrossOrigin
+    @GetMapping("/getMySchedules")
+    @ResponseBody
+    public ArrayList<ArrayList<String>> getMySchedules(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret) {
+        ArrayList<ArrayList<String>> groupy = new ArrayList<>();
+
+        //TODO: this should do a security thing:
+        int userID = Integer.parseInt(loginSecret);
+
+        //Check if logged in
+        //TODO: make this secure by using a secret
+        if (!loggedInUsers.contains(userID)) {
+            System.out.println("can't get schedules, user not signed in");
+            return groupy;
+        }
+
+        System.out.println("Getting schedules for user " + userID);
+
+        try {
+            Account currentUser = Account.getAccountByIdFromDB(userID);
+            groupy = currentUser.getMySchedulesTuples();
+        } catch (SQLException e) {
+            System.out.println("no search results for " + userID);
+            return groupy;
+        } catch (Exception e) {
+            System.out.println(e);
+            return groupy;
+        }
+
+        System.out.println("sending schedule for user " + userID);
+
+        return groupy;
+    }
+
+
+
+    @PostMapping("/makeNewSchedule")
+    @ResponseBody
+    @CrossOrigin
+    public ArrayList<String> makeNewSchedule(@RequestBody NewScheduleForm nsF) {
+        ArrayList<String> group = new ArrayList<>();
+
+        //TODO: this should do a security thing:
+        int userID = Integer.parseInt(nsF.getLoginSecret());
+
+        //Check if logged in
+        //TODO: make this secure by using a secret
+        if (!loggedInUsers.contains(userID)) {
+            System.out.println("can't make schedule, user not signed in");
+            return group;
+        }
+
+        try {
+            Account currentUser = Account.getAccountByIdFromDB(userID);
+            Schedule newSc = new Schedule(nsF.getName(), new Term(nsF.getTerm()), null);
+            newSc.saveSchedule();
+            currentUser.addSchedule(newSc);
+            currentUser.saveOrUpdateAccount();
+            System.out.println("Created schedule " + newSc.getName() + " for user " + currentUser.getId());
+            group.add(Integer.toString(newSc.getId()));
+            group.add(newSc.getName());
+            group.add(newSc.getTerm().toString());
+        } catch (SQLException e) {
+            System.out.println("no user " + userID);
+            return group;
+        } catch (Exception e) {
+            System.out.println(e);
+            return group;
+        }
+
+        return group;
+    }
+
+
 
 }
