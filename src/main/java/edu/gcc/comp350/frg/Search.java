@@ -14,6 +14,11 @@ public class Search {
         currentResults = new ArrayList<>();
     }
 
+    public Search(Filter filter){
+        this.filter = filter;
+        currentResults = new ArrayList<>();
+    }
+
     public String getQuery() {
         return query;
     }
@@ -39,7 +44,9 @@ public class Search {
     }
 
     public void runQuery(){
-        ArrayList<Class> classResults = Class.getClassesFromDBbySearchTerm(query);
+        ArrayList<Class> classResults;
+        if(query != null) classResults = Class.getClassesFromDBbySearchTerm(query);
+        else classResults = Class.getAllClassesFromDB();
 
         for (Class c : classResults) {
             if(filter.isValid(c))

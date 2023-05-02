@@ -98,7 +98,7 @@ public class SpringWebAPI {
         System.out.println("\n---------------------\n");
 
         ArrayList<String> searchResultStrings = new ArrayList<>();
-        Search newSearch = new Search("", f);
+        Search newSearch = new Search(f);
 
         try {
             newSearch.runQuery();
