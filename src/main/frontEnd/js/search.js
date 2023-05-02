@@ -2,16 +2,34 @@ let classes = null;//store a list of classes from last time filter got ran
 
 window.addEventListener("DOMContentLoaded", function() {
     // attach an event listener to the search bar for dynamic updates
+    updateFilter();
     const searchBar = document.getElementById("class-search-bar");
-    commentButton.addEventListener("input", onType);
+    searchBar.addEventListener("input", onType);
+    const addTimeBtn = this.document.getElementById("add-time");
+    addTimeBtn.addEventListener("click", addTime);
+    const clearTimeBtn = this.document.getElementById("clear-time");
+    clearTimeBtn.addEventListener("click", clearTime);
+    document.getElementById("filters-button").addEventListener("click", updateFilter);
 });
+
+function addTime(){
+    const new_timeslot = document.getElementById("timeslot-hidden").cloneNode(true);
+    new_timeslot.removeAttribute("hidden"); 
+    document.getElementById("timeslots").appendChild(new_timeslot);
+}
+
+function clearTime(){
+    const parent = document.getElementById("timeslots");
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
 
 function onType(){
     //close and submit the filter if it hasn't been submitted already
     if(document.getElementById("filterCollapse").classList.contains("show")){
+        classes = null;
         document.getElementById("filters-button").click();
-        updateFilter();
-        return;
     }
     //filter the currently stored classes however they are stored
     if(classes === null){
@@ -20,35 +38,39 @@ function onType(){
     const container = document.getElementById("search-results");
     const search = document.getElementById("class-search-bar").value;
     container.innerHTML = "";
+    console.log(classes)
     for (const c of classes) {
-        if(!c.includes(search)) continue;
+        if(!c.toLowerCase().includes(search)) continue;
         const p = coFactory.createClassObject(c)
         container.append(p);
+    }
+    if(classes.length === 0){
+        container.innerHTML = "<p>No search results</p>";
     }
 }
 
 function updateFilter(){
     const prof = document.getElementById("prof-in").value;
     const code = document.getElementById("code-in").value;
-    const min = document.getElementById("min-cred-in").value;
+    let min = document.getElementById("min-cred-in").value;
     if(min === "") min="-1";
-    const max = document.getElementById("max-cred-in").value;
+    let max = document.getElementById("max-cred-in").value;
     if(max === "") max="-1";
     const dept = document.getElementById("dept-in").value;
-    const timeslot_elems = document.getElementById("timeslots").childNodes;
+    const timeslot_elems = document.getElementById("timeslots").children;
     const timeslots = new Array(timeslot_elems.length);
     //convert all timeslot elements into a string that can be decoded later
     //start at 1 to skip 0, which is just the original that gets cloned
-    for(i=1; i<timeslot_elems.length; i++){
-        const children = timeslot_elems.item(i).childNodes;
+    for(i=0; i<timeslot_elems.length; i++){
+        const children = timeslot_elems.item(i).children;
         /**
          * each element has these children:
-         * close button
-         * day of week
-         * "from" text
-         * start time
-         * "to" text
-         * end time
+         * 1. close button
+         * 2. day of week
+         * 3. "from" text
+         * 4. start time
+         * 5. "to" text
+         * 6. end time
          */
         let ret = "";
 
@@ -74,18 +96,18 @@ function updateFilter(){
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            "professor":prof,
-            "code":code,
-            "minimum":min,
-            "maximum":max,
-            "department":dept,
-            "timeslots":JSON.stringify(timeslots)
+            professor : prof,
+            code : code,
+            minimum : min,
+            maximum : max,
+            department :dept,
+            timeslots : timeslots
         })
     })
         .then(validateJSON)
         //get all classes
         .then(data => {
-            classes = data.classes;
+            classes = data;
         });
 }
 
