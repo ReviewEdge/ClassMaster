@@ -188,7 +188,12 @@ public class Class {
 
     public String getCourseCodeWithoutTerm() {
         String[] partsOfCC = this.code.split(" ");
-        String courseCodeWithoutTerm = partsOfCC[2] + " " + partsOfCC[3] + " " + partsOfCC[4];
+        String courseCodeWithoutTerm;
+        try {
+            courseCodeWithoutTerm = partsOfCC[2] + " " + partsOfCC[3] + " " + partsOfCC[4];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            courseCodeWithoutTerm = partsOfCC[2] + " " + partsOfCC[3];
+        }
         return courseCodeWithoutTerm;
     }
 
