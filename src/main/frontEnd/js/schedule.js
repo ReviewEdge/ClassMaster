@@ -29,8 +29,6 @@ window.addEventListener("DOMContentLoaded",function() {
     });
 
     newScSubmit.addEventListener("click", function() {
-        // if()
-
         createNewSchedule();
     });
 });
