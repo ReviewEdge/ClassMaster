@@ -36,7 +36,7 @@ function onType(){
         return;
     }
     const container = document.getElementById("search-results");
-    const search = document.getElementById("class-search-bar").value;
+    const search = document.getElementById("class-search-bar").value.toLowerCase().trim();
     container.innerHTML = "";
     console.log(classes)
     for (const c of classes) {
@@ -131,16 +131,6 @@ function validateJSON(response) {
 /**
  * copied from an example in web class, will be using as a reference for how to do js
  */
-
-
-
-
-
-
-
-
-
-
 
 /*
 window.addEventListener("DOMContentLoaded", function() {
