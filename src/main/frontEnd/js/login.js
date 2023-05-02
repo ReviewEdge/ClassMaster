@@ -1,3 +1,5 @@
+import { setCookie, getCookie } from './useCookies.js';
+
 window.addEventListener("DOMContentLoaded", function() {
 
 
@@ -27,9 +29,12 @@ async function login(e, p) {
         fetch(url, options)
             .then(data => {
                 data.json().then((data) => {
-                    const id = data.id;
+                    const id = data;
+                    console.log("ID: " + data);
                     if (id !== -1) {
                         setCookie("user", id, 30);
+                        // console.log(getCookie("user"));
+                        window.location.href = "/home.html";
                     }
                 });
             });
@@ -39,25 +44,3 @@ async function login(e, p) {
 }
 
 
-function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    let expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}

@@ -22,7 +22,6 @@ class classObjectFactory {
     }
 
     createClassObject(classInfo) {
-        console.log(classInfo)
         const p = document.createElement("p");
         p.className = 'classText';
         p.id ='classText' + this.nextUniqueID;
