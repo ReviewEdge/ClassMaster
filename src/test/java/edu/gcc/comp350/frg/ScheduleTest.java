@@ -101,4 +101,24 @@ class ScheduleTest {
         }
 
     }
+
+    void exportSchedule() throws Exception {
+        int randomNum = ThreadLocalRandom.current().nextInt(40, 10000 + 1);
+        String schedName = Integer.toString(randomNum);
+
+        ArrayList<Class> testClasses = new ArrayList<>();
+        Class acct = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 A");
+        Class acct2 = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 B");
+        testClasses.add(acct);
+        testClasses.add(acct2);
+
+        Schedule schedTest = new Schedule(schedName, new Term("Fall 2020"), testClasses);
+        try{
+            schedTest.Export();
+        }
+        catch (Exception e){
+            fail();
+        }
+
+    }
 }
