@@ -73,6 +73,50 @@ input,textarea {
     left: 12px;
 }
 
+.list-of-schedules {
+    display: none;
+}
+
+.schedules-is-active {
+    display: block;
+    color: black;
+    position: absolute;
+    top: 50px;
+    left: 12px;
+    max-width: 8rem;
+}
+
+#hidden-sched-name-temp {
+    display: none;
+}
+
+#new-sched-button {
+    width: 2rem;
+}
+
+.new-sc-form {
+    display: none;
+    padding-top: 1rem;
+}
+
+#new-sc-name {
+    max-width: 8rem;
+    margin-bottom: .4rem;
+}
+
+.sc-form-active {
+    display: block;
+}
+
+
+
+
+
+
+
+
+
+
 #login-button {
     position: absolute;
     top: 12px;

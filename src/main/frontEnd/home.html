@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="CSS/home.css">
   <script src="js/courseInfo.js"></script>
   <script src="js/collapsible.js"></script>
-  <script src="js/schedule.js"></script>
+  <script src="js/schedule.js" type="module"></script>
   <script src="js/searchBar.js"></script>
 	<!-- Bootstrap -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -16,13 +16,26 @@
   <div class="home-flex-container">
     <div class="hamburger-menu flex-item-left collapsible">
       <button id="hamburger-button" class="collapsible-btn">SM</button>
+      <div id="sc-list-id" class="list-of-schedules">
+		<p id="hidden-sched-name-temp"><span id="sched-name-input">NAME</span> - <span id="sched-term-input">TERM</span></p>
+		<button id="new-sched-button">+</button>
+		<div class="new-sc-form">
+			<input id="new-sc-name" type="text" placeholder="Name">
+			<label for="term">Choose a Term:</label>
+				<select id="new-sc-term" name="term">
+					<option value="Fall 2020">Fall 2020</option>
+					<option value="Spring 2021">Spring 2021</option>
+			</select>
+			<input id="new-sc-submit" type="submit">
+		</div>
+      </div>
     </div>
 
     <div class="flex-item-right">
       <div class="header">
         <h1>ClassMaster</h1>
-        <!-- <button id="login-button" onclick="window.location.href='/login.html';">Login</button> -->
-        <button id="login-button">Login</button>
+        <button id="login-button" onclick="window.location.href='/login.html';">Login</button>
+        <!-- <button id="login-button">Login</button> -->
 		<div class="search container">
 			<div class="input-group">
 				<input type="text" class="col-10" id="class-search-bar" placeholder="Try searching for a class name, time, or course code">
