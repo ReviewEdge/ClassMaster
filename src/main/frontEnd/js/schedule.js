@@ -39,19 +39,22 @@ window.addEventListener("DOMContentLoaded", function() {
     const timeslots = [
       new Timeslot('Monday', '12:00 PM', '1:00 PM' ),
       new Timeslot('Wednesday', '12:00 PM', '1:00 PM'),
-      new Timeslot('Thursday', '12:30 PM', '1:30 PM'),
+      new Timeslot('Thursday', '12:30 PM', '2:20 PM'),
       new Timeslot('Friday', '12:00 PM', '1:00 PM')
     ];
 
-    const classes = [new Class('MATH 214 Applied Probabliity and Linear Algebra', timeslots)];
+    const classes = [new Class('MATH 214 A', timeslots)];
 
     classes.forEach(cls => {
         cls.timeslots.forEach(slt => {
-      const queryString = `tr:nth-child(${getRowIndex(slt.startTime)}) td:nth-child(${getColumnIndex(slt.dayOfWeek)})`;
-      console.log(queryString);
-      const cell = table.querySelector(queryString);
-      if(!cell){console.log("ah shit, it's null!")}
-      cell.innerText = cls.name;})
+      const queryStringStart = `tr:nth-child(${getRowIndex(slt.startTime)}) td:nth-child(${getColumnIndex(slt.dayOfWeek)})`;
+      const queryStringEnd = `tr:nth-child(${getRowIndex(slt.endTime)}) td:nth-child(${getColumnIndex(slt.dayOfWeek)})`;
+      const startCell = table.querySelector(queryStringStart);
+      const endCell = table.querySelector(queryStringEnd);
+      if(!startCell){console.log("ah shit, start's null!")}
+      if(!endCell){console.log("ah shit, end's null!")}
+      startCell.innerText = cls.name;
+      endCell.innerText = cls.name;})
     });
 });
 
@@ -83,11 +86,18 @@ function getColumnIndex(dayOfWeek) {
   console.log(columns.indexOf(dayOfWeek) + 2);
   return columns.indexOf(dayOfWeek) + 2;
 }
-function getRowIndex(classTime) {
-    console.log(classTime)
-  const rows = ['8:00 AM','8:30 AM', '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM',];
-  console.log(rows.indexOf(classTime) + 2);
-  return rows.indexOf(classTime) + 2;
+function getRowIndex(timeStr) {
+  let [times, ampm] = timeStr.split(" ");
+  let [hours, minutes] = times.split(":");
+ let hourInt = parseInt(hours);
+ let minInt = parseFloat(minutes);
+  if (ampm === 'PM' && hourInt !== 12) {
+    hourInt += 12;
+  }
+  const time = 2*((hourInt) + (minInt / 60))-14;
+  console.log(timeStr)
+  console.log(time);
+  return Math.ceil(time)
 }
 
 
