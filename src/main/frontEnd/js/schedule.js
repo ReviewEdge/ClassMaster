@@ -68,21 +68,21 @@ function getMyScheduleNames(){
     const container = document.getElementById("sc-list-id");
     const template = document.getElementById("hidden-sched-name-temp");
 
-    fetch(getAllUserSchedulesURL)
-        .then(data => {
-        data.json().then((data) => {
-            if (data.length === 0) {
-                const sch = document.createElement("p");
-                sch.innerText = "No schedules";
-                container.prepend(sch)
-            } else {
-                for (const s of data) {
-                    insertSchedule(s, template, container);
-                }
-            }
+    // fetch(getAllUserSchedulesURL)
+    //     .then(data => {
+    //     data.json().then((data) => {
+    //         if (data.length === 0) {
+    //             const sch = document.createElement("p");
+    //             sch.innerText = "No schedules";
+    //             container.prepend(sch)
+    //         } else {
+    //             for (const s of data) {
+    //                 insertSchedule(s, template, container);
+    //             }
+    //         }
 
-        });
-    });
+    //     });
+    // });
 }
 
 function insertSchedule(s, template, container) {
@@ -107,14 +107,14 @@ function updateSchedule(){
     container.innerText = 'Classes'
     container.innerHTML = ''
     container.append(scheduleHeader)
-    getCurrentSchedule()
-    // var schedule = getCurrentSchedule()
-    // updateClassDisplayList(schedule)
+    // getCurrentSchedule()
+    var schedule = getCurrentSchedule()
+    updateClassDisplayList(schedule, container)
 }
 
 function getCurrentSchedule(){
     
-    const getScheduleURL = 'http://localhost:8080/getSchedule?id=' + 1;
+    const getScheduleURL = 'http://localhost:8080/getCal?id=' + 1;
 
     const container = document.getElementById("schedule-classes-list");
 
@@ -122,24 +122,35 @@ function getCurrentSchedule(){
     fetch(getScheduleURL)
         .then(data => {
         data.json().then((data) => {
-            // console.log(data)
-            if (data.length === 0) {
-                const sch = document.createElement("p");
-                sch.innerText = "Schedule empty";
-                container.append(sch)
-            } else {
-                for (const c of data) {
-                    const p = coFactory.createClassObject(c, true)
-                    container.append(p);
-                }
-            }
+            console.log(data)
+            return data
+
+            // if (data.length === 0) {
+            //     const sch = document.createElement("p");
+            //     sch.innerText = "Schedule empty";
+            //     container.append(sch)
+            // } else {
+            //     for (const c of data) {
+            //         const p = coFactory.createClassObject(c, true)
+            //         container.append(p);
+            //     }
+            // }
 
         });
     });
 }
 
-function updateClassDisplayList(schedule){
-    
+function updateClassDisplayList(schedule, container){
+
+    if (schedule === null){
+        const sch = document.createElement("p");
+        sch.innerText = "Schedule empty";
+        container.append(sch)
+    }
+    for(const c of schedule.classes){
+        const p = coFactory.createClassObjectFromJSON(schedule, true)
+        container.append(p);
+    }
 }
 
 function addClassToSchedule(courseCode){

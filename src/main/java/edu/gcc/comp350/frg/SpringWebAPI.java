@@ -87,7 +87,7 @@ public class SpringWebAPI {
     @CrossOrigin
     @GetMapping("/getCal")
     @ResponseBody
-    public Schedule getCal(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
+    public String getCal(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
         System.out.println("\n---------------------\n");
         try {
             if(scheduleID.equals("")){
@@ -96,7 +96,8 @@ public class SpringWebAPI {
 
             Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
             System.out.println("sending calendar results for id=" + scheduleID);
-            return sch;
+            System.out.println(sch.toJSON());
+            return sch.toJSON();
         } catch (Exception e){
             System.out.println("SpringWebAPI requested for invalid calendar id");
             System.out.println(e.toString());
