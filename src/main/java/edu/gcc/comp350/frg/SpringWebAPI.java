@@ -149,6 +149,44 @@ public class SpringWebAPI {
         }
     }
 
+
+
+
+
+    @CrossOrigin
+    @GetMapping("/logout")
+    @ResponseBody
+    public Integer logout(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret) {
+        //TODO: this should do a security thing:
+        int userID = Integer.parseInt(loginSecret);
+
+        //Check if logged in
+        //TODO: make this secure by using a secret
+        if (!loggedInUsers.contains(userID)) {
+            System.out.println("can't get logout, user not signed in");
+            return -1;
+        }
+
+        try {
+            Account realAccount = Account.getAccountByIdFromDB(userID);
+
+            if (realAccount == null) {
+                return -1;
+            }
+
+            loggedInUsers.removeIf(n -> n == realAccount.getId());
+            System.out.println("logged out user " + realAccount.getId());
+            return 1;
+        } catch (Exception e) {
+            System.out.println(e);
+            return -1;
+        }
+    }
+
+
+
+
+
     @CrossOrigin
     @GetMapping("/addClass")
     @ResponseBody
