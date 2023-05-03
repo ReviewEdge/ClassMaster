@@ -196,13 +196,8 @@ public class Class {
     @Override
     public String toString(){
         StringBuilder classString = new StringBuilder();
-        classString.append(getCourseCodeWithoutTerm()+", ");
-        classString.append(this.title+", ");
-        if(this.term != null) {
-            classString.append(this.term + ", ");
-        } else {
-            classString.append("No Term" + ", ");
-        }
+        classString.append("$"+getCourseCodeWithoutTerm()+" ");
+        classString.append(this.title+"$");
         if(this.timeSlots != null) {
             classString.append(this.timeSlots + ", ");
         } else {

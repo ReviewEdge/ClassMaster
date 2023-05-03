@@ -12,46 +12,65 @@ window.addEventListener("DOMContentLoaded", function() {
         });
 
 
-
-
-
-
-    // create an array of Class objects
-    const classes = [
-      new Class('Math 101', '8:00 AM', '8:30 AM', 'Sunday'),
-      new Class('Physics 201', '9:00 AM', '10:30 AM', 'Tuesday'),
-      new Class('English 202', '11:00 AM', '12:30 PM', 'Monday'),
-      // more Class objects
-    ];
-
     // loop through each Class object and add it to the table cell that corresponds to its day and time
     const table = document.getElementById('calendar-view-table');
-    classes.forEach(cls => {
+
+    const getCalendarURL = `http://localhost:8080/calendar`;
+   fetch(getCalendarURL)
+       .then(response => response.json())
+       .then(data => {
+           try {
+               // Parse the JSON data here
+               console.log(data);
+           } catch (error) {
+               console.error('Error parsing JSON data:', error);
+           }
+       })
+       .catch(error => {
+           console.error('Error fetching data:', error);
+       });
+
+
+
+
+
+
+
+    const timeslots = [
+      new Timeslot('9:00am', '10:30am', 'Monday'),
+      new Timeslot('10:45am', '12:15pm', 'Wednesday')
+    ];
+
+    const classes = [new Class('Math', timeslots)];
+
+    /*classes.forEach(cls => {
       const queryString = `tr:nth-child(${getRowIndex(cls.startTime)}) td:nth-child(${getColumnIndex(cls.dayOfWeek)})`;
       console.log(queryString);
       const cell = table.querySelector(queryString);
       if(!cell){console.log("ah shit, it's null!")}
       cell.innerText = cls.name;
-    });
+    });*/
 });
 
 
 window.addEventListener("DOMContentLoaded",function() {
     updateSchedule()
 });
-/* AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                    This is new stuff           **/
 
-// define your Java objects (for example, a Class object)
+// ****defining objects from here****
 class Class {
-  constructor(name, startTime, endTime, dayOfWeek) {
+  constructor(name,timeslots) {
     this.name = name;
-    this.startTime = startTime;
-    this.endTime = endTime;
-    this.dayOfWeek = dayOfWeek;
+    this.timeslots = timeslots;
   }
 }
-
+class Timeslot {
+  constructor(dayOfWeek, startTime, endTime) {
+    this.dayOfWeek = dayOfWeek;
+    this.startTime = startTime;
+    this.endTime = endTime;
+  }
+}
 
 
 // helper function to get the column index of a day of the week

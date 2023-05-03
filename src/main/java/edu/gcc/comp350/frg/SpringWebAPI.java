@@ -69,7 +69,7 @@ public class SpringWebAPI {
 
             ArrayList<String> scheduleResultString = new ArrayList<>();
             for (Class c : sch.getClasses()) {
-//                System.out.println(sch.toString());
+               System.out.println(sch.toString());
                 scheduleResultString.add(c.toString());
             }
             return scheduleResultString;
@@ -305,7 +305,5 @@ public class SpringWebAPI {
 
         return group;
     }
-
-
 
 }
