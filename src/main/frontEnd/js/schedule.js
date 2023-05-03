@@ -96,12 +96,9 @@ function insertSchedule(s, template, container) {
     container.prepend(clonedElement);
 }
 
-
-
-
-async function getCurrentSchedule(){
+async function getCurrentSchedule(scheduleNum){
     
-    const getScheduleURL = 'http://localhost:8080/getSchedule?id=' + 1;
+    const getScheduleURL = 'http://localhost:8080/getSchedule?id=' + scheduleNum;
 
     const container = document.getElementById("schedule-classes-list");
 
@@ -122,9 +119,10 @@ async function updateSchedule(){
     container.innerHTML = ''
     // getCurrentSchedule()
 
-    const schedule = await getCurrentSchedule();
+    const schedule = await getCurrentSchedule(1);
     container.append(scheduleHeader)
-    updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm);
+    updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm)
+    setAddRemoveButtonFunctionality()
 }
 
 function updateClassDisplayList(schedule, cont, Header){
@@ -217,3 +215,22 @@ function removeClassFromSchedule(courseCode){
         });
     });
 };
+
+function setAddRemoveButtonFunctionality(){
+    console.log("HIIII")
+
+    const addButtons = document.getElementsByClassName("addClassButton");
+    for(const b of addButtons){
+        b.addEventListener("click", function() {
+            addClassToSchedule(b.data-courseCode)
+        });
+    }
+    const removeButtons = document.getElementsByClassName("removeClassButton");
+    console.log(removeButtons)
+    for(const b of addButtons){
+        console.log(b)
+        b.addEventListener("click", function() {
+            removeClassToSchedule(b.data-courseCode)
+        });
+    }
+}

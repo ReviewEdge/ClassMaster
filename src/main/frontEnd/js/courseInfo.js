@@ -46,6 +46,7 @@ class classObjectFactory {
             addButton.id ='addClassButton' + this.nextUniqueID;
             addButton.innerText = "(Click to add Class)";
             addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoSplit[0] +'")');
+            // addButton.setAttribute("data-courseCode", classInfoSplit[0])
             p.append(addButton)
         }
         else {
@@ -54,6 +55,7 @@ class classObjectFactory {
             removeButton.id ='removeClassButton' + this.nextUniqueID;
             removeButton.innerText = "(Click to remove Class)";
             removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoSplit[0] +'")');
+            // removeButton.setAttribute("data-courseCode", classInfoSplit[0])
             p.append(removeButton)
         }
 
@@ -90,6 +92,7 @@ class classObjectFactory {
             addButton.id ='addClassButton' + this.nextUniqueID;
             addButton.innerText = "(Click to add Class)";
             addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoJSON.code +'")');
+            // addButton.setAttribute("data-courseCode", classInfoJSON.code)
             p.append(addButton)
         }
         else {
@@ -98,6 +101,7 @@ class classObjectFactory {
             removeButton.id ='removeClassButton' + this.nextUniqueID;
             removeButton.innerText = "(Click to remove Class)";
             removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoJSON.code +'")');
+            // removeButton.setAttribute("data-courseCode", classInfoJSON.code)
             p.append(removeButton)
         }
 
@@ -113,28 +117,3 @@ class classObjectFactory {
 }
 
 coFactory = new classObjectFactory();
-
-function removeClassFromSchedule(courseCode){
-
-    var currentSchedule = 1;
-    var ccSplit = courseCode.split(" ")
-    console.log(courseCode)
-    console.log(ccSplit)
-
-    const addClassURL = 'http://localhost:8080/removeClass?' +
-        'scheduleID=' + currentSchedule +
-        '&dept=' + ccSplit[0] + 
-        '&courseNum=' + ccSplit[1] + 
-        '&section=' + ccSplit[2] + 
-        '&year=2020' + 
-        '&term=30';
-    console.log(addClassURL)
-
-    fetch(addClassURL)
-        .then(data => {
-        data.json().then((data) => {
-            // updateSchedule()
-            console.log("hi")
-        });
-    });
-};
