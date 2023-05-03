@@ -1,5 +1,7 @@
 package edu.gcc.comp350.frg;
 
+import org.springframework.util.unit.DataUnit;
+
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -99,6 +101,7 @@ public class Filter {
         //if there is no set day, add this to all days
         if(timeslot.getDay() == Day.NONE){
             for(Day d : Day.values()) {
+                if(d== Day.NONE) continue;
                 Timeslot t = new Timeslot(timeslot);
                 t.setDay(d);
                 addTimeslot(t);
@@ -270,18 +273,20 @@ public class Filter {
         }
         if(timeslots != null) {
             ArrayList<Timeslot> ts = test.getTimeSlots();
-            for (Timeslot t : ts){
-                // the day's timeslots
-                TreeSet<Timeslot> day = timeslots.get(t.getDay().ordinal());
-                // if no limitations have been put on this day, don't check
-                if(day.size() == 0) continue;
-                // all timeslots before, including ones that start at the same time as t
-                NavigableSet<Timeslot> b = day.headSet(t, true);
-                if (b.size() == 0) return false;// there are no valid timeslots on that day
-                // the timeslot that starts just before the class' one
-                Timeslot before = b.last();
-                // check if this time fits within the allotted time
-                if (!t.isIn(before)) return false;
+            if(ts != null && ts.size() > 0) {
+                for (Timeslot t : ts) {
+                    // the day's timeslots
+                    TreeSet<Timeslot> day = timeslots.get(t.getDay().ordinal());
+                    // if no limitations have been put on this day, don't check
+                    if (day.size() == 0) continue;
+                    // all timeslots before, including ones that start at the same time as t
+                    NavigableSet<Timeslot> b = day.headSet(t, true);
+                    if (b.size() == 0) return false;// there are no valid timeslots on that day
+                    // the timeslot that starts just before the class' one
+                    Timeslot before = b.last();
+                    // check if this time fits within the allotted time
+                    if (!t.isIn(before)) return false;
+                }
             }
         }
         if (professor != null){
