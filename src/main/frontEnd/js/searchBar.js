@@ -5,7 +5,7 @@ window.addEventListener("DOMContentLoaded", function() {
         const searchQuery = searchBar.value;
         const container = document.getElementById("search-results");
 
-        const getSearchURL = `http://localhost:8080/search?query=` +
+        const getSearchURL = "http://localhost:8080/search?query=" + searchQuery;
         fetch(getSearchURL)
             .then(data => {
                 data.json().then((data) => {
@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", function() {
                     } else {
                         container.innerHTML = "";
                         for (const c of data) {
-                            const p = coFactory.createClassObject(c)
+                            const p = coFactory.createClassObject(c, false)
                             container.append(p);
                         }
                     }

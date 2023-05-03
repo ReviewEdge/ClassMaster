@@ -273,12 +273,11 @@ public class Schedule {
         }
     }
 
-//    @Override
-//    public String toJSON(){
-//        StringBuilder scheduleString = new StringBuilder();
-
-//        return scheduleString.toString();
-//    }
+    public String toJSON(){
+        StringBuilder scheduleString = new StringBuilder();
+        JSONObject jsonObject = new JSONObject(this);
+        return jsonObject.toString();
+    }
 
 
 //    public static void main(String[] args){

@@ -107,6 +107,39 @@ public class Class {
         }
     }
 
+    public static ArrayList<Class> getAllClassesFromDB() {
+        try {
+
+            Connection conn = DatabaseConnector.connect();
+
+            String sql = "SELECT * FROM classes20to21v4";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // returns null if no classes were found
+            if (rs.getString("unique_code") == null) {
+                return null;
+            }
+
+            ArrayList<Class> classesResults = new ArrayList<>();
+            while (rs.next()) {
+                Class newClass = makeNewClassFromRS(rs);
+                if (newClass != null) {
+                    classesResults.add(newClass);
+                }
+            }
+
+            conn.close();
+
+            return classesResults;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
 
     private static Class makeNewClassFromRS(ResultSet rs) throws SQLException {
         // returns null if no class was found
@@ -188,7 +221,12 @@ public class Class {
 
     public String getCourseCodeWithoutTerm() {
         String[] partsOfCC = this.code.split(" ");
-        String courseCodeWithoutTerm = partsOfCC[2] + " " + partsOfCC[3] + " " + partsOfCC[4];
+        String courseCodeWithoutTerm;
+        try {
+            courseCodeWithoutTerm = partsOfCC[2] + " " + partsOfCC[3] + " " + partsOfCC[4];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            courseCodeWithoutTerm = partsOfCC[2] + " " + partsOfCC[3];
+        }
         return courseCodeWithoutTerm;
     }
 
@@ -196,8 +234,13 @@ public class Class {
     @Override
     public String toString(){
         StringBuilder classString = new StringBuilder();
-        classString.append("$"+getCourseCodeWithoutTerm()+" ");
-        classString.append(this.title+"$");
+        //classString.append(getCourseCodeWithoutTerm()+", ");
+        classString.append(this.title+", ");
+        if(this.term != null) {
+            classString.append(this.term + ", ");
+        } else {
+            classString.append("No Term" + ", ");
+        }
         if(this.timeSlots != null) {
             classString.append(this.timeSlots + ", ");
         } else {

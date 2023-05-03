@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.json.JSONObject;
+import org.springframework.http.MediaType;
 import com.github.javaparser.utils.Pair;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,7 @@ public class SpringWebAPI {
         System.out.println("\n---------------------\n");
 
         ArrayList<String> searchResultStrings = new ArrayList<>();
+        f.setTerm(new Term(30));
         Search newSearch = new Search(query, f);
 
         try {
@@ -56,16 +59,16 @@ public class SpringWebAPI {
     }
 
     @CrossOrigin
-    @GetMapping("/calendar")
+    @GetMapping("/getSchedule")
     @ResponseBody
-    public ArrayList<String> calendar(@RequestParam(value = "id", defaultValue = "") String acct) {
+    public ArrayList<String> getSchedule(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
         System.out.println("\n---------------------\n");
         try {
-            if(acct.equals("")){
+            if(scheduleID.equals("")){
                 throw new Exception("id left to default value");
             }
-            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(acct));
-            System.out.println("sending calendar results for id=" + acct);
+            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
+            System.out.println("sending calendar results for id=" + scheduleID);
 
             ArrayList<String> scheduleResultString = new ArrayList<>();
             for (Class c : sch.getClasses()) {
@@ -79,6 +82,29 @@ public class SpringWebAPI {
             return null;
         }
     }
+
+    //WORKING AREA FOR HOW TO MAKE IT A SCHEDULE RETURN
+    @CrossOrigin
+    @GetMapping("/getCal")
+    @ResponseBody
+    public String getCal(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
+        System.out.println("\n---------------------\n");
+        try {
+            if(scheduleID.equals("")){
+                throw new Exception("id left to default value");
+            }
+
+            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
+            System.out.println("sending calendar results for id=" + scheduleID);
+            System.out.println(sch.toJSON());
+            return sch.toJSON();
+        } catch (Exception e){
+            System.out.println("SpringWebAPI requested for invalid calendar id");
+            System.out.println(e.toString());
+            return null;
+        }
+    }
+
 
     @CrossOrigin
     @PostMapping("/API/setFilter")
@@ -98,7 +124,7 @@ public class SpringWebAPI {
         System.out.println("\n---------------------\n");
 
         ArrayList<String> searchResultStrings = new ArrayList<>();
-        Search newSearch = new Search("", f);
+        Search newSearch = new Search(f);
 
         try {
             newSearch.runQuery();
@@ -149,9 +175,58 @@ public class SpringWebAPI {
         }
     }
 
+
+
+
+
     @CrossOrigin
+    @GetMapping("/logout")
+    @ResponseBody
+    public Integer logout(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret) {
+        //TODO: this should do a security thing:
+        int userID = Integer.parseInt(loginSecret);
+
+        //Check if logged in
+        //TODO: make this secure by using a secret
+        if (!loggedInUsers.contains(userID)) {
+            System.out.println("can't get logout, user not signed in");
+            return -1;
+        }
+
+        try {
+            Account realAccount = Account.getAccountByIdFromDB(userID);
+
+            if (realAccount == null) {
+                return -1;
+            }
+
+            loggedInUsers.removeIf(n -> n == realAccount.getId());
+            System.out.println("logged out user " + realAccount.getId());
+            return 1;
+        } catch (Exception e) {
+            System.out.println(e);
+            return -1;
+        }
+    }
+
+
+
+
+
+    @CrossOrigin
+    @PostMapping(value = "/addClassTest")
+    @ResponseBody
+    public Schedule addClas(@RequestParam ScheduleForm scheduleForm){
+        System.out.println("\n---------------------\n");
+        System.out.println("ADDING CLAS REQUEST");
+        System.out.println("Request Recieved to add " +  scheduleForm + " to schedule ");
+        System.out.println(scheduleForm);
+        return new Schedule("name", new Term(30), new ArrayList<Class>());
+    }
+
     @GetMapping("/addClass")
     @ResponseBody
+    @CrossOrigin
     public ArrayList<Boolean> addClass(@RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
                                        @RequestParam(value = "dept", defaultValue = "") String dept,
                                        @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
@@ -190,9 +265,9 @@ public class SpringWebAPI {
     @GetMapping("/removeClass")
     @ResponseBody
     public ArrayList<Boolean> removeClass(@RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
-                                       @RequestParam(value = "dept", defaultValue = "") String dept,
-                                       @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
-                                       @RequestParam(value = "section", defaultValue = "") String section,
+                                          @RequestParam(value = "dept", defaultValue = "") String dept,
+                                          @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
+                                          @RequestParam(value = "section", defaultValue = "") String section,
                                           @RequestParam(value = "year", defaultValue = "") String year,
                                           @RequestParam(value = "term", defaultValue = "") String term){
         System.out.println("\n---------------------\n");
