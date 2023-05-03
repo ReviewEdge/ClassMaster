@@ -1,37 +1,147 @@
 import { setCookie, getCookie } from './useCookies.js';
 
-window.addEventListener("DOMContentLoaded", function() {
-    const termSpan = document.getElementById("curr-sched-term-name");
 
-    const getTermURL = 'http://localhost:8080/term-test';
-    fetch(getTermURL)
-        .then(data => {
-            data.json().then((data) => {
-                termSpan.innerText = data.name;
+// COURSE INFO STUFF
+var coFactoryExists = false;
+var coFactory_master = null;
+
+class classObjectFactory {
+
+    nextUniqueID;
+
+    constructor(){
+        if(coFactoryExists){
+            return coFactory_master;
+        }
+        this.nextUniqueID = 1;
+        coFactoryExists = true;
+    }
+
+    createClassObject(classInfo, inSchedule) {
+        // console.log(classInfo)
+        const p = document.createElement("p");
+        p.className = 'classText';
+        p.id ='classText' + this.nextUniqueID;
+    //    p.innerText = ClassInfo + "     (•••)";
+        p.innerText = classInfo;
+        // p.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+
+        const detailsButton = document.createElement("span");
+        // detailsButton.className = 'classText';
+        detailsButton.id ='detailsButton' + this.nextUniqueID;
+        // detailsButton.innerText = ClassInfo + "     (•••)";
+        detailsButton.innerText = "(Click for Details)";
+        detailsButton.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+        p.append(detailsButton)
+
+        var classInfoSplit = classInfo.split(",");
+
+        if(!(inSchedule)){
+            const addButton = document.createElement("span");
+            addButton.className = 'addClassButton';
+            addButton.id ='addClassButton' + this.nextUniqueID;
+            addButton.innerText = "(Click to add Class)";
+            // addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoSplit[0] +'")');
+            // addButton.setAttribute("data-courseCode", classInfoSplit[0])
+            addButton.addEventListener("click", function() {
+                addClassToSchedule(classInfoSplit[0])
             });
-        });
-});
+            p.append(addButton)
+        }
+        else {
+            const removeButton = document.createElement("span");
+            removeButton.className = 'removeClassButton';
+            removeButton.id ='removeClassButton' + this.nextUniqueID;
+            removeButton.innerText = "(Click to remove Class)";
+            // removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoSplit[0] +'")');
+            // removeButton.setAttribute("data-courseCode", classInfoSplit[0])
+            removeButton.addEventListener("click", function() {
+                removeClassToSchedule(classInfoSplit[0])
+            });
+            p.append(removeButton)
+        }
+
+        const pop = document.createElement("p");
+        pop.className = 'classInfoText';
+        pop.id ='classInfoText' + this.nextUniqueID;
+        pop.innerText = "Get Description Information: WIP";
+        p.append(pop);
+
+        this.nextUniqueID++;
+        return p;
+    }
+
+    createClassObjectFromJSON(classInfoJSON, inSchedule) {
+        // console.log(classInfo)
+        const p = document.createElement("p");
+        p.className = 'classText';
+        p.id ='classText' + this.nextUniqueID;
+        const courseCodeDiv = classInfoJSON.code.split(" ");
+        p.innerText =  courseCodeDiv[2] + " " + courseCodeDiv[3] + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
+        // p.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+
+        const detailsButton = document.createElement("span");
+        // detailsButton.className = 'classText';
+        detailsButton.id ='detailsButton' + this.nextUniqueID;
+        // detailsButton.innerText = ClassInfo + "     (•••)";
+        detailsButton.innerText = "(Click for Details)";
+        detailsButton.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+        p.append(detailsButton)
+
+        if(!(inSchedule)){
+            const addButton = document.createElement("span");
+            addButton.className = 'addClassButton';
+            addButton.id ='addClassButton' + this.nextUniqueID;
+            addButton.innerText = "(Click to add Class)";
+            // addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoJSON.code +'")');
+            // addButton.setAttribute("data-courseCode", classInfoJSON.code)
+            addButton.addEventListener("click", function() {
+                addClassToSchedule(classInfoJSON.code)
+            });
+            p.append(addButton)
+        }
+        else {
+            const removeButton = document.createElement("span");
+            removeButton.className = 'removeClassButton';
+            removeButton.id ='removeClassButton' + this.nextUniqueID;
+            removeButton.innerText = "(Click to remove Class)";
+            // removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoJSON.code +'")');
+            // removeButton.setAttribute("data-courseCode", classInfoJSON.code)
+            removeButton.addEventListener("click", function() {
+                removeClassToSchedule(classInfoJSON.code)
+            });
+            p.append(removeButton)
+        }
+
+        const pop = document.createElement("p");
+        pop.className = 'classInfoText';
+        pop.id ='classInfoText' + this.nextUniqueID;
+        pop.innerText = "Get Description Information: WIP";
+        p.append(pop);
+        
+        this.nextUniqueID++;
+        return p;
+    }
+}
+
+const coFactory = new classObjectFactory();
+
+function clickMoreInfo(val) {
+    var popup = document.getElementById("classInfoText" + val);
+    popup.classList.toggle("show");
+}
 
 
-window.addEventListener("DOMContentLoaded",function() {
-    updateSchedule()
-});
 
-window.addEventListener("DOMContentLoaded",function() {
-    getMyScheduleNames();
 
-    const newScBtn = document.getElementById("new-sched-button");
-    const newScForm = document.getElementsByClassName("new-sc-form")[0];
-    const newScSubmit = this.document.getElementById("new-sc-submit");
 
-    newScBtn.addEventListener("click", function() {
-        newScForm.classList.toggle("sc-form-active");
-    });
 
-    newScSubmit.addEventListener("click", function() {
-        createNewSchedule();
-    });
-});
+
+
+
+
+
+
 
 
 function createNewSchedule() {
@@ -122,7 +232,7 @@ async function updateSchedule(){
     const schedule = await getCurrentSchedule(1);
     container.append(scheduleHeader)
     updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm)
-    setAddRemoveButtonFunctionality()
+    // setAddRemoveButtonFunctionality()
 }
 
 function updateClassDisplayList(schedule, cont, Header){
@@ -216,21 +326,58 @@ function removeClassFromSchedule(courseCode){
     });
 };
 
-function setAddRemoveButtonFunctionality(){
-    console.log("HIIII")
+// function setAddRemoveButtonFunctionality(){
+//     console.log("HIIII")
 
-    const addButtons = document.getElementsByClassName("addClassButton");
-    for(const b of addButtons){
-        b.addEventListener("click", function() {
-            addClassToSchedule(b.data-courseCode)
+//     const addButtons = document.getElementsByClassName("addClassButton");
+//     for(const b of addButtons){
+//         b.addEventListener("click", function() {
+//             addClassToSchedule(b.data-courseCode)
+//         });
+//     }
+//     const removeButtons = document.getElementsByClassName("removeClassButton");
+//     console.log(removeButtons)
+//     for(const b of addButtons){
+//         console.log(b)
+//         b.addEventListener("click", function() {
+//             removeClassToSchedule(b.data-courseCode)
+//         });
+//     }
+// }
+
+
+
+
+
+window.addEventListener("DOMContentLoaded", function() {
+    const termSpan = document.getElementById("curr-sched-term-name");
+
+    const getTermURL = 'http://localhost:8080/term-test';
+    fetch(getTermURL)
+        .then(data => {
+            data.json().then((data) => {
+                termSpan.innerText = data.name;
+            });
         });
-    }
-    const removeButtons = document.getElementsByClassName("removeClassButton");
-    console.log(removeButtons)
-    for(const b of addButtons){
-        console.log(b)
-        b.addEventListener("click", function() {
-            removeClassToSchedule(b.data-courseCode)
-        });
-    }
-}
+});
+
+
+window.addEventListener("DOMContentLoaded",function() {
+    updateSchedule()
+});
+
+window.addEventListener("DOMContentLoaded",function() {
+    getMyScheduleNames();
+
+    const newScBtn = document.getElementById("new-sched-button");
+    const newScForm = document.getElementsByClassName("new-sc-form")[0];
+    const newScSubmit = this.document.getElementById("new-sc-submit");
+
+    newScBtn.addEventListener("click", function() {
+        newScForm.classList.toggle("sc-form-active");
+    });
+
+    newScSubmit.addEventListener("click", function() {
+        createNewSchedule();
+    });
+});
