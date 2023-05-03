@@ -1,4 +1,5 @@
 import { setCookie, getCookie } from './useCookies.js';
+import { coFactory } from './courseInfo.js';
 
 window.addEventListener("DOMContentLoaded", function() {
     const termSpan = document.getElementById("curr-sched-term-name");
@@ -122,7 +123,6 @@ async function updateSchedule(){
     const schedule = await getCurrentSchedule(1);
     container.append(scheduleHeader)
     updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm)
-    setAddRemoveButtonFunctionality()
 }
 
 function updateClassDisplayList(schedule, cont, Header){
@@ -148,18 +148,18 @@ function updateClassDisplayList(schedule, cont, Header){
     Header.append(termHeader)
 }
 
-function addClassToSchedule(courseCode){
+export function addClassToSchedule(courseCode){
 
     var currentSchedule = 1;
     var ccSplit = courseCode.split(" ")
-    // console.log(courseCode)
+    console.log(courseCode)
     // console.log(ccSplit)
 
     const addClassURL = 'http://localhost:8080/addClass?' +
         'scheduleID=' + currentSchedule +
-        '&dept=' + ccSplit[0] + 
-        '&courseNum=' + ccSplit[1] + 
-        '&section=' + ccSplit[2] +
+        '&dept=' + ccSplit[2] + 
+        '&courseNum=' + ccSplit[3] + 
+        '&section=' + ccSplit[4] +
         '&year=2020' + 
         '&term=30';
 
@@ -192,7 +192,7 @@ function addClassToSchedule(courseCode){
     });
 }
 
-function removeClassFromSchedule(courseCode){
+export function removeClassFromSchedule(courseCode){
 
     var currentSchedule = 1;
     var ccSplit = courseCode.split(" ")
@@ -201,9 +201,9 @@ function removeClassFromSchedule(courseCode){
 
     const addClassURL = 'http://localhost:8080/removeClass?' +
         'scheduleID=' + currentSchedule +
-        '&dept=' + ccSplit[0] + 
-        '&courseNum=' + ccSplit[1] + 
-        '&section=' + ccSplit[2] + 
+        '&dept=' + ccSplit[2] + 
+        '&courseNum=' + ccSplit[3] + 
+        '&section=' + ccSplit[4] + 
         '&year=2020' + 
         '&term=30';
     console.log(addClassURL)
@@ -215,22 +215,3 @@ function removeClassFromSchedule(courseCode){
         });
     });
 };
-
-function setAddRemoveButtonFunctionality(){
-    console.log("HIIII")
-
-    const addButtons = document.getElementsByClassName("addClassButton");
-    for(const b of addButtons){
-        b.addEventListener("click", function() {
-            addClassToSchedule(b.data-courseCode)
-        });
-    }
-    const removeButtons = document.getElementsByClassName("removeClassButton");
-    console.log(removeButtons)
-    for(const b of addButtons){
-        console.log(b)
-        b.addEventListener("click", function() {
-            removeClassToSchedule(b.data-courseCode)
-        });
-    }
-}

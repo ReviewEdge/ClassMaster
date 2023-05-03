@@ -1,3 +1,4 @@
+import {addClassToSchedule, removeClassFromSchedule} from "./schedule.js"
 
 function clickMoreInfo(val) {
     var popup = document.getElementById("classInfoText" + val);
@@ -39,14 +40,18 @@ class classObjectFactory {
         p.append(detailsButton)
 
         var classInfoSplit = classInfo.split(",");
+        console.log(classInfoSplit)
 
         if(!(inSchedule)){
             const addButton = document.createElement("span");
             addButton.className = 'addClassButton';
             addButton.id ='addClassButton' + this.nextUniqueID;
             addButton.innerText = "(Click to add Class)";
-            addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoSplit[0] +'")');
+            // addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoSplit[0] +'")');
             // addButton.setAttribute("data-courseCode", classInfoSplit[0])
+            addButton.addEventListener("click", function() {
+                addClassToSchedule(classInfoSplit[0])
+            });
             p.append(addButton)
         }
         else {
@@ -54,8 +59,11 @@ class classObjectFactory {
             removeButton.className = 'removeClassButton';
             removeButton.id ='removeClassButton' + this.nextUniqueID;
             removeButton.innerText = "(Click to remove Class)";
-            removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoSplit[0] +'")');
+            // removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoSplit[0] +'")');
             // removeButton.setAttribute("data-courseCode", classInfoSplit[0])
+            removeButton.addEventListener("click", function() {
+                removeClassFromSchedule(classInfoSplit[0])
+            });
             p.append(removeButton)
         }
 
@@ -91,8 +99,11 @@ class classObjectFactory {
             addButton.className = 'addClassButton';
             addButton.id ='addClassButton' + this.nextUniqueID;
             addButton.innerText = "(Click to add Class)";
-            addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoJSON.code +'")');
+            // addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoJSON.code +'")');
             // addButton.setAttribute("data-courseCode", classInfoJSON.code)
+            addButton.addEventListener("click", function() {
+                addClassToSchedule(classInfoJSON.code)
+            });
             p.append(addButton)
         }
         else {
@@ -100,8 +111,11 @@ class classObjectFactory {
             removeButton.className = 'removeClassButton';
             removeButton.id ='removeClassButton' + this.nextUniqueID;
             removeButton.innerText = "(Click to remove Class)";
-            removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoJSON.code +'")');
+            // removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoJSON.code +'")');
             // removeButton.setAttribute("data-courseCode", classInfoJSON.code)
+            removeButton.addEventListener("click", function() {
+                removeClassFromSchedule(classInfoJSON.code)
+            });
             p.append(removeButton)
         }
 
@@ -116,4 +130,4 @@ class classObjectFactory {
     }
 }
 
-coFactory = new classObjectFactory();
+export const coFactory = new classObjectFactory();

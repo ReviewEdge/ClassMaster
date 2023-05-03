@@ -1,3 +1,4 @@
+import {coFactory} from "./courseInfo.js"
 let classes = null;//store a list of classes from last time filter got ran
 
 window.addEventListener("DOMContentLoaded", function() {
@@ -61,7 +62,7 @@ function updateFilter(){
     const timeslots = new Array(timeslot_elems.length);
     //convert all timeslot elements into a string that can be decoded later
     //start at 1 to skip 0, which is just the original that gets cloned
-    for(i=0; i<timeslot_elems.length; i++){
+    for(var i=0; i<timeslot_elems.length; i++){
         const children = timeslot_elems.item(i).children;
         /**
          * each element has these children:
