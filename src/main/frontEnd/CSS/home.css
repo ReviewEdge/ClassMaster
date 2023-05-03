@@ -55,6 +55,11 @@ input,textarea {
 .search {
 }
 
+.search-results{
+    background-color: white;
+}
+
+
 #class-search-bar {
 }
 
@@ -63,8 +68,6 @@ input,textarea {
 }
 
 #filters-button {
-    max-width: 4rem;
-    margin-top: 2px;
 }
 
 #hamburger-button {
