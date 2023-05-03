@@ -21,7 +21,7 @@ class classObjectFactory {
         coFactoryExists = true;
     }
 
-        createClassObject(classInfo, inSchedule) {
+    createClassObject(classInfo, inSchedule) {
         // console.log(classInfo)
         const p = document.createElement("p");
         p.className = 'classText';
@@ -66,6 +66,75 @@ class classObjectFactory {
         this.nextUniqueID++;
         return p;
     }
+
+    createClassObjectFromJSON(classInfoJSON, inSchedule) {
+        // console.log(classInfo)
+        const p = document.createElement("p");
+        p.className = 'classText';
+        p.id ='classText' + this.nextUniqueID;
+        const courseCodeDiv = classInfoJSON.code.split(" ");
+        p.innerText =  courseCodeDiv[2] + " " + courseCodeDiv[3] + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
+        // p.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+
+        const detailsButton = document.createElement("span");
+        // detailsButton.className = 'classText';
+        detailsButton.id ='detailsButton' + this.nextUniqueID;
+        // detailsButton.innerText = ClassInfo + "     (•••)";
+        detailsButton.innerText = "(Click for Details)";
+        detailsButton.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+        p.append(detailsButton)
+
+        if(!(inSchedule)){
+            const addButton = document.createElement("span");
+            addButton.className = 'addClassButton';
+            addButton.id ='addClassButton' + this.nextUniqueID;
+            addButton.innerText = "(Click to add Class)";
+            addButton.setAttribute('onclick', 'addClassToSchedule("' + classInfoJSON.code +'")');
+            p.append(addButton)
+        }
+        else {
+            const removeButton = document.createElement("span");
+            removeButton.className = 'removeClassButton';
+            removeButton.id ='removeClassButton' + this.nextUniqueID;
+            removeButton.innerText = "(Click to remove Class)";
+            removeButton.setAttribute('onclick', 'removeClassFromSchedule("' + classInfoJSON.code +'")');
+            p.append(removeButton)
+        }
+
+        const pop = document.createElement("p");
+        pop.className = 'classInfoText';
+        pop.id ='classInfoText' + this.nextUniqueID;
+        pop.innerText = "Get Description Information: WIP";
+        p.append(pop);
+        
+        this.nextUniqueID++;
+        return p;
+    }
 }
 
 coFactory = new classObjectFactory();
+
+function removeClassFromSchedule(courseCode){
+
+    var currentSchedule = 1;
+    var ccSplit = courseCode.split(" ")
+    console.log(courseCode)
+    console.log(ccSplit)
+
+    const addClassURL = 'http://localhost:8080/removeClass?' +
+        'scheduleID=' + currentSchedule +
+        '&dept=' + ccSplit[0] + 
+        '&courseNum=' + ccSplit[1] + 
+        '&section=' + ccSplit[2] + 
+        '&year=2020' + 
+        '&term=30';
+    console.log(addClassURL)
+
+    fetch(addClassURL)
+        .then(data => {
+        data.json().then((data) => {
+            // updateSchedule()
+            console.log("hi")
+        });
+    });
+};

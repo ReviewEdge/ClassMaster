@@ -58,36 +58,35 @@ public class SpringWebAPI {
         return searchResultStrings;
     }
 
+//    @CrossOrigin
+//    @GetMapping("/getSchedule")
+//    @ResponseBody
+//    public ArrayList<String> getSchedule(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
+//        System.out.println("\n---------------------\n");
+//        try {
+//            if(scheduleID.equals("")){
+//                throw new Exception("id left to default value");
+//            }
+//            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
+//            System.out.println("sending calendar results for id=" + scheduleID);
+//
+//            ArrayList<String> scheduleResultString = new ArrayList<>();
+//            for (Class c : sch.getClasses()) {
+////                System.out.println(sch.toString());
+//                scheduleResultString.add(c.toString());
+//            }
+//            return scheduleResultString;
+//        } catch (Exception e){
+//            System.out.println("SpringWebAPI requested for invalid calendar id");
+//            System.out.println(e.toString());
+//            return null;
+//        }
+//    }
+
     @CrossOrigin
     @GetMapping("/getSchedule")
     @ResponseBody
-    public ArrayList<String> getSchedule(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
-        System.out.println("\n---------------------\n");
-        try {
-            if(scheduleID.equals("")){
-                throw new Exception("id left to default value");
-            }
-            Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
-            System.out.println("sending calendar results for id=" + scheduleID);
-
-            ArrayList<String> scheduleResultString = new ArrayList<>();
-            for (Class c : sch.getClasses()) {
-//                System.out.println(sch.toString());
-                scheduleResultString.add(c.toString());
-            }
-            return scheduleResultString;
-        } catch (Exception e){
-            System.out.println("SpringWebAPI requested for invalid calendar id");
-            System.out.println(e.toString());
-            return null;
-        }
-    }
-
-    //WORKING AREA FOR HOW TO MAKE IT A SCHEDULE RETURN
-    @CrossOrigin
-    @GetMapping("/getCal")
-    @ResponseBody
-    public String getCal(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
+    public String getSchedule(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
         System.out.println("\n---------------------\n");
         try {
             if(scheduleID.equals("")){

@@ -99,58 +99,55 @@ function insertSchedule(s, template, container) {
 
 
 
+async function getCurrentSchedule(){
+    
+    const getScheduleURL = 'http://localhost:8080/getSchedule?id=' + 1;
 
+    const container = document.getElementById("schedule-classes-list");
 
-function updateSchedule(){
+    const data = await fetch(getScheduleURL)
+    const dataJson = await data.json()
+    return dataJson
+
+}
+
+async function updateSchedule(){
     const container = document.getElementById("schedule-classes-list");
     const scheduleHeader = document.getElementById("schedule-display-header");
-    container.innerText = 'Classes'
+    const scheduleTerm = document.getElementById("curr-sched-term-name")
+
+    scheduleHeader.innerText = 'Loading Classes'
+    scheduleTerm.innerText = ''
+    container.innerText = ''
     container.innerHTML = ''
-    container.append(scheduleHeader)
     // getCurrentSchedule()
-    var schedule = getCurrentSchedule()
-    updateClassDisplayList(schedule, container)
+
+    const schedule = await getCurrentSchedule();
+    container.append(scheduleHeader)
+    updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm);
 }
 
-function getCurrentSchedule(){
-    
-    const getScheduleURL = 'http://localhost:8080/getCal?id=' + 1;
+function updateClassDisplayList(schedule, cont, Header){
 
-    const container = document.getElementById("schedule-classes-list");
-
-
-    fetch(getScheduleURL)
-        .then(data => {
-        data.json().then((data) => {
-            console.log(data)
-            return data
-
-            // if (data.length === 0) {
-            //     const sch = document.createElement("p");
-            //     sch.innerText = "Schedule empty";
-            //     container.append(sch)
-            // } else {
-            //     for (const c of data) {
-            //         const p = coFactory.createClassObject(c, true)
-            //         container.append(p);
-            //     }
-            // }
-
-        });
-    });
-}
-
-function updateClassDisplayList(schedule, container){
+    console.log(schedule);
 
     if (schedule === null){
         const sch = document.createElement("p");
         sch.innerText = "Schedule empty";
-        container.append(sch)
+        cont.append(sch)
+        return;
     }
     for(const c of schedule.classes){
-        const p = coFactory.createClassObjectFromJSON(schedule, true)
-        container.append(p);
+        const p = coFactory.createClassObjectFromJSON(c, true)
+        cont.append(p);
     }
+
+    const termHeader = document.createElement("span")
+    termHeader.id = "curr-sched-term-name"
+    termHeader.innerText = schedule.term.name
+
+    Header.innerText = schedule.name + ": "
+    Header.append(termHeader)
 }
 
 function addClassToSchedule(courseCode){
