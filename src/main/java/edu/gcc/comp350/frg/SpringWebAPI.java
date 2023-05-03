@@ -22,7 +22,6 @@ public class SpringWebAPI {
     @GetMapping("/term-test")
     @ResponseBody
     public Term termTest() {
-        System.out.println("\n---------------------\n");
         Term sendTerm = new Term(30);
 
         System.out.println("SENDING TERM OBJECT: " + sendTerm);
@@ -34,8 +33,6 @@ public class SpringWebAPI {
     @GetMapping("/search")
     @ResponseBody
     public ArrayList<String> search(@RequestParam(value = "query", defaultValue = "") String query) {
-        System.out.println("\n---------------------\n");
-
         ArrayList<String> searchResultStrings = new ArrayList<>();
         Search newSearch = new Search(query, f);
 
@@ -59,7 +56,6 @@ public class SpringWebAPI {
     @GetMapping("/calendar")
     @ResponseBody
     public ArrayList<String> calendar(@RequestParam(value = "id", defaultValue = "") String acct) {
-        System.out.println("\n---------------------\n");
         try {
             if(acct.equals("")){
                 throw new Exception("id left to default value");
@@ -95,8 +91,6 @@ public class SpringWebAPI {
             f.addTimeslot(t);
         }
 
-        System.out.println("\n---------------------\n");
-
         ArrayList<String> searchResultStrings = new ArrayList<>();
         Search newSearch = new Search(f);
 
@@ -120,7 +114,6 @@ public class SpringWebAPI {
     @PostMapping("/login")
     @ResponseBody
     public Integer login(@RequestBody LoginForm loginForm) {
-        System.out.println("\n---------------------\n");
         Account emptyAccount = new Account(-1, null, null, null, null, null);
 
         Integer accountID = new Integer(-1);
@@ -196,7 +189,6 @@ public class SpringWebAPI {
                                        @RequestParam(value = "section", defaultValue = "") String section,
                                        @RequestParam(value = "year", defaultValue = "") String year,
                                        @RequestParam(value = "term", defaultValue = "") String term){
-        System.out.println("\n---------------------\n");
         String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
         System.out.println("Request Recieved to add " +  courseCode + " to schedule " + scheduleID);
         ArrayList<Boolean> result = new ArrayList<>();
@@ -233,7 +225,6 @@ public class SpringWebAPI {
                                        @RequestParam(value = "section", defaultValue = "") String section,
                                           @RequestParam(value = "year", defaultValue = "") String year,
                                           @RequestParam(value = "term", defaultValue = "") String term){
-        System.out.println("\n---------------------\n");
         String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
         System.out.println("Request Recieved to remove " +  courseCode + "from schedule " + scheduleID);
         ArrayList<Boolean> result = new ArrayList<>();
