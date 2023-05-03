@@ -21,8 +21,8 @@ class classObjectFactory {
         coFactoryExists = true;
     }
 
-    createClassObject(classInfo, inSchedule) {
-        console.log(classInfo)
+        createClassObject(classInfo, inSchedule) {
+        // console.log(classInfo)
         const p = document.createElement("p");
         p.className = 'classText';
         p.id ='classText' + this.nextUniqueID;

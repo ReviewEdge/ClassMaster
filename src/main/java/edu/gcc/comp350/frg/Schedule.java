@@ -153,6 +153,8 @@ public class Schedule {
         return preexist;
     }
 
+
+    //TODO: issues with this!!
     public ArrayList<Integer> getRefNums(){
         int i = 0;
         ArrayList<Integer> refNums= new ArrayList<>();
