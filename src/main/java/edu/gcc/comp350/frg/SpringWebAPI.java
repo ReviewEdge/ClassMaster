@@ -212,17 +212,19 @@ public class SpringWebAPI {
 
 
 
-
+    /*
     @CrossOrigin
     @PostMapping(value = "/addClassTest")
     @ResponseBody
-    public Schedule addClas(@RequestParam ScheduleForm scheduleForm){
+    public Schedule addClass(@RequestParam ScheduleForm scheduleForm){
         System.out.println("\n---------------------\n");
-        System.out.println("ADDING CLAS REQUEST");
+        System.out.println("ADDING CLASS REQUEST");
         System.out.println("Request Recieved to add " +  scheduleForm + " to schedule ");
         System.out.println(scheduleForm);
         return new Schedule("name", new Term(30), new ArrayList<Class>());
     }
+
+    */
 
     @GetMapping("/addClass")
     @ResponseBody

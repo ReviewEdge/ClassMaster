@@ -37,19 +37,22 @@ window.addEventListener("DOMContentLoaded", function() {
 
 
     const timeslots = [
-      new Timeslot('9:00am', '10:30am', 'Monday'),
-      new Timeslot('10:45am', '12:15pm', 'Wednesday')
+      new Timeslot('Monday', '12:00 PM', '1:00 PM' ),
+      new Timeslot('Wednesday', '12:00 PM', '1:00 PM'),
+      new Timeslot('Thursday', '12:30 PM', '1:30 PM'),
+      new Timeslot('Friday', '12:00 PM', '1:00 PM')
     ];
 
-    const classes = [new Class('Math', timeslots)];
+    const classes = [new Class('MATH 214 Applied Probabliity and Linear Algebra', timeslots)];
 
-    /*classes.forEach(cls => {
-      const queryString = `tr:nth-child(${getRowIndex(cls.startTime)}) td:nth-child(${getColumnIndex(cls.dayOfWeek)})`;
+    classes.forEach(cls => {
+        cls.timeslots.forEach(slt => {
+      const queryString = `tr:nth-child(${getRowIndex(slt.startTime)}) td:nth-child(${getColumnIndex(slt.dayOfWeek)})`;
       console.log(queryString);
       const cell = table.querySelector(queryString);
       if(!cell){console.log("ah shit, it's null!")}
-      cell.innerText = cls.name;
-    });*/
+      cell.innerText = cls.name;})
+    });
 });
 
 
@@ -75,11 +78,13 @@ class Timeslot {
 
 // helper function to get the column index of a day of the week
 function getColumnIndex(dayOfWeek) {
+    console.log(dayOfWeek)
   const columns = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   console.log(columns.indexOf(dayOfWeek) + 2);
   return columns.indexOf(dayOfWeek) + 2;
 }
 function getRowIndex(classTime) {
+    console.log(classTime)
   const rows = ['8:00 AM','8:30 AM', '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM',];
   console.log(rows.indexOf(classTime) + 2);
   return rows.indexOf(classTime) + 2;
