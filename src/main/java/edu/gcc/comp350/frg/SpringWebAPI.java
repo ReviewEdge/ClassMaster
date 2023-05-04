@@ -47,16 +47,16 @@ public class SpringWebAPI {
     }
 
 
-    @CrossOrigin
-    @GetMapping("/term-test")
-    @ResponseBody
-    public Term termTest() {
-        Term sendTerm = new Term(30);
-
-        System.out.println("SENDING TERM OBJECT: " + sendTerm);
-
-        return sendTerm;
-    }
+//    @CrossOrigin
+//    @GetMapping("/term-test")
+//    @ResponseBody
+//    public Term termTest() {
+//        Term sendTerm = new Term(30);
+//
+//        System.out.println("SENDING TERM OBJECT: " + sendTerm);
+//
+//        return sendTerm;
+//    }
 
     @CrossOrigin
     @GetMapping("/search")
@@ -217,23 +217,14 @@ public class SpringWebAPI {
     @GetMapping("/logout")
     @ResponseBody
     public Integer logout(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret) {
-        //TODO: this should do a security thing:
-        int userID = Integer.parseInt(loginSecret);
-
-        //Check if logged in
-        //TODO: make this secure by using a secret
-        if (!loggedInUsers.contains(userID)) {
-            System.out.println("can't get logout, user not signed in");
+        // check if logged in, get account if so
+        Account realAccount = validateLoginSecret(loginSecret);
+        if (realAccount == null) {
+            System.out.println("Failed to logout");
             return -1;
         }
 
         try {
-            Account realAccount = Account.getAccountByIdFromDB(userID);
-
-            if (realAccount == null) {
-                return -1;
-            }
-
             loggedInUsers.removeIf(n -> n == realAccount.getId());
             System.out.println("logged out user " + realAccount.getId());
             return 1;
@@ -242,9 +233,6 @@ public class SpringWebAPI {
             return -1;
         }
     }
-
-
-
 
 
     @CrossOrigin
@@ -346,39 +334,24 @@ public class SpringWebAPI {
     public ArrayList<ArrayList<String>> getMySchedules(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret) {
         ArrayList<ArrayList<String>> groupy = new ArrayList<>();
 
-        int userID;
+        // check if logged in, get account if so
+        Account realAccount = validateLoginSecret(loginSecret);
+        if (realAccount == null) {
+            System.out.println("User not properly logged in, can't get schedules");
+            return groupy;
+        }
 
+        System.out.println("Getting schedules for user " + realAccount.getId());
 
         try {
-            //TODO: this should do a security thing:
-            userID = Integer.parseInt(loginSecret);
+            // get schedule IDs and classes
+            groupy = realAccount.getMySchedulesTuples();
         } catch (Exception e) {
-            System.out.println("/getMySchedules received blank user ID");
-            return null;
-        }
-
-
-        //Check if logged in
-        //TODO: make this secure by using a secret
-        if (!loggedInUsers.contains(userID)) {
-            System.out.println("can't get schedules, user not signed in");
+            System.out.println("Error while trying to get schedules for " + realAccount.getId());
             return groupy;
         }
 
-        System.out.println("Getting schedules for user " + userID);
-
-        try {
-            Account currentUser = Account.getAccountByIdFromDB(userID);
-            groupy = currentUser.getMySchedulesTuples();
-        } catch (SQLException e) {
-            System.out.println("no search results for " + userID);
-            return groupy;
-        } catch (Exception e) {
-            System.out.println(e);
-            return groupy;
-        }
-
-        System.out.println("sending schedule for user " + userID);
+        System.out.println("sending schedule for user " + realAccount.getId());
 
         return groupy;
     }
@@ -391,28 +364,25 @@ public class SpringWebAPI {
     public ArrayList<String> makeNewSchedule(@RequestBody NewScheduleForm nsF) {
         ArrayList<String> group = new ArrayList<>();
 
-        //TODO: this should do a security thing:
-        int userID = Integer.parseInt(nsF.getLoginSecret());
-
-        //Check if logged in
-        //TODO: make this secure by using a secret
-        if (!loggedInUsers.contains(userID)) {
-            System.out.println("can't make schedule, user not signed in");
+        // check if logged in, get account if so
+        Account realAccount = validateLoginSecret(nsF.getLoginSecret());
+        if (realAccount == null) {
+            System.out.println("User not properly logged in, can't get schedules");
             return group;
         }
 
+
         try {
-            Account currentUser = Account.getAccountByIdFromDB(userID);
             Schedule newSc = new Schedule(nsF.getName(), new Term(nsF.getTerm()), null);
             newSc.saveSchedule();
-            currentUser.addSchedule(newSc);
-            currentUser.saveOrUpdateAccount();
-            System.out.println("Created schedule " + newSc.getName() + " for user " + currentUser.getId());
+            realAccount.addSchedule(newSc);
+            realAccount.saveOrUpdateAccount();
+            System.out.println("Created schedule " + newSc.getName() + " for user " + realAccount.getId());
             group.add(Integer.toString(newSc.getId()));
             group.add(newSc.getName());
             group.add(newSc.getTerm().toString());
         } catch (SQLException e) {
-            System.out.println("no user " + userID);
+            System.out.println(e);
             return group;
         } catch (Exception e) {
             System.out.println(e);
@@ -421,7 +391,5 @@ public class SpringWebAPI {
 
         return group;
     }
-
-
 
 }
