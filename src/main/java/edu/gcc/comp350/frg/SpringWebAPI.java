@@ -20,6 +20,33 @@ public class SpringWebAPI {
 //    private static final String template = "Hello, %s!";
 //    private final AtomicLong counter = new AtomicLong();
 
+    private Account validateLoginSecret(String loginSecret) {
+        int userID;
+
+        try {
+            //TODO: this should do a security thing:
+            userID = Integer.parseInt(loginSecret);
+        } catch (Exception e) {
+            System.out.println("received blank user ID");
+            return null;
+        }
+
+        //Check if logged in
+        //TODO: make this secure by using a secret
+        if (!loggedInUsers.contains(userID)) {
+            System.out.println("can't get schedules, user not signed in");
+            return null;
+        }
+
+        try {
+            return Account.getAccountByIdFromDB(userID);
+        } catch (SQLException e) {
+            System.out.println("Account with ID: " + userID + " was not found in database");
+            return null;
+        }
+    }
+
+
     @CrossOrigin
     @GetMapping("/term-test")
     @ResponseBody
@@ -83,22 +110,36 @@ public class SpringWebAPI {
     @CrossOrigin
     @GetMapping("/getSchedule")
     @ResponseBody
-    public String getSchedule(@RequestParam(value = "id", defaultValue = "") String scheduleID) {
-        System.out.println("\n---------------------\n");
+    public String getSchedule(@RequestParam(value = "id", defaultValue = "") String scheduleID,
+                              @RequestParam(value = "loginSecret", defaultValue = "") String loginSecret) {
+
+        System.out.println("Attempting to get schedule " + scheduleID);
+
+        // check if logged in, get account if so
+        Account realAccount = validateLoginSecret(loginSecret);
+        if (realAccount == null) {
+            System.out.println("Tried to get schedule for non existing account");
+            return null;
+        }
+
         try {
             if(scheduleID.equals("")){
-                throw new Exception("id left to default value");
+                System.out.println("received blank schedule ID. failed to get schedule.");
+                return null;
             }
 
             Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
             System.out.println("sending calendar results for id=" + scheduleID);
             System.out.println(sch.toJSON());
             return sch.toJSON();
-        } catch (Exception e){
-            System.out.println("SpringWebAPI requested for invalid calendar id");
-            System.out.println(e.toString());
+
+            
+        } catch (Exception e) {
+            System.out.println("failed to get schedule: " + scheduleID);
+            System.out.println(e);
             return null;
         }
+        
     }
 
 
@@ -305,8 +346,17 @@ public class SpringWebAPI {
     public ArrayList<ArrayList<String>> getMySchedules(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret) {
         ArrayList<ArrayList<String>> groupy = new ArrayList<>();
 
-        //TODO: this should do a security thing:
-        int userID = Integer.parseInt(loginSecret);
+        int userID;
+
+
+        try {
+            //TODO: this should do a security thing:
+            userID = Integer.parseInt(loginSecret);
+        } catch (Exception e) {
+            System.out.println("/getMySchedules received blank user ID");
+            return null;
+        }
+
 
         //Check if logged in
         //TODO: make this secure by using a secret
