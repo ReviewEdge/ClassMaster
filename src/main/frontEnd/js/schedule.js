@@ -182,7 +182,7 @@ async function updateSchedule(){
 
 function updateClassDisplayList(schedule, cont, Header){
 
-    console.log(schedule);
+    // console.log(schedule);
 
     if (schedule === null){
         const sch = document.createElement("p");
@@ -232,14 +232,6 @@ export async function addClassToSchedule(courseCode){
         // };
         // const addClassURL = 'http://localhost:8080/addClassTest';
     
-        // const addClassURL = 'http://localhost:8080/addClassTest';
-        // const data = {email: '1', password: '123'};
-        // const options = {
-        //     method: 'POST',
-        //     headers: {'Content-Type': 'application/json'},
-        //     body: JSON.stringify(data)
-        // };
-    
         console.log(addClassURL)
         // console.log(options)
         
@@ -260,40 +252,13 @@ export async function addClassToSchedule(courseCode){
 
 export async function removeClassFromSchedule(courseCode){
 
-    var currentSchedule = 1;
-    var ccSplit = courseCode.split(" ")
-    // console.log(courseCode)
-    // console.log(ccSplit)
-
-    const removeClassURL = 'http://localhost:8080/removeClass?' +
-        'scheduleID=' + currentSchedule +
-        '&dept=' + ccSplit[2] + 
-        '&courseNum=' + ccSplit[3] + 
-        '&section=' + ccSplit[4] + 
-        '&year=2020' + 
-        '&term=30';
-    console.log(removeClassURL)
-
-    const data = await fetch(removeClassURL)
-    const dataJSON = await data.json()
-    // console.log(dataJSON)
-    if(dataJSON.Succeeded[0] == "True"){
-        updateSchedule()
-        console.log("Successfully removed class")
-    }
-    else{
-        console.log("Failed to remove class to schedule")
-        console.log(dataJSON.ErrorMessage[0])
-=======
-    const userSecret = getCookie("user");
-
     if(userSecret === "") {
         console.log("CAN'T REMOVE A CLASS, NO USER LOGGED IN");
     } else {
         var currentSchedule = getUserCurrScheduleFromCookie(userSecret);
         var ccSplit = courseCode.split(" ")
-        console.log(courseCode)
-        console.log(ccSplit)
+        // console.log(courseCode)
+        // console.log(ccSplit)
 
         const removeClassURL = 'http://localhost:8080/removeClass?' +
             'loginSecret=' + userSecret +
@@ -303,6 +268,8 @@ export async function removeClassFromSchedule(courseCode){
             '&section=' + ccSplit[4] + 
             '&year=' + ccSplit[0] + 
             '&term=' + ccSplit[1];
+
+        console.log(removeClassURL)
 
         const data = await fetch(removeClassURL)
         const dataJSON = await data.json()

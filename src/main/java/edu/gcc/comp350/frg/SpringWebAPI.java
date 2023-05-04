@@ -303,24 +303,25 @@ public class SpringWebAPI {
         Account realAccount = validateLoginSecret(loginSecret);
         if (realAccount == null) {
             System.out.println("Failed to add class, user must be logged in");
-            result.add(false);
-            return result;
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", "Failed to add class due to invalid of parameters");
+            return result.toString();
         }
 
         // check if user owns the schedule
         if (!realAccount.getScheduleIDs().contains(Integer.parseInt(scheduleID))) {
-            System.out.println("can't add class because user " + realAccount.getId() + " does not own schedule " + scheduleID);
-            result.add(false);
-            return result;
+            String error = "Can't add class because user " + realAccount.getId() + " does not own schedule " + scheduleID;
+            System.out.println(error);
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", error);
+            return result.toString();
         }
 
-        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
-        System.out.println("Request received to add " +  courseCode + " to schedule " + scheduleID);
-
         if(scheduleID.equals("") || courseCode.equals("    ")){
-            System.out.println("Failed to add class due to invalid of parameters");
+            String error = "Failed to add class due to invalid of parameters";
+            System.out.println(error);
             result.append("Succeeded", "False");
-            result.append("ErrorMessage", "Failed to add class due to invalid of parameters");
+            result.append("ErrorMessage", error);
             return result.toString();
         }
         try {
@@ -359,22 +360,21 @@ public class SpringWebAPI {
         // check if logged in, get account if so
         Account realAccount = validateLoginSecret(loginSecret);
         if (realAccount == null) {
-            System.out.println("Failed to remove class, user must be logged in");
-            result.add(false);
-            return result;
+            String error = "Failed to remove class, user must be logged in";
+            System.out.println(error);
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", error);
+            return result.toString();
         }
 
         // check if user owns the schedule
         if (!realAccount.getScheduleIDs().contains(Integer.parseInt(scheduleID))) {
-            System.out.println("can't remove class because user " + realAccount.getId() + " does not own schedule " + scheduleID);
-            result.add(false);
-            return result;
+            String error = "Can't remove class because user " + realAccount.getId() + " does not own schedule " + scheduleID;
+            System.out.println(error);
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", error);
+            return result.toString();
         }
-
-
-
-        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
-        System.out.println("Request received to remove " +  courseCode + "from schedule " + scheduleID);
 
         if(scheduleID.equals("") || courseCode.equals("    ")){
             System.out.println("Failed to remove class due to invalid of parameters");
