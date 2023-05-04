@@ -36,7 +36,11 @@ class classObjectFactory {
         detailsButton.id ='detailsButton' + this.nextUniqueID;
         // detailsButton.innerText = ClassInfo + "     (•••)";
         detailsButton.innerText = "(Click for Details)";
-        detailsButton.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+        const intVal = this.nextUniqueID
+        detailsButton.addEventListener("click", function() {
+            var popup = document.getElementById('classInfoText' + intVal);
+            popup.classList.toggle("show");
+        });
         p.append(detailsButton)
 
         var classInfoSplit = classInfo.split(",");
@@ -74,20 +78,23 @@ class classObjectFactory {
     }
 
     createClassObjectFromJSON(classInfoJSON, inSchedule) {
-        // console.log(classInfo)
+        // console.log(classInfoJSON)
         const p = document.createElement("p");
         p.className = 'classText';
         p.id ='classText' + this.nextUniqueID;
         const courseCodeDiv = classInfoJSON.code.split(" ");
-        p.innerText =  courseCodeDiv[2] + " " + courseCodeDiv[3] + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
-        // p.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+        p.innerText =  classInfoJSON.courseCodeWithoutTerm + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor + ", " + turnTimeslotIntoString(classInfoJSON.timeSlots);
 
         const detailsButton = document.createElement("span");
         // detailsButton.className = 'classText';
         detailsButton.id ='detailsButton' + this.nextUniqueID;
         // detailsButton.innerText = ClassInfo + "     (•••)";
         detailsButton.innerText = "(Click for Details)";
-        detailsButton.setAttribute('onclick', 'clickMoreInfo(' + this.nextUniqueID + ')');
+        const intVal = this.nextUniqueID
+        detailsButton.addEventListener("click", function() {
+            var popup = document.getElementById('classInfoText' + intVal);
+            popup.classList.toggle("show");
+        });
         p.append(detailsButton)
 
         if(!(inSchedule)){
@@ -114,12 +121,23 @@ class classObjectFactory {
         const pop = document.createElement("p");
         pop.className = 'classInfoText';
         pop.id ='classInfoText' + this.nextUniqueID;
-        pop.innerText = "Get Description Information: WIP";
+        pop.innerText = "Credits: " + classInfoJSON.credits + ", Description/Prereqs: "  + classInfoJSON.description;
         p.append(pop);
         
         this.nextUniqueID++;
         return p;
     }
+}
+
+function turnTimeslotIntoString(timeslot){
+    // console.log(timeslot)
+    var str = ""
+    for(const t of timeslot){
+        const startSplit = t.start.split(":")
+        const endSplit = t.end.split(":")
+        str += t.day + " " + startSplit[0] + ":" + startSplit[1] + "-" + endSplit[0] + ":" + endSplit[1] + ", "
+    }
+    return str
 }
 
 export const coFactory = new classObjectFactory();

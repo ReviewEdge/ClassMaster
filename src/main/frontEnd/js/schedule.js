@@ -126,7 +126,7 @@ async function updateSchedule(){
 
 function updateClassDisplayList(schedule, cont, Header){
 
-    console.log(schedule);
+    // console.log(schedule);
 
     if (schedule === null){
         const sch = document.createElement("p");
@@ -188,7 +188,7 @@ export async function removeClassFromSchedule(courseCode){
 
     var currentSchedule = 1;
     var ccSplit = courseCode.split(" ")
-    console.log(courseCode)
+    // console.log(courseCode)
     // console.log(ccSplit)
 
     const removeClassURL = 'http://localhost:8080/removeClass?' +
@@ -202,7 +202,7 @@ export async function removeClassFromSchedule(courseCode){
 
     const data = await fetch(removeClassURL)
     const dataJSON = await data.json()
-    console.log(dataJSON)
+    // console.log(dataJSON)
     if(dataJSON.Succeeded[0] == "True"){
         updateSchedule()
         console.log("Successfully removed class")
