@@ -6,16 +6,21 @@ window.addEventListener("DOMContentLoaded", function() {
     updateFilter();
     const searchBar = document.getElementById("class-search-bar");
     searchBar.addEventListener("input", onType);
+    searchBar.addEventListener("focus", onFocusSearch);
     const addTimeBtn = this.document.getElementById("add-time");
     addTimeBtn.addEventListener("click", addTime);
     const clearTimeBtn = this.document.getElementById("clear-time");
     clearTimeBtn.addEventListener("click", clearTime);
-    document.getElementById("filters-button").addEventListener("click", updateFilter);
+    // document.getElementById("filters-button").addEventListener("click", updateFilter);
 });
 
 function addTime(){
     const new_timeslot = document.getElementById("timeslot-hidden").cloneNode(true);
-    new_timeslot.removeAttribute("hidden"); 
+    new_timeslot.removeAttribute("hidden");
+    new_timeslot.removeAttribute("id");
+    new_timeslot.childNodes.item(1).addEventListener("click", function(e){
+        e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+    })
     document.getElementById("timeslots").appendChild(new_timeslot);
 }
 
@@ -26,12 +31,16 @@ function clearTime(){
     }
 }
 
-function onType(){
+function onFocusSearch(){
     //close and submit the filter if it hasn't been submitted already
     if(document.getElementById("filterCollapse").classList.contains("show")){
         classes = null;
         document.getElementById("filters-button").click();
     }
+    updateFilter();
+}
+
+function onType(){
     //filter the currently stored classes however they are stored
     if(classes === null){
         return;
@@ -69,7 +78,6 @@ async function updateFilter(){
     const timeslot_elems = document.getElementById("timeslots").children;
     const timeslots = new Array(timeslot_elems.length);
     //convert all timeslot elements into a string that can be decoded later
-    //start at 1 to skip 0, which is just the original that gets cloned
     for(var i=0; i<timeslot_elems.length; i++){
         const children = timeslot_elems.item(i).children;
         /**
