@@ -35,26 +35,69 @@
     </div>
 
     <div class="flex-item-right">
-      <div class="header">
-        <h1>ClassMaster</h1>
-        <button id="login-button">Login</button>
+      	<div class="header">
+			<h1>ClassMaster</h1>
+			<button id="login-button">Login</button>
 
-		<div class="search container">
-			<div class="input-group">
-				<input type="text" class="col-10" id="class-search-bar" placeholder="Try searching for a class name, time, or course code">
-				<select class="col-2" id="dept-in">
-					<option value="" selected>Departments...</option>
-					<option disabled>──────────</option>
-					<option value="COMP">Computer Science</option>
-					<option value="HUMA">Humanities</option>
-					<option value="WRIT">Writing</option>
-				</select>
+			<div class="search container">
+				<div class="input-group">
+					<button type="button" class="col-1"id="filters-button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">Filters</button>
+					<input type="text" class="col-9" id="class-search-bar" placeholder="Try searching for a class name, time, or course code">
+					<select class="col-2" id="dept-in">
+						<option value="" selected>Departments...</option>
+						<option disabled>──────────</option>
+						<option>ACCT</option>
+						<option>ART</option>
+						<option>ASTR</option>
+						<option>BIOL</option>
+						<option>CHEM</option>
+						<option>CMIN</option>
+						<option>COMM</option>
+						<option>COMP</option>
+						<option>DESI</option>
+						<option>ECON</option>
+						<option>EDUC</option>
+						<option>ELEE</option>
+						<option>ENGL</option>
+						<option>ENGR</option>
+						<option>ENTR</option>
+						<option>EXER</option>
+						<option>FNCE</option>
+						<option>FREN</option>
+						<option>GEOL</option>
+						<option>GREK</option>
+						<option>HEBR</option>
+						<option>HIST</option>
+						<option>HUMA</option>
+						<option>INBS</option>
+						<option>LATN</option>
+						<option>MARK</option>
+						<option>MATH</option>
+						<option>MECE</option>
+						<option>MNGT</option>
+						<option>MUSI</option>
+						<option>NURS</option>
+						<option>PHIL</option>
+						<option>PHYE</option>
+						<option>PHYS</option>
+						<option>POLS</option>
+						<option>PSYC</option>
+						<option>RELI</option>
+						<option>ROBO</option>
+						<option>SCIC</option>
+						<option>SEDU</option>
+						<option>SOCI</option>
+						<option>SOCW</option>
+						<option>SPAN</option>
+						<option>SSFT</option>
+						<option>THEA</option>
+						<option>WRIT</option>
+					</select>
+				</div>
 			</div>
-        </div>
 			<div class = "container">
 				<p>
 					<!--<button id="search-submit-button">Search</button>-->
-					<button type="button" id="filters-button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">Filters</button>
 				</p>
 				<div class="collapse" id="filterCollapse">
 					<div>
@@ -118,9 +161,8 @@
 					</div>
 				</div>
 			</div>
-      </div>
-
-      <div class="search-results overflow-auto" id="search-results" style="max-height:200px">
+			<div class="search-results overflow-auto container" id="search-results" style="max-height:200px">
+			</div>
       </div>
 
       <div class="schedule-display">
