@@ -70,7 +70,7 @@ function updateFilter(){
     const timeslot_elems = document.getElementById("timeslots").children;
     const timeslots = new Array(timeslot_elems.length);
     //convert all timeslot elements into a string that can be decoded later
-    for(i=0; i<timeslot_elems.length; i++){
+    for(var i=0; i<timeslot_elems.length; i++){
         const children = timeslot_elems.item(i).children;
         /**
          * each element has these children:
