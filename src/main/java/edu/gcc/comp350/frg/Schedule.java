@@ -276,7 +276,6 @@ public class Schedule {
     }
 
     public String toJSON(){
-        StringBuilder scheduleString = new StringBuilder();
         JSONObject jsonObject = new JSONObject(this);
         return jsonObject.toString();
     }

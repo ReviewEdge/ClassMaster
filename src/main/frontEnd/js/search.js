@@ -48,10 +48,10 @@ function onType(){
     const container = document.getElementById("search-results");
     const search = document.getElementById("class-search-bar").value.toLowerCase().trim();
     container.innerHTML = "";
-    console.log(classes)
+    // console.log(classes)
     for (const c of classes) {
         if(!c.toLowerCase().includes(search)) continue;
-        const p = coFactory.createClassObject(c)
+        const p = coFactory.createClassObject(c, false)
         container.append(p);
     }
     if(classes.length === 0){

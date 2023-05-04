@@ -178,12 +178,11 @@ async function updateSchedule(){
     } else {
         console.log("NO ACCESS TO CURRENT SCHEDULE, YOU'RE NOT LOGGED IN");
     }
-
 }
 
 function updateClassDisplayList(schedule, cont, Header){
 
-    console.log(schedule);
+    // console.log(schedule);
 
     if (schedule === null){
         const sch = document.createElement("p");
@@ -204,7 +203,7 @@ function updateClassDisplayList(schedule, cont, Header){
     Header.append(termHeader)
 }
 
-export function addClassToSchedule(courseCode){
+export async function addClassToSchedule(courseCode){
 
     //TODO: Should check if cl and sc terms match in the FE and tell user if they don't
 
@@ -243,23 +242,49 @@ export function addClassToSchedule(courseCode){
     
         console.log(addClassURL)
         // console.log(options)
-    
-        // fetch(addClassURL, options)
-        fetch(addClassURL)
-            .then(data => {
-            data.json().then((data) => {
-                if (!data[0]) {
-                    console.log("FAILED TO REMOVE CLASS");
-                }
-                updateSchedule()
-            });
-        });
+        
+        const data = await fetch(addClassURL)
+        const dataJSON = await data.json()
+        // console.log(dataJSON)
+        if(dataJSON.Succeeded[0] == "True"){
+            updateSchedule()
+            console.log("Successfully added class")
+        }
+        else{
+            console.log("Failed to add class to schedule")
+            console.log(dataJSON.ErrorMessage[0])
+        }
     }
 
 }
 
-export function removeClassFromSchedule(courseCode){
+export async function removeClassFromSchedule(courseCode){
 
+    var currentSchedule = 1;
+    var ccSplit = courseCode.split(" ")
+    // console.log(courseCode)
+    // console.log(ccSplit)
+
+    const removeClassURL = 'http://localhost:8080/removeClass?' +
+        'scheduleID=' + currentSchedule +
+        '&dept=' + ccSplit[2] + 
+        '&courseNum=' + ccSplit[3] + 
+        '&section=' + ccSplit[4] + 
+        '&year=2020' + 
+        '&term=30';
+    console.log(removeClassURL)
+
+    const data = await fetch(removeClassURL)
+    const dataJSON = await data.json()
+    // console.log(dataJSON)
+    if(dataJSON.Succeeded[0] == "True"){
+        updateSchedule()
+        console.log("Successfully removed class")
+    }
+    else{
+        console.log("Failed to remove class to schedule")
+        console.log(dataJSON.ErrorMessage[0])
+=======
     const userSecret = getCookie("user");
 
     if(userSecret === "") {
@@ -279,14 +304,16 @@ export function removeClassFromSchedule(courseCode){
             '&year=' + ccSplit[0] + 
             '&term=' + ccSplit[1];
 
-        fetch(removeClassURL)
-            .then(data => {
-            data.json().then((data) => {
-                if (!data[0]) {
-                    console.log("FAILED TO REMOVE CLASS");
-                }
-                updateSchedule();
-            });
-        });
+        const data = await fetch(removeClassURL)
+        const dataJSON = await data.json()
+        // console.log(dataJSON)
+        if(dataJSON.Succeeded[0] == "True"){
+            updateSchedule()
+            console.log("Successfully removed class")
+        }
+        else{
+            console.log("Failed to remove class to schedule")
+            console.log(dataJSON.ErrorMessage[0])
+        }
     }
 };

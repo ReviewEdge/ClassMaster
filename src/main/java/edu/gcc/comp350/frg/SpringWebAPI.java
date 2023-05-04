@@ -238,18 +238,19 @@ public class SpringWebAPI {
     @CrossOrigin
     @PostMapping(value = "/addClassTest")
     @ResponseBody
-    public Schedule addClas(@RequestParam ScheduleForm scheduleForm){
+    public Schedule addClas(@RequestParam AddDropForm addDropForm){
         System.out.println("\n---------------------\n");
         System.out.println("ADDING CLAS REQUEST");
-        System.out.println("Request Recieved to add " +  scheduleForm + " to schedule ");
-        System.out.println(scheduleForm);
+        System.out.println("Request Recieved to add " +  addDropForm + " to schedule ");
+        System.out.println(addDropForm);
         return new Schedule("name", new Term(30), new ArrayList<Class>());
     }
+
 
     @GetMapping("/addClass")
     @ResponseBody
     @CrossOrigin
-    public ArrayList<Boolean> addClass(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret,
+    public String addClass(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret,
                                        @RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
                                        @RequestParam(value = "dept", defaultValue = "") String dept,
                                        @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
@@ -257,7 +258,11 @@ public class SpringWebAPI {
                                        @RequestParam(value = "year", defaultValue = "") String year,
                                        @RequestParam(value = "term", defaultValue = "") String term){
 
-        ArrayList<Boolean> result = new ArrayList<>();
+        System.out.println("\n---------------------\n");
+        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
+        System.out.println("Request Received to add " +  courseCode + " to schedule " + scheduleID);
+        JSONObject result = new JSONObject();
+
 
         // check if logged in, get account if so
         Account realAccount = validateLoginSecret(loginSecret);
@@ -278,38 +283,43 @@ public class SpringWebAPI {
         System.out.println("Request received to add " +  courseCode + " to schedule " + scheduleID);
 
         if(scheduleID.equals("") || courseCode.equals("    ")){
-            System.out.println("Failed to add class due to lack of parameters");
-            result.add(false);
-            return result;
+            System.out.println("Failed to add class due to invalid of parameters");
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", "Failed to add class due to invalid of parameters");
+            return result.toString();
         }
         try {
             Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
             Class cls = Class.getClassFromDBbyCourseCode(courseCode);
             sch.addClass(cls);
             sch.saveSchedule();
-            System.out.println("Course Added");
-            result.add(true);
-            return result;
+            result.append("Succeeded", "True");
+            result.append("ErrorMessage", "Class Added");
 
         } catch (Exception e){
             System.out.println("Failed to add to schedule");
-            System.out.println(e);
-            result.add(false);
-            return result;
+            System.out.println(e.toString());
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", e.getMessage());
+
         }
+        return result.toString();
+
     }
 
     @CrossOrigin
     @GetMapping("/removeClass")
     @ResponseBody
-    public ArrayList<Boolean> removeClass(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret,
+    public String removeClass(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret,
                                           @RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
                                           @RequestParam(value = "dept", defaultValue = "") String dept,
                                           @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
                                           @RequestParam(value = "section", defaultValue = "") String section,
                                           @RequestParam(value = "year", defaultValue = "") String year,
                                           @RequestParam(value = "term", defaultValue = "") String term){
-        ArrayList<Boolean> result = new ArrayList<>();
+        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
+        System.out.println("Request Received to remove " +  courseCode + "from schedule " + scheduleID);
+        JSONObject result = new JSONObject();
 
         // check if logged in, get account if so
         Account realAccount = validateLoginSecret(loginSecret);
@@ -332,9 +342,10 @@ public class SpringWebAPI {
         System.out.println("Request received to remove " +  courseCode + "from schedule " + scheduleID);
 
         if(scheduleID.equals("") || courseCode.equals("    ")){
-            System.out.println("Failed to remove class due to lack of parameters");
-            result.add(false);
-            return result;
+            System.out.println("Failed to remove class due to invalid of parameters");
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", "Failed to remove class due to invalid of parameters");
+            return result.toString();
         }
         try {
             Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
@@ -344,19 +355,20 @@ public class SpringWebAPI {
                 if(classes.get(i).getCode().equals(courseCode)){
                     sch.removeClass(i);
                     sch.saveSchedule();
-                    System.out.println("Course removed");
-                    result.add(true);
-                    return result;
+                    result.append("Succeeded", "True");
+                    result.append("ErrorMessage", "Class Removed");
                 }
             }
             throw new Exception("No matching class in the schedule");
 
         } catch (Exception e){
-            System.out.println("Failed to remove class schedule");
-            System.out.println(e);
-            result.add(false);
-            return result;
+            System.out.println("Failed to remove from schedule");
+            System.out.println(e.toString());
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", e.getMessage());
         }
+        return result.toString();
+
     }
 
 
