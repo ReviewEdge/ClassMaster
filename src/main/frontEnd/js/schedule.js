@@ -118,7 +118,6 @@ async function updateSchedule(){
     scheduleTerm.innerText = ''
     container.innerText = ''
     container.innerHTML = ''
-    // getCurrentSchedule()
 
     const schedule = await getCurrentSchedule(1);
     container.append(scheduleHeader)
@@ -148,12 +147,11 @@ function updateClassDisplayList(schedule, cont, Header){
     Header.append(termHeader)
 }
 
-export function addClassToSchedule(courseCode){
+export async function addClassToSchedule(courseCode){
 
     var currentSchedule = 1;
     var ccSplit = courseCode.split(" ")
-    console.log(courseCode)
-    // console.log(ccSplit)
+    // console.log(courseCode)
 
     const addClassURL = 'http://localhost:8080/addClass?' +
         'scheduleID=' + currentSchedule +
@@ -163,6 +161,8 @@ export function addClassToSchedule(courseCode){
         '&year=2020' + 
         '&term=30';
 
+    console.log(addClassURL)
+
     // const data = {scheduleID: currentSchedule, courseCode: courseCode};
     // const options = {
     //     method: 'POST',
@@ -171,47 +171,44 @@ export function addClassToSchedule(courseCode){
     // };
     // const addClassURL = 'http://localhost:8080/addClassTest';
 
-    // const addClassURL = 'http://localhost:8080/addClassTest';
-    // const data = {email: '1', password: '123'};
-    // const options = {
-    //     method: 'POST',
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: JSON.stringify(data)
-    // };
-
-    console.log(addClassURL)
-    // console.log(options)
-
-    // fetch(addClassURL, options)
-    fetch(addClassURL)
-        .then(data => {
-        data.json().then((data) => {
-            console.log(data)
-            updateSchedule()
-        });
-    });
+    const data = await fetch(addClassURL)
+    const dataJSON = await data.json()
+    // console.log(dataJSON)
+    if(dataJSON.Succeeded[0] == "True"){
+        updateSchedule()
+        console.log("Successfully added class")
+    }
+    else{
+        console.log("Failed to add class to schedule")
+        console.log(dataJSON.ErrorMessage[0])
+    }
 }
 
-export function removeClassFromSchedule(courseCode){
+export async function removeClassFromSchedule(courseCode){
 
     var currentSchedule = 1;
     var ccSplit = courseCode.split(" ")
     console.log(courseCode)
-    console.log(ccSplit)
+    // console.log(ccSplit)
 
-    const addClassURL = 'http://localhost:8080/removeClass?' +
+    const removeClassURL = 'http://localhost:8080/removeClass?' +
         'scheduleID=' + currentSchedule +
         '&dept=' + ccSplit[2] + 
         '&courseNum=' + ccSplit[3] + 
         '&section=' + ccSplit[4] + 
         '&year=2020' + 
         '&term=30';
-    console.log(addClassURL)
+    console.log(removeClassURL)
 
-    fetch(addClassURL)
-        .then(data => {
-        data.json().then((data) => {
-            updateSchedule()
-        });
-    });
+    const data = await fetch(removeClassURL)
+    const dataJSON = await data.json()
+    console.log(dataJSON)
+    if(dataJSON.Succeeded[0] == "True"){
+        updateSchedule()
+        console.log("Successfully removed class")
+    }
+    else{
+        console.log("Failed to remove class to schedule")
+        console.log(dataJSON.ErrorMessage[0])
+    }
 };

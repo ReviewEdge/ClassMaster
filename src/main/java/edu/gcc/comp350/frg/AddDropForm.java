@@ -1,16 +1,16 @@
 package edu.gcc.comp350.frg;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class ScheduleForm {
+public class AddDropForm {
 
     private String scheduleID;
     private String courseCode;
+    private String addDrop;
 
 
-    public ScheduleForm(String scheduleID, String courseCode) {
+    public AddDropForm(String scheduleID, String courseCode, String addDrop) {
         this.scheduleID = scheduleID;
         this.courseCode = courseCode;
+        this.addDrop = addDrop;
     }
 
     public String getScheduleID() {
@@ -19,6 +19,9 @@ public class ScheduleForm {
 
     public String getCourseCode() {
         return courseCode;
+    }
+    public String getAddDrop() {
+        return addDrop;
     }
 
 }
