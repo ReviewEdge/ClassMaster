@@ -87,7 +87,6 @@ function createNewSchedule() {
 
 
 function getMyScheduleNames(){
-    //TODO: needs to actually check that I'm signed in!!
     const userSecret = getCookie("user");
     const getAllUserSchedulesURL = `http://localhost:8080/getMySchedules?loginSecret=` + userSecret;
     const container = document.getElementById("sc-list-id");
@@ -102,7 +101,7 @@ function getMyScheduleNames(){
                 container.prepend(sch)
             } else {
                 //set latest schedule as current schedule, if there is no cur schedule set
-                //TODO: i don't think this fires when it should
+                //TODO: i don't think this fires when it should?
 
                 console.log(document.cookie);
 
@@ -207,68 +206,87 @@ function updateClassDisplayList(schedule, cont, Header){
 
 export function addClassToSchedule(courseCode){
 
-    var currentSchedule = 1;
-    var ccSplit = courseCode.split(" ")
-    console.log(courseCode)
-    // console.log(ccSplit)
+    //TODO: Should check if cl and sc terms match in the FE and tell user if they don't
 
-    const addClassURL = 'http://localhost:8080/addClass?' +
-        'scheduleID=' + currentSchedule +
-        '&dept=' + ccSplit[2] + 
-        '&courseNum=' + ccSplit[3] + 
-        '&section=' + ccSplit[4] +
-        '&year=2020' + 
-        '&term=30';
+    const userSecret = getCookie("user");
 
-    // const data = {scheduleID: currentSchedule, courseCode: courseCode};
-    // const options = {
-    //     method: 'POST',
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: JSON.stringify(data)
-    // };
-    // const addClassURL = 'http://localhost:8080/addClassTest';
-
-    // const addClassURL = 'http://localhost:8080/addClassTest';
-    // const data = {email: '1', password: '123'};
-    // const options = {
-    //     method: 'POST',
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: JSON.stringify(data)
-    // };
-
-    console.log(addClassURL)
-    // console.log(options)
-
-    // fetch(addClassURL, options)
-    fetch(addClassURL)
-        .then(data => {
-        data.json().then((data) => {
-            console.log(data)
-            updateSchedule()
+    if(userSecret === "") {
+        console.log("CAN'T ADD A CLASS, NO USER LOGGED IN");
+    } else {
+        var currentSchedule = getUserCurrScheduleFromCookie(userSecret);
+        var ccSplit = courseCode.split(" ")
+    
+        const addClassURL = 'http://localhost:8080/addClass?' +
+            'loginSecret=' + userSecret +
+            '&scheduleID=' + currentSchedule +
+            '&dept=' + ccSplit[2] + 
+            '&courseNum=' + ccSplit[3] + 
+            '&section=' + ccSplit[4] +
+            '&year=' + ccSplit[0] + 
+            '&term=' + ccSplit[1];
+    
+        // const data = {scheduleID: currentSchedule, courseCode: courseCode};
+        // const options = {
+        //     method: 'POST',
+        //     headers: {'Content-Type': 'application/json'},
+        //     body: JSON.stringify(data)
+        // };
+        // const addClassURL = 'http://localhost:8080/addClassTest';
+    
+        // const addClassURL = 'http://localhost:8080/addClassTest';
+        // const data = {email: '1', password: '123'};
+        // const options = {
+        //     method: 'POST',
+        //     headers: {'Content-Type': 'application/json'},
+        //     body: JSON.stringify(data)
+        // };
+    
+        console.log(addClassURL)
+        // console.log(options)
+    
+        // fetch(addClassURL, options)
+        fetch(addClassURL)
+            .then(data => {
+            data.json().then((data) => {
+                if (!data[0]) {
+                    console.log("FAILED TO REMOVE CLASS");
+                }
+                updateSchedule()
+            });
         });
-    });
+    }
+
 }
 
 export function removeClassFromSchedule(courseCode){
 
-    var currentSchedule = 1;
-    var ccSplit = courseCode.split(" ")
-    console.log(courseCode)
-    console.log(ccSplit)
+    const userSecret = getCookie("user");
 
-    const addClassURL = 'http://localhost:8080/removeClass?' +
-        'scheduleID=' + currentSchedule +
-        '&dept=' + ccSplit[2] + 
-        '&courseNum=' + ccSplit[3] + 
-        '&section=' + ccSplit[4] + 
-        '&year=2020' + 
-        '&term=30';
-    console.log(addClassURL)
+    if(userSecret === "") {
+        console.log("CAN'T REMOVE A CLASS, NO USER LOGGED IN");
+    } else {
+        var currentSchedule = getUserCurrScheduleFromCookie(userSecret);
+        var ccSplit = courseCode.split(" ")
+        console.log(courseCode)
+        console.log(ccSplit)
 
-    fetch(addClassURL)
-        .then(data => {
-        data.json().then((data) => {
-            updateSchedule()
+        const removeClassURL = 'http://localhost:8080/removeClass?' +
+            'loginSecret=' + userSecret +
+            '&scheduleID=' + currentSchedule +
+            '&dept=' + ccSplit[2] + 
+            '&courseNum=' + ccSplit[3] + 
+            '&section=' + ccSplit[4] + 
+            '&year=' + ccSplit[0] + 
+            '&term=' + ccSplit[1];
+
+        fetch(removeClassURL)
+            .then(data => {
+            data.json().then((data) => {
+                if (!data[0]) {
+                    console.log("FAILED TO REMOVE CLASS");
+                }
+                updateSchedule();
+            });
         });
-    });
+    }
 };

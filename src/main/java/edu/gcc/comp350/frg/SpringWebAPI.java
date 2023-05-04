@@ -249,16 +249,33 @@ public class SpringWebAPI {
     @GetMapping("/addClass")
     @ResponseBody
     @CrossOrigin
-    public ArrayList<Boolean> addClass(@RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
+    public ArrayList<Boolean> addClass(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret,
+                                       @RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
                                        @RequestParam(value = "dept", defaultValue = "") String dept,
                                        @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
                                        @RequestParam(value = "section", defaultValue = "") String section,
                                        @RequestParam(value = "year", defaultValue = "") String year,
                                        @RequestParam(value = "term", defaultValue = "") String term){
-        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
-        System.out.println("Request Recieved to add " +  courseCode + " to schedule " + scheduleID);
+
         ArrayList<Boolean> result = new ArrayList<>();
 
+        // check if logged in, get account if so
+        Account realAccount = validateLoginSecret(loginSecret);
+        if (realAccount == null) {
+            System.out.println("Failed to add class, user must be logged in");
+            result.add(false);
+            return result;
+        }
+
+        // check if user owns the schedule
+        if (!realAccount.getScheduleIDs().contains(Integer.parseInt(scheduleID))) {
+            System.out.println("can't add class because user " + realAccount.getId() + " does not own schedule " + scheduleID);
+            result.add(false);
+            return result;
+        }
+
+        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
+        System.out.println("Request received to add " +  courseCode + " to schedule " + scheduleID);
 
         if(scheduleID.equals("") || courseCode.equals("    ")){
             System.out.println("Failed to add class due to lack of parameters");
@@ -276,7 +293,7 @@ public class SpringWebAPI {
 
         } catch (Exception e){
             System.out.println("Failed to add to schedule");
-            System.out.println(e.toString());
+            System.out.println(e);
             result.add(false);
             return result;
         }
@@ -285,15 +302,34 @@ public class SpringWebAPI {
     @CrossOrigin
     @GetMapping("/removeClass")
     @ResponseBody
-    public ArrayList<Boolean> removeClass(@RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
+    public ArrayList<Boolean> removeClass(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret,
+                                          @RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
                                           @RequestParam(value = "dept", defaultValue = "") String dept,
                                           @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
                                           @RequestParam(value = "section", defaultValue = "") String section,
                                           @RequestParam(value = "year", defaultValue = "") String year,
                                           @RequestParam(value = "term", defaultValue = "") String term){
-        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
-        System.out.println("Request Recieved to remove " +  courseCode + "from schedule " + scheduleID);
         ArrayList<Boolean> result = new ArrayList<>();
+
+        // check if logged in, get account if so
+        Account realAccount = validateLoginSecret(loginSecret);
+        if (realAccount == null) {
+            System.out.println("Failed to remove class, user must be logged in");
+            result.add(false);
+            return result;
+        }
+
+        // check if user owns the schedule
+        if (!realAccount.getScheduleIDs().contains(Integer.parseInt(scheduleID))) {
+            System.out.println("can't remove class because user " + realAccount.getId() + " does not own schedule " + scheduleID);
+            result.add(false);
+            return result;
+        }
+
+
+
+        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
+        System.out.println("Request received to remove " +  courseCode + "from schedule " + scheduleID);
 
         if(scheduleID.equals("") || courseCode.equals("    ")){
             System.out.println("Failed to remove class due to lack of parameters");
@@ -317,13 +353,11 @@ public class SpringWebAPI {
 
         } catch (Exception e){
             System.out.println("Failed to remove class schedule");
-            System.out.println(e.toString());
+            System.out.println(e);
             result.add(false);
             return result;
         }
     }
-
-
 
 
 
