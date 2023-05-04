@@ -126,7 +126,7 @@ async function updateSchedule(){
 
 function updateClassDisplayList(schedule, cont, Header){
 
-    // console.log(schedule);
+    console.log(schedule);
 
     if (schedule === null){
         const sch = document.createElement("p");
