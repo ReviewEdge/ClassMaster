@@ -11,19 +11,19 @@ window.addEventListener("DOMContentLoaded", function() {
         lNotice.classList.remove("ln-active");
         profileBtn.innerText="Log out";
         profileBtn.addEventListener("click", function() {
+            setCookie("user", "", 100);  //always clears the user cookie
+
             const logoutURL = "http://localhost:8080/logout?loginSecret=" + userID;
             fetch(logoutURL)
             .then(data => {
                 data.json().then((data) => {
-                    if (data === 1) {
-                        setCookie("user", "", 100);
-                        location.reload();
-                    } else {
+                    if (data !== 1) {
                         console.log("didn't log out");
                     }
 
                 });
             });
+            location.reload();
         });
     } else {
         lNotice.classList.add("ln-active");
