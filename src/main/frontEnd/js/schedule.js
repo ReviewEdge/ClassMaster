@@ -69,21 +69,21 @@ function getMyScheduleNames(){
     const container = document.getElementById("sc-list-id");
     const template = document.getElementById("hidden-sched-name-temp");
 
-    // fetch(getAllUserSchedulesURL)
-    //     .then(data => {
-    //     data.json().then((data) => {
-    //         if (data.length === 0) {
-    //             const sch = document.createElement("p");
-    //             sch.innerText = "No schedules";
-    //             container.prepend(sch)
-    //         } else {
-    //             for (const s of data) {
-    //                 insertSchedule(s, template, container);
-    //             }
-    //         }
+    fetch(getAllUserSchedulesURL)
+        .then(data => {
+        data.json().then((data) => {
+            if (data.length === 0) {
+                const sch = document.createElement("p");
+                sch.innerText = "No schedules";
+                container.prepend(sch)
+            } else {
+                for (const s of data) {
+                    insertSchedule(s, template, container);
+                }
+            }
 
-    //     });
-    // });
+        });
+    });
 }
 
 function insertSchedule(s, template, container) {

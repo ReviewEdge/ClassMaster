@@ -1,7 +1,10 @@
 import { setCookie, getCookie } from './useCookies.js';
 
 window.addEventListener("DOMContentLoaded", function() {
-
+    const signUpButton = document.getElementById("sign-up-button");
+    signUpButton.addEventListener("click", function () {
+        window.location.href = "/signup.html";
+    });
 
     const form = document.getElementById("login-form");
     form.addEventListener('submit', (event) => {
