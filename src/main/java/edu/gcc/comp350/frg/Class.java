@@ -235,6 +235,7 @@ public class Class {
     public String toString(){
         StringBuilder classString = new StringBuilder();
         //classString.append(getCourseCodeWithoutTerm()+", ");
+        classString.append(this.code+", ");
         classString.append(this.title+", ");
         if(this.term != null) {
             classString.append(this.term + ", ");

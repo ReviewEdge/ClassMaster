@@ -1,9 +1,10 @@
 import { setCookie, getCookie } from './useCookies.js';
+import { coFactory } from './courseInfo.js';
 
 window.addEventListener("DOMContentLoaded", function() {
     const termSpan = document.getElementById("curr-sched-term-name");
 
-    const getTermURL = `http://localhost:8080/term-test`;
+    const getTermURL = 'http://localhost:8080/term-test';
     fetch(getTermURL)
         .then(data => {
             data.json().then((data) => {
@@ -68,21 +69,21 @@ function getMyScheduleNames(){
     const container = document.getElementById("sc-list-id");
     const template = document.getElementById("hidden-sched-name-temp");
 
-    fetch(getAllUserSchedulesURL)
-        .then(data => {
-        data.json().then((data) => {
-            if (data.length === 0) {
-                const sch = document.createElement("p");
-                sch.innerText = "No schedules";
-                container.prepend(sch)
-            } else {
-                for (const s of data) {
-                    insertSchedule(s, template, container);
-                }
-            }
+    // fetch(getAllUserSchedulesURL)
+    //     .then(data => {
+    //     data.json().then((data) => {
+    //         if (data.length === 0) {
+    //             const sch = document.createElement("p");
+    //             sch.innerText = "No schedules";
+    //             container.prepend(sch)
+    //         } else {
+    //             for (const s of data) {
+    //                 insertSchedule(s, template, container);
+    //             }
+    //         }
 
-        });
-    });
+    //     });
+    // });
 }
 
 function insertSchedule(s, template, container) {
@@ -96,84 +97,115 @@ function insertSchedule(s, template, container) {
     container.prepend(clonedElement);
 }
 
+async function getCurrentSchedule(scheduleNum){
+    
+    const getScheduleURL = 'http://localhost:8080/getSchedule?id=' + scheduleNum;
 
+    const container = document.getElementById("schedule-classes-list");
 
+    const data = await fetch(getScheduleURL)
+    const dataJson = await data.json()
+    return dataJson
 
+}
 
-
-function updateSchedule(){
+async function updateSchedule(){
     const container = document.getElementById("schedule-classes-list");
     const scheduleHeader = document.getElementById("schedule-display-header");
-    container.innerText = 'Classes';
-    container.innerHTML = '';
-    container.append(scheduleHeader);
-    getCurrentSchedule();
+    const scheduleTerm = document.getElementById("curr-sched-term-name")
+
+    scheduleHeader.innerText = 'Loading Classes'
+    scheduleTerm.innerText = ''
+    container.innerText = ''
+    container.innerHTML = ''
+    // getCurrentSchedule()
+
+    const schedule = await getCurrentSchedule(1);
+    container.append(scheduleHeader)
+    updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm)
 }
 
-function getCurrentSchedule(){
-    
-    const getScheduleURL = `http://localhost:8080/calendar?id=` + 1;
+function updateClassDisplayList(schedule, cont, Header){
 
-    const container = document.getElementById("schedule-classes-list");
+    console.log(schedule);
 
+    if (schedule === null){
+        const sch = document.createElement("p");
+        sch.innerText = "Schedule empty";
+        cont.append(sch)
+        return;
+    }
+    for(const c of schedule.classes){
+        const p = coFactory.createClassObjectFromJSON(c, true)
+        cont.append(p);
+    }
 
-    fetch(getScheduleURL)
-        .then(data => {
-        data.json().then((data) => {
-            if (data.length === 0) {
-                const sch = document.createElement("p");
-                sch.innerText = "Schedule empty";
-                container.append(sch)
-            } else {
-                for (const c of data) {
-                    const p = coFactory.createClassObject(c)
-                    container.append(p);
-                }
-            }
+    const termHeader = document.createElement("span")
+    termHeader.id = "curr-sched-term-name"
+    termHeader.innerText = schedule.term.name
 
-        });
-    });
+    Header.innerText = schedule.name + ": "
+    Header.append(termHeader)
 }
 
-function addClassToSchedule(courseCode){
+export function addClassToSchedule(courseCode){
 
     var currentSchedule = 1;
     var ccSplit = courseCode.split(" ")
     console.log(courseCode)
-    console.log(ccSplit)
+    // console.log(ccSplit)
 
-    const addClassURL = `http://localhost:8080/addClass?` +
-        `scheduleID=` + currentSchedule +
-        `&dept=` + ccSplit[0] + 
-        `&courseNum=` + ccSplit[1] + 
-        `&section=` + ccSplit[2] +
-        `&year=2020` + 
-        `&term=30`;
+    const addClassURL = 'http://localhost:8080/addClass?' +
+        'scheduleID=' + currentSchedule +
+        '&dept=' + ccSplit[2] + 
+        '&courseNum=' + ccSplit[3] + 
+        '&section=' + ccSplit[4] +
+        '&year=2020' + 
+        '&term=30';
+
+    // const data = {scheduleID: currentSchedule, courseCode: courseCode};
+    // const options = {
+    //     method: 'POST',
+    //     headers: {'Content-Type': 'application/json'},
+    //     body: JSON.stringify(data)
+    // };
+    // const addClassURL = 'http://localhost:8080/addClassTest';
+
+    // const addClassURL = 'http://localhost:8080/addClassTest';
+    // const data = {email: '1', password: '123'};
+    // const options = {
+    //     method: 'POST',
+    //     headers: {'Content-Type': 'application/json'},
+    //     body: JSON.stringify(data)
+    // };
+
     console.log(addClassURL)
+    // console.log(options)
 
-
+    // fetch(addClassURL, options)
     fetch(addClassURL)
         .then(data => {
         data.json().then((data) => {
+            console.log(data)
             updateSchedule()
         });
     });
 }
 
-function removeClassFromSchedule(courseCode){
+export function removeClassFromSchedule(courseCode){
 
     var currentSchedule = 1;
     var ccSplit = courseCode.split(" ")
     console.log(courseCode)
     console.log(ccSplit)
 
-    const addClassURL = `http://localhost:8080/removeClass?` +
-        `scheduleID=` + currentSchedule +
-        `&dept=` + ccSplit[0] + 
-        `&courseNum=` + ccSplit[1] + 
-        `&section=` + ccSplit[2] + 
-        `&year=2020` + 
-        `&term=30`;
+    const addClassURL = 'http://localhost:8080/removeClass?' +
+        'scheduleID=' + currentSchedule +
+        '&dept=' + ccSplit[2] + 
+        '&courseNum=' + ccSplit[3] + 
+        '&section=' + ccSplit[4] + 
+        '&year=2020' + 
+        '&term=30';
     console.log(addClassURL)
 
     fetch(addClassURL)
