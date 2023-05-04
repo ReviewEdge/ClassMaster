@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", function() {
                     } else {
                         container.innerHTML = "";
                         for (const c of data) {
-                            const p = coFactory.createClassObject(c)
+                            const p = coFactory.createClassObject(c, false)
                             container.append(p);
                         }
                     }

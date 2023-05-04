@@ -67,6 +67,10 @@ input,textarea {
     display: inline;
 }
 
+#search-results{
+    background-color: lightgray;
+}
+
 #filters-button {
 }
 
@@ -107,6 +111,16 @@ input,textarea {
     margin-bottom: .4rem;
 }
 
+.l-notice {
+    max-width: 8rem;
+    color: black;
+    display: none;
+}
+
+.ln-active {
+    display: block;
+}
+
 .sc-form-active {
     display: block;
 }
@@ -115,6 +129,10 @@ input,textarea {
     position: absolute;
     top: 12px;
     right: 12px;
+}
+
+#search-results {
+    background-color: lightgray;
 }
 
 .schedule-classes-list {

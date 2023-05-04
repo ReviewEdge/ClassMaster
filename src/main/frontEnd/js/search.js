@@ -1,3 +1,4 @@
+import {coFactory} from "./courseInfo.js"
 let classes = null;//store a list of classes from last time filter got ran
 
 window.addEventListener("DOMContentLoaded", function() {
