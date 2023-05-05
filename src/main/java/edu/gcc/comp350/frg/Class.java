@@ -1,7 +1,5 @@
 package edu.gcc.comp350.frg;
 
-import org.json.JSONObject;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -251,11 +249,6 @@ public class Class {
         }
         classString.append(this.professor);
         return classString.toString();
-    }
-
-    public String toJSON(){
-        JSONObject jsonObject = new JSONObject(this);
-        return jsonObject.toString();
     }
 
     public int getCredits() {

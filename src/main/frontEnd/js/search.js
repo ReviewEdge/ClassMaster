@@ -48,13 +48,10 @@ function onType(){
     const container = document.getElementById("search-results");
     const search = document.getElementById("class-search-bar").value.toLowerCase().trim();
     container.innerHTML = "";
-    // console.log(classes)
-
+    console.log(classes)
     for (const c of classes) {
-        // console.log(classObjectToString(c))
-        if(!classObjectToString(c).toLowerCase().includes(search)) continue;
-        const p = coFactory.createClassObjectFromJSON(c, false)
-        // const p = coFactory.createClassObject(c, false)
+        if(!c.toLowerCase().includes(search)) continue;
+        const p = coFactory.createClassObject(c)
         container.append(p);
     }
     if(classes.length === 0){
@@ -62,12 +59,7 @@ function onType(){
     }
 }
 
-function classObjectToString(c){
-    var str = c.code + " " + c.professor + " " + c.title + " " + c.department
-    return str;
-}
-
-async function updateFilter(){
+function updateFilter(){
     const prof = document.getElementById("prof-in").value;
     const code = document.getElementById("code-in").value;
     let min = document.getElementById("min-cred-in").value;
@@ -107,8 +99,7 @@ async function updateFilter(){
         timeslots[i] = ret;
     }
     const postCommentUrl = "http://localhost:8080/API/setFilter";
-    const data = await fetch(postCommentUrl, {
-    // fetch(postCommentUrl, {
+    fetch(postCommentUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -122,21 +113,11 @@ async function updateFilter(){
             timeslots : timeslots
         })
     })
-    //     .then(validateJSON)
-    //     //get all classes
-    //     .then(data => {
-    //         classes = data;
-    //     });
-
-    const dataJSON = await data.json()
-
-    if(dataJSON != null){
-        classes = []
-        for(const c of dataJSON){
-            classes.push(JSON.parse(c))
-        }
-        // console.log(classes)
-    }
+        .then(validateJSON)
+        //get all classes
+        .then(data => {
+            classes = data;
+        });
 }
 
 /**
