@@ -143,6 +143,40 @@ public class SpringWebAPI {
     }
 
 
+//    @CrossOrigin
+//    @PostMapping("/API/setFilter")
+//    @ResponseBody
+//    public ArrayList<String> setFilter(@RequestBody FilterForm filterForm) {
+//        f.setProfessor(filterForm.getProfessor());//sets it to null if empty
+//        f.setCode(filterForm.getCode());//sets it to null if empty
+//        f.setMinCredits(filterForm.getMinimum());//sets it to -1 if empty
+//        f.setMaxCredits(filterForm.getMaximum());//sets it to -1 if empty
+//        f.setDepartment(filterForm.getDepartment());//sets it to null if empty
+//        //reset the timeslots to match what was sent
+//        f.removeAllTimeslots();
+//        for(Timeslot t : filterForm.getTimeslots()){
+//            f.addTimeslot(t);
+//        }
+//
+//        ArrayList<String> searchResultStrings = new ArrayList<>();
+//        Search newSearch = new Search(f);
+//
+//        try {
+//            newSearch.runQuery();
+//        } catch (NullPointerException e) {
+//            System.out.println("no search results for this filter");
+//            return searchResultStrings;
+//        }
+//
+//        for (Class c : newSearch.getCurrentResults() ) {
+//            searchResultStrings.add(c.toString());
+//        }
+//
+//        System.out.println("sending search results for this filter");
+//
+//        return searchResultStrings;
+//    }
+
     @CrossOrigin
     @PostMapping("/API/setFilter")
     @ResponseBody
@@ -158,18 +192,19 @@ public class SpringWebAPI {
             f.addTimeslot(t);
         }
 
-        ArrayList<String> searchResultStrings = new ArrayList<>();
         Search newSearch = new Search(f);
+        ArrayList<String> searchResultStrings = new ArrayList<>();
+
 
         try {
             newSearch.runQuery();
         } catch (NullPointerException e) {
             System.out.println("no search results for this filter");
-            return searchResultStrings;
+            return null;
         }
 
         for (Class c : newSearch.getCurrentResults() ) {
-            searchResultStrings.add(c.toString());
+            searchResultStrings.add(c.toJSON());
         }
 
         System.out.println("sending search results for this filter");
@@ -238,67 +273,114 @@ public class SpringWebAPI {
     @CrossOrigin
     @PostMapping(value = "/addClassTest")
     @ResponseBody
-    public Schedule addClas(@RequestParam ScheduleForm scheduleForm){
+    public Schedule addClas(@RequestParam AddDropForm addDropForm){
         System.out.println("\n---------------------\n");
         System.out.println("ADDING CLAS REQUEST");
-        System.out.println("Request Recieved to add " +  scheduleForm + " to schedule ");
-        System.out.println(scheduleForm);
+        System.out.println("Request Recieved to add " +  addDropForm + " to schedule ");
+        System.out.println(addDropForm);
         return new Schedule("name", new Term(30), new ArrayList<Class>());
     }
+
 
     @GetMapping("/addClass")
     @ResponseBody
     @CrossOrigin
-    public ArrayList<Boolean> addClass(@RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
+    public String addClass(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret,
+                                       @RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
                                        @RequestParam(value = "dept", defaultValue = "") String dept,
                                        @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
                                        @RequestParam(value = "section", defaultValue = "") String section,
                                        @RequestParam(value = "year", defaultValue = "") String year,
                                        @RequestParam(value = "term", defaultValue = "") String term){
-        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
-        System.out.println("Request Recieved to add " +  courseCode + " to schedule " + scheduleID);
-        ArrayList<Boolean> result = new ArrayList<>();
 
+        System.out.println("\n---------------------\n");
+        String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
+        System.out.println("Request Received to add " +  courseCode + " to schedule " + scheduleID);
+        JSONObject result = new JSONObject();
+
+
+        // check if logged in, get account if so
+        Account realAccount = validateLoginSecret(loginSecret);
+        if (realAccount == null) {
+            System.out.println("Failed to add class, user must be logged in");
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", "Failed to add class due to invalid of parameters");
+            return result.toString();
+        }
+
+        // check if user owns the schedule
+        if (!realAccount.getScheduleIDs().contains(Integer.parseInt(scheduleID))) {
+            String error = "Can't add class because user " + realAccount.getId() + " does not own schedule " + scheduleID;
+            System.out.println(error);
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", error);
+            return result.toString();
+        }
 
         if(scheduleID.equals("") || courseCode.equals("    ")){
-            System.out.println("Failed to add class due to lack of parameters");
-            result.add(false);
-            return result;
+            String error = "Failed to add class due to invalid of parameters";
+            System.out.println(error);
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", error);
+            return result.toString();
         }
         try {
             Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
             Class cls = Class.getClassFromDBbyCourseCode(courseCode);
             sch.addClass(cls);
             sch.saveSchedule();
-            System.out.println("Course Added");
-            result.add(true);
-            return result;
+            result.append("Succeeded", "True");
+            result.append("ErrorMessage", "Class Added");
 
         } catch (Exception e){
             System.out.println("Failed to add to schedule");
             System.out.println(e.toString());
-            result.add(false);
-            return result;
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", e.getMessage());
+
         }
+        return result.toString();
+
     }
 
     @CrossOrigin
     @GetMapping("/removeClass")
     @ResponseBody
-    public ArrayList<Boolean> removeClass(@RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
+    public String removeClass(@RequestParam(value = "loginSecret", defaultValue = "") String loginSecret,
+                                          @RequestParam(value = "scheduleID", defaultValue = "") String scheduleID,
                                           @RequestParam(value = "dept", defaultValue = "") String dept,
                                           @RequestParam(value = "courseNum", defaultValue = "") String courseNum,
                                           @RequestParam(value = "section", defaultValue = "") String section,
                                           @RequestParam(value = "year", defaultValue = "") String year,
                                           @RequestParam(value = "term", defaultValue = "") String term){
         String courseCode = year + " " + term + " " +  dept + " " + courseNum + " " + section;
-        System.out.println("Request Recieved to remove " +  courseCode + "from schedule " + scheduleID);
-        ArrayList<Boolean> result = new ArrayList<>();
+        System.out.println("Request Received to remove " +  courseCode + "from schedule " + scheduleID);
+        JSONObject result = new JSONObject();
+
+        // check if logged in, get account if so
+        Account realAccount = validateLoginSecret(loginSecret);
+        if (realAccount == null) {
+            String error = "Failed to remove class, user must be logged in";
+            System.out.println(error);
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", error);
+            return result.toString();
+        }
+
+        // check if user owns the schedule
+        if (!realAccount.getScheduleIDs().contains(Integer.parseInt(scheduleID))) {
+            String error = "Can't remove class because user " + realAccount.getId() + " does not own schedule " + scheduleID;
+            System.out.println(error);
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", error);
+            return result.toString();
+        }
 
         if(scheduleID.equals("") || courseCode.equals("    ")){
-            System.out.println("Failed to remove class due to lack of parameters");
-            result.add(false);
-            return result;
+            System.out.println("Failed to remove class due to invalid of parameters");
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", "Failed to remove class due to invalid of parameters");
+            return result.toString();
         }
         try {
             Schedule sch = Schedule.getScheduleByIDFromDB(Integer.parseInt(scheduleID));
@@ -308,22 +390,21 @@ public class SpringWebAPI {
                 if(classes.get(i).getCode().equals(courseCode)){
                     sch.removeClass(i);
                     sch.saveSchedule();
-                    System.out.println("Course removed");
-                    result.add(true);
-                    return result;
+                    result.append("Succeeded", "True");
+                    result.append("ErrorMessage", "Class Removed");
                 }
             }
             throw new Exception("No matching class in the schedule");
 
         } catch (Exception e){
-            System.out.println("Failed to remove class schedule");
+            System.out.println("Failed to remove from schedule");
             System.out.println(e.toString());
-            result.add(false);
-            return result;
+            result.append("Succeeded", "False");
+            result.append("ErrorMessage", e.getMessage());
         }
+        return result.toString();
+
     }
-
-
 
 
 
