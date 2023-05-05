@@ -191,6 +191,7 @@ public class SpringWebAPI {
         for(Timeslot t : filterForm.getTimeslots()){
             f.addTimeslot(t);
         }
+        f.setTerm(filterForm.getTerm());
 
         Search newSearch = new Search(f);
         ArrayList<String> searchResultStrings = new ArrayList<>();

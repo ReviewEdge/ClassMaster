@@ -7,8 +7,9 @@ public class FilterForm {
     private String maximum;
     private String department;
     private String[] timeslots;
+    private String term;
 
-    public FilterForm(String professor, String code, String minimum, String maximum, String department, String[] timeslots) {
+    public FilterForm(String professor, String code, String minimum, String maximum, String department, String[] timeslots, String term) {
         this.professor = professor;
         this.code = code;
         this.minimum = minimum;
@@ -20,6 +21,7 @@ public class FilterForm {
 //            this.timeslots[i] = new Timeslot(t[i]);
 //        }
         this.timeslots = timeslots;
+        this.term = term;
     }
 
     public String getProfessor() {
@@ -51,5 +53,14 @@ public class FilterForm {
             t[i] = new Timeslot(timeslots[i]);
         }
         return t;
+    }
+
+    public Term getTerm() {
+        try{
+            return new Term(term);
+        }
+        catch (Exception ex){
+            return null;
+        }
     }
 }
