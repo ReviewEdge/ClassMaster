@@ -274,6 +274,7 @@ public class Filter {
         if(timeslots != null) {
             ArrayList<Timeslot> ts = test.getTimeSlots();
             if(ts != null && ts.size() > 0) {
+                int restrictedPassed = 0;
                 for (Timeslot t : ts) {
                     // the day's timeslots
                     TreeSet<Timeslot> day = timeslots.get(t.getDay().ordinal());
@@ -286,7 +287,9 @@ public class Filter {
                     Timeslot before = b.last();
                     // check if this time fits within the allotted time
                     if (!t.isIn(before)) return false;
+                    restrictedPassed++;
                 }
+                if(restrictedPassed==0) return false;
             }
         }
         if (professor != null){
