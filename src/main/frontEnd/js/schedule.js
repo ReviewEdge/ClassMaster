@@ -289,7 +289,7 @@ export async function addClassToSchedule(courseCode){
             console.log("Successfully added class")
         }
         else{
-            alert("Failed to remove to a schedule:\n" + dataJSON.ErrorMessage[0])
+            alert("Failed to add to a schedule:\n" + dataJSON.ErrorMessage[0])
             console.log("Failed to add class to schedule")
             console.log(dataJSON.ErrorMessage[0])
         }
