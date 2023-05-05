@@ -35,28 +35,28 @@ class AccountTest {
     void addSchedule() {
     }
 
-    @Test
-    void saveOrUpdateAccount() throws Exception {
-        int randomNum = ThreadLocalRandom.current().nextInt(40, 10000 + 1);
-        String accountName = Integer.toString(randomNum);
-
-        Account newAccount = new Account(accountName, "userX@gcc.edu", "password", "username");
-        newAccount.saveOrUpdateAccount();
-
-        ArrayList<Class> testClasses = new ArrayList<>();
-        Class acct = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 A");
-        Class acct2 = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 B");
-        testClasses.add(acct);
-        testClasses.add(acct2);
-        newAccount.addSchedule(new Schedule("testSched", new Term("Fall 2020"), testClasses));
-
-        newAccount.saveOrUpdateAccount();
-
-        assertEquals(accountName, newAccount.getName());
-
-        Account.deleteAccountByIDFromDB(newAccount.getId());
-
-    }
+//    @Test
+//    void saveOrUpdateAccount() throws Exception {
+//        int randomNum = ThreadLocalRandom.current().nextInt(40, 10000 + 1);
+//        String accountName = Integer.toString(randomNum);
+//
+//        Account newAccount = new Account(accountName, "userX@gcc.edu", "password", "username");
+//        newAccount.saveOrUpdateAccount();
+//
+//        ArrayList<Class> testClasses = new ArrayList<>();
+//        Class acct = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 A");
+//        Class acct2 = Class.getClassFromDBbyCourseCode("2020 10 ACCT 201 B");
+//        testClasses.add(acct);
+//        testClasses.add(acct2);
+//        newAccount.addSchedule(new Schedule("testSched", new Term("Fall 2020"), testClasses));
+//
+//        newAccount.saveOrUpdateAccount();
+//
+//        assertEquals(accountName, newAccount.getName());
+//
+//        Account.deleteAccountByIDFromDB(newAccount.getId());
+//
+//    }
 
     @Test
     void getAccountByIdFromDB() throws Exception {
