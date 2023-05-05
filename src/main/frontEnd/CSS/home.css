@@ -24,7 +24,7 @@ input,textarea {
 }
 
 .hamburger-menu {
-    background-color: cadetblue;
+    background-color: #BDD9BF;
     color: cadetblue;
     min-width: 4rem;
     height:100vh;
@@ -48,7 +48,7 @@ input,textarea {
 }
 
 .header {
-    background-color: cadetblue;
+    background-color: #BDD9BF;
     padding: 1rem;
 }
 
@@ -68,7 +68,7 @@ input,textarea {
 }
 
 #search-results{
-    background-color: lightgray;
+    background-color: white;
 }
 
 #filters-button {
@@ -132,7 +132,7 @@ input,textarea {
 }
 
 #search-results {
-    background-color: lightgray;
+    background-color: white;
 }
 
 .schedule-classes-list {
@@ -177,12 +177,12 @@ input,textarea {
 }
 
 .addClassButton {
-    background-color: green;
+    background-color: #3E5641;
     border: black solid;
 }
 
 .removeClassButton {
-    background-color: red;
+    background-color: #A72608;
     border: black solid;
 
 }
