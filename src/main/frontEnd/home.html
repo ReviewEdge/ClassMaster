@@ -17,10 +17,10 @@
 <body>
   <div class="home-flex-container">
     <div class="hamburger-menu flex-item-left collapsible">
-      <button id="hamburger-button" class="collapsible-btn">SM</button>
+      <button id="hamburger-button" class="collapsible-btn">≡</button>
       <div id="sc-list-id" class="list-of-schedules">
 		<p class="l-notice ln-active">Login to save schedules.</p>
-		<p id="hidden-sched-name-temp"><span id="sched-name-input">NAME</span> - <span id="sched-term-input">TERM</span></p>
+		<p id="hidden-sched-name-temp" class="sched-in-list"><b><span id="sched-name-input">NAME</span></b><br><span id="sched-term-input">TERM</span></p>
 		<button id="new-sched-button">+</button>
 		<div class="new-sc-form">
 			<input id="new-sc-name" type="text" placeholder="Name">
@@ -176,9 +176,8 @@
         </div>
 
         <div class="calendar-view">
-			<h1>The Calendar View</h1>
-			<h3>This is all just text,
-				need to find way to actually add timeslots</h3>
+			<h1>Calendar</h1>
+
 
 			<table style="width:100%" id = calendar-view-table>
 				<colgroup>
@@ -197,7 +196,7 @@
 				<tr id ='8am-calendar'>
 					<td>8:00 AM - 9:00 AM</td>
 					<td id='8sunday-calendar'></td>
-					<td>hi</td>
+					<td></td>
 				</tr>
 				<tr>
 					<td>9:00 AM - 10:00 AM</td>

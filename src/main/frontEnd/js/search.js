@@ -63,7 +63,7 @@ function onType(){
 }
 
 function classObjectToString(c){
-    var str = c.code + " " + c.professor + " " + c.title + " " + c.department
+    var str = c.code + " " + c.professor + " " + c.title + " " + c.department + " " + c.term.name
     return str;
 }
 

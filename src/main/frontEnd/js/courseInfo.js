@@ -83,7 +83,13 @@ class classObjectFactory {
         p.className = 'classText';
         p.id ='classText' + this.nextUniqueID;
         const courseCodeDiv = classInfoJSON.code.split(" ");
-        p.innerText =  classInfoJSON.courseCodeWithoutTerm + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
+        if(!(inSchedule)){
+            p.innerText =  classInfoJSON.courseCodeWithoutTerm + ", " + classInfoJSON.term.name + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
+        }
+        else {
+            p.innerText =  classInfoJSON.courseCodeWithoutTerm + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
+        }
+
         if(classInfoJSON.hasOwnProperty("timeSlots")){
             p.innerText += ", " + turnTimeslotIntoString(classInfoJSON.timeSlots)
         }

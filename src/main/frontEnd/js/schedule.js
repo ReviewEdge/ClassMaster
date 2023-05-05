@@ -191,13 +191,11 @@ async function getCurrentSchedule(scheduleNum, loginSecret){
 
     const data = await fetch(getScheduleURL)
 
-    console.log(data);
+    // console.log(data);
 
     const dataJson = await data.json()
 
-
-    console.log(dataJson);
-
+    // console.log(dataJson);
 
     return dataJson
 }
@@ -219,6 +217,7 @@ async function updateSchedule(){
         container.append(scheduleHeader)
         updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm)
     } else {
+        alert("Please login to save or add to a schedule")
         console.log("NO ACCESS TO CURRENT SCHEDULE, YOU'RE NOT LOGGED IN");
     }
 }
@@ -253,6 +252,7 @@ export async function addClassToSchedule(courseCode){
     const userSecret = getCookie("user");
 
     if(userSecret === "") {
+        alert("Please login to add to a schedule")
         console.log("CAN'T ADD A CLASS, NO USER LOGGED IN");
     } else {
         var currentSchedule = getUserCurrScheduleFromCookie(userSecret);
@@ -286,6 +286,7 @@ export async function addClassToSchedule(courseCode){
             console.log("Successfully added class")
         }
         else{
+            alert("Failed to remove to a schedule:\n" + dataJSON.ErrorMessage[0])
             console.log("Failed to add class to schedule")
             console.log(dataJSON.ErrorMessage[0])
         }
@@ -294,8 +295,11 @@ export async function addClassToSchedule(courseCode){
 }
 
 export async function removeClassFromSchedule(courseCode){
+
     const userSecret = getCookie("user");
+
     if(userSecret === "") {
+        alert("Please login to remove from a schedule")
         console.log("CAN'T REMOVE A CLASS, NO USER LOGGED IN");
     } else {
         var currentSchedule = getUserCurrScheduleFromCookie(userSecret);
@@ -322,6 +326,7 @@ export async function removeClassFromSchedule(courseCode){
             console.log("Successfully removed class")
         }
         else{
+            alert("Failed to remove to a schedule:\n" + dataJSON.ErrorMessage[0])
             console.log("Failed to remove class to schedule")
             console.log(dataJSON.ErrorMessage[0])
         }
