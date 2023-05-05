@@ -251,7 +251,9 @@ export async function addClassToSchedule(courseCode){
 }
 
 export async function removeClassFromSchedule(courseCode){
+
     const userSecret = getCookie("user");
+
     if(userSecret === "") {
         console.log("CAN'T REMOVE A CLASS, NO USER LOGGED IN");
     } else {
