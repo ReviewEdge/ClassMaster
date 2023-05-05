@@ -252,3 +252,8 @@ tr:nth-child(2n+1) td:first-child:after {
     z-index: -1;
 }
 
+.sched-in-list {
+    cursor: pointer;
+    border: solid 1px;
+    padding: 3px;
+}
