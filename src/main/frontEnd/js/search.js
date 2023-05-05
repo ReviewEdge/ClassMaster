@@ -63,7 +63,19 @@ function onType(){
 }
 
 function classObjectToString(c){
-    var str = c.code + " " + c.professor + " " + c.title + " " + c.department + " " + c.term.name
+    // console.log(c)
+    var str = c.code + " " + c.professor + " " + c.title + " " + c.department + " " + c.term.name + " " + c.description
+    if(c.hasOwnProperty("timeSlots")){
+        for(const t of c.timeSlots){
+            str += termObjectToString(t)
+        }
+    }
+    return str;
+}
+
+function termObjectToString(c){
+    // console.log(c)
+    var str = c.day + " " + c.start + " " + c.end
     return str;
 }
 
