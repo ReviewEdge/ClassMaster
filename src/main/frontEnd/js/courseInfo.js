@@ -84,7 +84,7 @@ class classObjectFactory {
         p.id ='classText' + this.nextUniqueID;
         const courseCodeDiv = classInfoJSON.code.split(" ");
         if(!(inSchedule)){
-            p.innerText =  classInfoJSON.courseCodeWithoutTerm + " " + classInfoJSON.term.name + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
+            p.innerText =  classInfoJSON.courseCodeWithoutTerm + ", " + classInfoJSON.term.name + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
         }
         else {
             p.innerText =  classInfoJSON.courseCodeWithoutTerm + ": " + classInfoJSON.title + ", Professor: " + classInfoJSON.professor;
