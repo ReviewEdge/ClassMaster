@@ -79,11 +79,6 @@ function termObjectToString(c){
     return str;
 }
 
-function classObjectToString(c){
-    var str = c.code + " " + c.professor + " " + c.title + " " + c.department
-    return str;
-}
-
 async function updateFilter(){
     const prof = document.getElementById("prof-in").value;
     const code = document.getElementById("code-in").value;
