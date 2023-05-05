@@ -82,6 +82,11 @@ function termObjectToString(c){
 async function updateFilter(){
     const prof = document.getElementById("prof-in").value;
     const code = document.getElementById("code-in").value;
+    const term_elem = document.getElementById("curr-sched-term-name");
+    let term = "";
+    if(term_elem !== null){
+        term = term_elem.innerText;
+    }
     let min = document.getElementById("min-cred-in").value;
     if(min === "") min="-1";
     let max = document.getElementById("max-cred-in").value;
@@ -131,7 +136,8 @@ async function updateFilter(){
             minimum : min,
             maximum : max,
             department :dept,
-            timeslots : timeslots
+            timeslots : timeslots,
+            term : term
         })
     })
     //     .then(validateJSON)
