@@ -21,8 +21,10 @@ window.addEventListener("DOMContentLoaded", function() {
        .then(data => {
            try {
                // Parse the JSON data here
+               console.log("here data")
                console.log(data);
            } catch (error) {
+           console.log("uh oh")
                console.error('Error parsing JSON data:', error);
            }
        })
@@ -51,8 +53,8 @@ window.addEventListener("DOMContentLoaded", function() {
       const queryStringEnd = `tr:nth-child(${getRowIndex(slt.endTime)}) td:nth-child(${getColumnIndex(slt.dayOfWeek)})`;
       const startCell = table.querySelector(queryStringStart);
       const endCell = table.querySelector(queryStringEnd);
-      if(!startCell){console.log("ah shit, start's null!")}
-      if(!endCell){console.log("ah shit, end's null!")}
+      if(!startCell){console.log("start's null!")}
+      if(!endCell){console.log("end's null!")}
       startCell.innerText = cls.name;
       endCell.innerText = cls.name;})
     });
@@ -81,9 +83,7 @@ class Timeslot {
 
 // helper function to get the column index of a day of the week
 function getColumnIndex(dayOfWeek) {
-    console.log(dayOfWeek)
   const columns = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  console.log(columns.indexOf(dayOfWeek) + 2);
   return columns.indexOf(dayOfWeek) + 2;
 }
 function getRowIndex(timeStr) {
@@ -95,8 +95,6 @@ function getRowIndex(timeStr) {
     hourInt += 12;
   }
   const time = 2*((hourInt) + (minInt / 60))-14;
-  console.log(timeStr)
-  console.log(time);
   return Math.ceil(time)
 }
 
@@ -231,8 +229,11 @@ function updateClassDisplayList(schedule, container){
         sch.innerText = "Schedule empty";
         container.append(sch)
     }
+
     for(const c of schedule.classes){
         const p = coFactory.createClassObjectFromJSON(schedule, true)
+        console.log("Here class")
+        console.log(p);
         container.append(p);
     }
 }
@@ -303,4 +304,10 @@ function removeClassFromSchedule(courseCode){
             updateSchedule()
         });
     });
+};
+
+function parseCalendar(){
+
+
+
 };
