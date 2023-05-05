@@ -211,6 +211,27 @@ public class SpringWebAPI {
 
         return searchResultStrings;
     }
+    
+    
+    
+    @CrossOrigin
+    @PostMapping("/signup")
+    @ResponseBody
+    public Integer signup(@RequestBody LoginForm loginForm) {
+        try {
+            Account newAccount = new Account(null, loginForm.getEmail(), loginForm.getPassword(), null);
+            newAccount.saveOrUpdateAccount();
+            System.out.println("Created account " + newAccount.getId());
+        } catch (Exception e) {
+            System.out.println("Error while creating new account for email: " + loginForm.getEmail());
+            System.out.println(e);
+            return -1;
+        }
+
+        return 1;
+    }
+    
+    
 
     @CrossOrigin
     @PostMapping("/login")
