@@ -15,25 +15,28 @@ import { coFactory } from './courseInfo.js';
 //         });
 // });
 
+function testClassCalendar(){
 // create an array of Class objects
-const classes = [
-    new Class('Math 101', '8:00 AM', '8:30 AM', 'Sunday'),
-    new Class('Physics 201', '9:00 AM', '10:30 AM', 'Tuesday'),
-    new Class('English 202', '11:00 AM', '12:30 PM', 'Monday'),
-    // more Class objects
-    ];
+    const classes = [
+        new Class('Math 101', '8:00 AM', '8:30 AM', 'Sunday'),
+        new Class('Physics 201', '9:00 AM', '10:30 AM', 'Tuesday'),
+        new Class('English 202', '11:00 AM', '12:30 PM', 'Monday'),
+        // more Class objects
+        ];
 
-    // loop through each Class object and add it to the table cell that corresponds to its day and time
+        // loop through each Class object and add it to the table cell that corresponds to its day and time
     const table = document.getElementById('calendar-view-table');
     classes.forEach(cls => {
-    const cell = table.querySelector('tr:nth-child(${getRowIndex(cls.startTime)}) td:nth-child(${getColumnIndex(cls.dayOfWeek)})');
-    cell.innerText = "hello?";
-});  
+        // const cell = table.querySelector('tr:nth-child(${getRowIndex(cls.startTime)}) td:nth-child(${getColumnIndex(cls.dayOfWeek)})');
+        // cell.innerText = "hello?";
+    });  
+}
 
 
 
 window.addEventListener("DOMContentLoaded",function() {
     updateSchedule()
+    testClassCalendar()
 });
 
 /* AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
