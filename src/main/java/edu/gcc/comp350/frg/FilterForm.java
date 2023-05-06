@@ -1,5 +1,7 @@
 package edu.gcc.comp350.frg;
 
+import java.util.ArrayList;
+
 public class FilterForm {
     private String professor;
     private String code;
@@ -7,8 +9,9 @@ public class FilterForm {
     private String maximum;
     private String department;
     private String[] timeslots;
+    private String term;
 
-    public FilterForm(String professor, String code, String minimum, String maximum, String department, String[] timeslots) {
+    public FilterForm(String professor, String code, String minimum, String maximum, String department, String[] timeslots, String term) {
         this.professor = professor;
         this.code = code;
         this.minimum = minimum;
@@ -20,6 +23,7 @@ public class FilterForm {
 //            this.timeslots[i] = new Timeslot(t[i]);
 //        }
         this.timeslots = timeslots;
+        this.term = term;
     }
 
     public String getProfessor() {
@@ -46,10 +50,20 @@ public class FilterForm {
 //        return timeslots;
 //    }
     public Timeslot[] getTimeslots() {
-        Timeslot[] t = new Timeslot[timeslots.length];
+        ArrayList<Timeslot> t = new ArrayList<>();
         for(int i=0; i<timeslots.length; i++){
-            t[i] = new Timeslot(timeslots[i]);
+            if(timeslots[i] == null) continue;
+            t.add(new Timeslot(timeslots[i]));
         }
-        return t;
+        return t.toArray(new Timeslot[t.size()]);
+    }
+
+    public Term getTerm() {
+        try{
+            return new Term(term);
+        }
+        catch (Exception ex){
+            return null;
+        }
     }
 }

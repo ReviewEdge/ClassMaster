@@ -15,10 +15,56 @@ import { coFactory } from './courseInfo.js';
 //         });
 // });
 
+function testClassCalendar(){
+// create an array of Class objects
+    const classes = [
+        new Class('Math 101', '8:00 AM', '8:30 AM', 'Sunday'),
+        new Class('Physics 201', '9:00 AM', '10:30 AM', 'Tuesday'),
+        new Class('English 202', '11:00 AM', '12:30 PM', 'Monday'),
+        // more Class objects
+        ];
+
+        // loop through each Class object and add it to the table cell that corresponds to its day and time
+    const table = document.getElementById('calendar-view-table');
+    classes.forEach(cls => {
+        // const cell = table.querySelector('tr:nth-child(${getRowIndex(cls.startTime)}) td:nth-child(${getColumnIndex(cls.dayOfWeek)})');
+        // cell.innerText = "hello?";
+    });  
+}
+
+
 
 window.addEventListener("DOMContentLoaded",function() {
     updateSchedule()
+    testClassCalendar()
 });
+
+/* AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                    This is new stuff           **/
+
+// define your Java objects (for example, a Class object)
+class Class {
+    constructor(name, startTime, endTime, dayOfWeek) {
+        this.name = name;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.dayOfWeek = dayOfWeek;
+    }
+}
+
+  
+  
+// helper function to get the column index of a day of the week
+function getColumnIndex(dayOfWeek) {
+const columns = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+return columns.indexOf(dayOfWeek) + 1;
+}
+function getRowIndex(classTime) {
+const rows = ['8:00 AM','8:30 AM', '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM',];
+return columns.indexOf(classTime) + 1;
+}
+  
+  
 
 window.addEventListener("DOMContentLoaded",function() {
     getMyScheduleNames();
@@ -148,13 +194,11 @@ async function getCurrentSchedule(scheduleNum, loginSecret){
 
     const data = await fetch(getScheduleURL)
 
-    console.log(data);
+    // console.log(data);
 
     const dataJson = await data.json()
 
-
-    console.log(dataJson);
-
+    // console.log(dataJson);
 
     return dataJson
 }
@@ -176,14 +220,14 @@ async function updateSchedule(){
         container.append(scheduleHeader)
         updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm)
     } else {
+        alert("Please login to save or add to a schedule")
         console.log("NO ACCESS TO CURRENT SCHEDULE, YOU'RE NOT LOGGED IN");
     }
-
 }
 
 function updateClassDisplayList(schedule, cont, Header){
 
-    console.log(schedule);
+    // console.log(schedule);
 
     if (schedule === null){
         const sch = document.createElement("p");
@@ -204,13 +248,14 @@ function updateClassDisplayList(schedule, cont, Header){
     Header.append(termHeader)
 }
 
-export function addClassToSchedule(courseCode){
+export async function addClassToSchedule(courseCode){
 
     //TODO: Should check if cl and sc terms match in the FE and tell user if they don't
 
     const userSecret = getCookie("user");
 
     if(userSecret === "") {
+        alert("Please login to add to a schedule")
         console.log("CAN'T ADD A CLASS, NO USER LOGGED IN");
     } else {
         var currentSchedule = getUserCurrScheduleFromCookie(userSecret);
@@ -233,42 +278,37 @@ export function addClassToSchedule(courseCode){
         // };
         // const addClassURL = 'http://localhost:8080/addClassTest';
     
-        // const addClassURL = 'http://localhost:8080/addClassTest';
-        // const data = {email: '1', password: '123'};
-        // const options = {
-        //     method: 'POST',
-        //     headers: {'Content-Type': 'application/json'},
-        //     body: JSON.stringify(data)
-        // };
-    
         console.log(addClassURL)
         // console.log(options)
-    
-        // fetch(addClassURL, options)
-        fetch(addClassURL)
-            .then(data => {
-            data.json().then((data) => {
-                if (!data[0]) {
-                    console.log("FAILED TO REMOVE CLASS");
-                }
-                updateSchedule()
-            });
-        });
+        
+        const data = await fetch(addClassURL)
+        const dataJSON = await data.json()
+        // console.log(dataJSON)
+        if(dataJSON.Succeeded[0] == "True"){
+            updateSchedule()
+            console.log("Successfully added class")
+        }
+        else{
+            alert("Failed to add to a schedule:\n" + dataJSON.ErrorMessage[0])
+            console.log("Failed to add class to schedule")
+            console.log(dataJSON.ErrorMessage[0])
+        }
     }
 
 }
 
-export function removeClassFromSchedule(courseCode){
+export async function removeClassFromSchedule(courseCode){
 
     const userSecret = getCookie("user");
 
     if(userSecret === "") {
+        alert("Please login to remove from a schedule")
         console.log("CAN'T REMOVE A CLASS, NO USER LOGGED IN");
     } else {
         var currentSchedule = getUserCurrScheduleFromCookie(userSecret);
         var ccSplit = courseCode.split(" ")
-        console.log(courseCode)
-        console.log(ccSplit)
+        // console.log(courseCode)
+        // console.log(ccSplit)
 
         const removeClassURL = 'http://localhost:8080/removeClass?' +
             'loginSecret=' + userSecret +
@@ -279,14 +319,19 @@ export function removeClassFromSchedule(courseCode){
             '&year=' + ccSplit[0] + 
             '&term=' + ccSplit[1];
 
-        fetch(removeClassURL)
-            .then(data => {
-            data.json().then((data) => {
-                if (!data[0]) {
-                    console.log("FAILED TO REMOVE CLASS");
-                }
-                updateSchedule();
-            });
-        });
+        console.log(removeClassURL)
+
+        const data = await fetch(removeClassURL)
+        const dataJSON = await data.json()
+        // console.log(dataJSON)
+        if(dataJSON.Succeeded[0] == "True"){
+            updateSchedule()
+            console.log("Successfully removed class")
+        }
+        else{
+            alert("Failed to remove to a schedule:\n" + dataJSON.ErrorMessage[0])
+            console.log("Failed to remove class to schedule")
+            console.log(dataJSON.ErrorMessage[0])
+        }
     }
 };

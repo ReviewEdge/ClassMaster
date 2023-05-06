@@ -48,10 +48,13 @@ function onType(){
     const container = document.getElementById("search-results");
     const search = document.getElementById("class-search-bar").value.toLowerCase().trim();
     container.innerHTML = "";
-    console.log(classes)
+    // console.log(classes)
+
     for (const c of classes) {
-        if(!c.toLowerCase().includes(search)) continue;
-        const p = coFactory.createClassObject(c)
+        // console.log(classObjectToString(c))
+        if(!classObjectToString(c).toLowerCase().includes(search)) continue;
+        const p = coFactory.createClassObjectFromJSON(c, false)
+        // const p = coFactory.createClassObject(c, false)
         container.append(p);
     }
     if(classes.length === 0){
@@ -59,9 +62,31 @@ function onType(){
     }
 }
 
-function updateFilter(){
+function classObjectToString(c){
+    // console.log(c)
+    var str = c.code + " " + c.professor + " " + c.title + " " + c.department + " " + c.term.name + " " + c.description
+    if(c.hasOwnProperty("timeSlots")){
+        for(const t of c.timeSlots){
+            str += termObjectToString(t)
+        }
+    }
+    return str;
+}
+
+function termObjectToString(c){
+    // console.log(c)
+    var str = c.day + " " + c.start + " " + c.end
+    return str;
+}
+
+async function updateFilter(){
     const prof = document.getElementById("prof-in").value;
     const code = document.getElementById("code-in").value;
+    const term_elem = document.getElementById("curr-sched-term-name");
+    let term = "";
+    if(term_elem !== null){
+        term = term_elem.innerText;
+    }
     let min = document.getElementById("min-cred-in").value;
     if(min === "") min="-1";
     let max = document.getElementById("max-cred-in").value;
@@ -99,7 +124,8 @@ function updateFilter(){
         timeslots[i] = ret;
     }
     const postCommentUrl = "http://localhost:8080/API/setFilter";
-    fetch(postCommentUrl, {
+    const data = await fetch(postCommentUrl, {
+    // fetch(postCommentUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -110,14 +136,25 @@ function updateFilter(){
             minimum : min,
             maximum : max,
             department :dept,
-            timeslots : timeslots
+            timeslots : timeslots,
+            term : term
         })
     })
-        .then(validateJSON)
-        //get all classes
-        .then(data => {
-            classes = data;
-        });
+    //     .then(validateJSON)
+    //     //get all classes
+    //     .then(data => {
+    //         classes = data;
+    //     });
+
+    const dataJSON = await data.json()
+
+    if(dataJSON != null){
+        classes = []
+        for(const c of dataJSON){
+            classes.push(JSON.parse(c))
+        }
+        // console.log(classes)
+    }
 }
 
 /**
