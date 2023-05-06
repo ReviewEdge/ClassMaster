@@ -1,5 +1,6 @@
 import { setCookie, getCookie } from './useCookies.js';
 import { coFactory } from './courseInfo.js';
+import { refreshCalendar } from './cal.js';
 
 
 // No longer need this test:
@@ -187,7 +188,10 @@ function insertSchedule(s, template, container, userSecret) {
 }
 
 
-async function getCurrentSchedule(scheduleNum, loginSecret){
+export async function getCurrentSchedule(loginSecret){
+
+    const scheduleNum = getUserCurrScheduleFromCookie(loginSecret);
+
     const getScheduleURL = 'http://localhost:8080/getSchedule?id=' + scheduleNum + "&loginSecret=" + loginSecret;
 
     const container = document.getElementById("schedule-classes-list");
@@ -198,7 +202,9 @@ async function getCurrentSchedule(scheduleNum, loginSecret){
 
     const dataJson = await data.json()
 
+
     // console.log(dataJson);
+
 
     return dataJson
 }
@@ -216,9 +222,10 @@ async function updateSchedule(){
         container.innerText = ''
         container.innerHTML = ''
 
-        const schedule = await getCurrentSchedule(getUserCurrScheduleFromCookie(curUserSecret), curUserSecret);
+        const schedule = await getCurrentSchedule(curUserSecret);
         container.append(scheduleHeader)
         updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm)
+        refreshCalendar(schedule)
     } else {
         alert("Please login to save or add to a schedule")
         console.log("NO ACCESS TO CURRENT SCHEDULE, YOU'RE NOT LOGGED IN");
