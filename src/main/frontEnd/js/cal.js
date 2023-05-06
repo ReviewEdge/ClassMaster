@@ -1,4 +1,5 @@
 import { setCookie, getCookie } from './useCookies.js';
+import { getCurrentSchedule } from './schedule.js';
 
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -8,87 +9,52 @@ let endHour = 16;
 let events = [];
 
 
-
-window.addEventListener("DOMContentLoaded", async function() {
-    const curUserSecret = getCookie("user");
-    const curSchedule = getCurrentSchedule(curUserSecret);
-    await scheduleToListOfClasses(curSchedule);
-});
-
-
-function getUserCurrScheduleFromCookie(userSecret) {
-    const userCurrentScheduleCookieKey = "user" + userSecret + "currSched";
-    return getCookie(userCurrentScheduleCookieKey);
-}
-
-
-async function getCurrentSchedule(loginSecret){
-
-    const scheduleNum = getUserCurrScheduleFromCookie(loginSecret);
-
-    const getScheduleURL = 'http://localhost:8080/getSchedule?id=' + scheduleNum + "&loginSecret=" + loginSecret;
-
-    const container = document.getElementById("schedule-classes-list");
-
-    const data = await fetch(getScheduleURL)
-
-    // console.log(data);
-
-    const dataJson = await data.json()
-
-
-    // console.log(dataJson);
-
-
-    return dataJson
-}
-
-
 async function scheduleToListOfClasses(schedule) {
+    events = []
 
-    console.log("hey");
+    // console.log("hey");
 
-    // await console.log(schedule);
+    // console.log(schedule);
 
-    schedule.then(function(result) {
-        console.log(result.classes);
-    
+    const result = await schedule
 
-        result.classes.forEach(element => {
-            const newEvent = { day: '', start: { hour: 0, minute: 0 }, end: { hour: 0, minute: 0 }, title: '' }
-            newEvent.title = element.courseCodeWithoutTerm;
+    // console.log(result);
+    // console.log("promise recieved")
 
-            element.timeSlots.forEach(element => {
-                const startSplit = element.start.split(":");
-                const endSplit = element.end.split(":");
-                
-                newEvent.start.hour = parseInt(startSplit[0]);
-                newEvent.start.minute = parseInt(startSplit[1]);
-               
-                newEvent.end.hour = parseInt(endSplit[0]);
-                newEvent.end.minute = parseInt(endSplit[1]);
+    result.classes.forEach(element => {
+        const newEvent = { day: '', start: { hour: 0, minute: 0 }, end: { hour: 0, minute: 0 }, title: '' }
+        newEvent.title = element.courseCodeWithoutTerm;
 
-                //extend the day if there is a late class
-                if(newEvent.end.hour > 16) {
-                    endHour = 20;
-                }
+        element.timeSlots.forEach(element => {
+            const instanceOfEvent = JSON.parse(JSON.stringify(newEvent))
+            // console.log(instanceOfEvent)
+            const startSplit = element.start.split(":");
+            const endSplit = element.end.split(":");
+            
+            instanceOfEvent.start.hour = parseInt(startSplit[0]);
+            instanceOfEvent.start.minute = parseInt(startSplit[1]);
+            
+            instanceOfEvent.end.hour = parseInt(endSplit[0]);
+            instanceOfEvent.end.minute = parseInt(endSplit[1]);
 
-                newEvent.day = element.day;
-            });
+            //extend the day if there is a late class
+            if(instanceOfEvent.end.hour > 16) {
+                endHour = 20;
+            }
 
-            events.push(newEvent);
+            instanceOfEvent.day = element.day;
+            events.push(instanceOfEvent);
         });
-
-
-    }).then(function() {
-        generateCalendar();
     });
+    // console.log(events)
+    generateCalendar();
 
 }
 
 
 function generateCalendar() {
     const calendarEl = document.getElementById('calendar');
+    calendarEl.innerHTML = ''
 
     // Add days of the week
     daysOfWeek.forEach(day => {
@@ -123,7 +89,7 @@ function generateCalendar() {
 
     // Add events
     events.forEach(event => {
-        console.log(event);
+        // console.log(event);
 
         // Calculate position and size of event
         const topOfDiv = 23.7;
@@ -165,3 +131,5 @@ function generateCalendar() {
     });
 }
 
+
+export {scheduleToListOfClasses as refreshCalendar}
