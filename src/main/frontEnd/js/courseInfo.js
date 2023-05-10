@@ -34,8 +34,8 @@ class classObjectFactory {
         const detailsButton = document.createElement("span");
         // detailsButton.className = 'classText';
         detailsButton.id ='detailsButton' + this.nextUniqueID;
-        // detailsButton.innerText = ClassInfo + "     (•••)";
-        detailsButton.innerText = "(Click for Details)";
+        detailsButton.innerHTML = "<br><b>Click for Details</b> ";
+        // detailsButton.innerText = "(Click for Details) ";
         const intVal = this.nextUniqueID
         detailsButton.addEventListener("click", function() {
             var popup = document.getElementById('classInfoText' + intVal);
@@ -48,9 +48,9 @@ class classObjectFactory {
 
         if(!(inSchedule)){
             const addButton = document.createElement("span");
-            addButton.className = 'addClassButton';
+            addButton.className = 'btn btn-success btn-sm addClassButton';
             addButton.id ='addClassButton' + this.nextUniqueID;
-            addButton.innerText = "(Click to add Class)";
+            addButton.innerText = "+";
             addButton.addEventListener("click", function() {
                 addClassToSchedule(classInfoSplit[0])
             });
@@ -58,9 +58,9 @@ class classObjectFactory {
         }
         else {
             const removeButton = document.createElement("span");
-            removeButton.className = 'removeClassButton';
+            removeButton.className = 'btn btn-danger btn-sm removeClassButton';
             removeButton.id ='removeClassButton' + this.nextUniqueID;
-            removeButton.innerText = "(Click to remove Class)";
+            removeButton.innerText = "-";
             removeButton.addEventListener("click", function() {
                 removeClassFromSchedule(classInfoSplit[0])
             });
@@ -97,8 +97,8 @@ class classObjectFactory {
         const detailsButton = document.createElement("span");
         // detailsButton.className = 'classText';
         detailsButton.id ='detailsButton' + this.nextUniqueID;
-        // detailsButton.innerText = ClassInfo + "     (•••)";
-        detailsButton.innerText = "(Click for Details)";
+        detailsButton.innerHTML = "<br><b>Click for Details</b> ";
+        // detailsButton.innerText = "(Click for Details) ";
         const intVal = this.nextUniqueID
         detailsButton.addEventListener("click", function() {
             var popup = document.getElementById('classInfoText' + intVal);
@@ -108,9 +108,9 @@ class classObjectFactory {
 
         if(!(inSchedule)){
             const addButton = document.createElement("span");
-            addButton.className = 'addClassButton';
+            addButton.className = 'btn btn-success btn-sm addClassButton';
             addButton.id ='addClassButton' + this.nextUniqueID;
-            addButton.innerText = "(Click to add Class)";
+            addButton.innerText = "+";
             addButton.addEventListener("click", function() {
                 addClassToSchedule(classInfoJSON.code)
             });
@@ -118,9 +118,9 @@ class classObjectFactory {
         }
         else {
             const removeButton = document.createElement("span");
-            removeButton.className = 'removeClassButton';
+            removeButton.className = 'btn btn-danger btn-sm removeClassButton';
             removeButton.id ='removeClassButton' + this.nextUniqueID;
-            removeButton.innerText = "(Click to remove Class)";
+            removeButton.innerText = "-";
             removeButton.addEventListener("click", function() {
                 removeClassFromSchedule(classInfoJSON.code)
             });

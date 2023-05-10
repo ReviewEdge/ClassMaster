@@ -24,27 +24,29 @@ async function scheduleToListOfClasses(schedule) {
     result.classes.forEach(element => {
         const newEvent = { day: '', start: { hour: 0, minute: 0 }, end: { hour: 0, minute: 0 }, title: '' }
         newEvent.title = element.courseCodeWithoutTerm;
+        
+        if(element.hasOwnProperty("timeSlots")){
+            element.timeSlots.forEach(element => {
+                const instanceOfEvent = JSON.parse(JSON.stringify(newEvent))
+                // console.log(instanceOfEvent)
+                const startSplit = element.start.split(":");
+                const endSplit = element.end.split(":");
+                
+                instanceOfEvent.start.hour = parseInt(startSplit[0]);
+                instanceOfEvent.start.minute = parseInt(startSplit[1]);
+                
+                instanceOfEvent.end.hour = parseInt(endSplit[0]);
+                instanceOfEvent.end.minute = parseInt(endSplit[1]);
 
-        element.timeSlots.forEach(element => {
-            const instanceOfEvent = JSON.parse(JSON.stringify(newEvent))
-            // console.log(instanceOfEvent)
-            const startSplit = element.start.split(":");
-            const endSplit = element.end.split(":");
-            
-            instanceOfEvent.start.hour = parseInt(startSplit[0]);
-            instanceOfEvent.start.minute = parseInt(startSplit[1]);
-            
-            instanceOfEvent.end.hour = parseInt(endSplit[0]);
-            instanceOfEvent.end.minute = parseInt(endSplit[1]);
+                //extend the day if there is a late class
+                if(instanceOfEvent.end.hour > 16) {
+                    endHour = 20;
+                }
 
-            //extend the day if there is a late class
-            if(instanceOfEvent.end.hour > 16) {
-                endHour = 20;
-            }
-
-            instanceOfEvent.day = element.day;
-            events.push(instanceOfEvent);
-        });
+                instanceOfEvent.day = element.day;
+                events.push(instanceOfEvent);
+            });
+        }
     });
     // console.log(events)
     generateCalendar();
@@ -77,7 +79,7 @@ function generateCalendar() {
                 meridian = " PM";
             }
 
-            hourEl.textContent = i + meridian;
+            hourEl.textContent = tweHour + meridian;
             dayEl.appendChild(hourEl);
         }
 
