@@ -93,6 +93,9 @@ class classObjectFactory {
         if(classInfoJSON.hasOwnProperty("timeSlots")){
             p.innerText += ", " + turnTimeslotIntoString(classInfoJSON.timeSlots)
         }
+        else {
+            p.innerText += ", Time unlisted"
+        }
 
         const detailsButton = document.createElement("span");
         // detailsButton.className = 'classText';
@@ -144,7 +147,23 @@ function turnTimeslotIntoString(timeslot){
     for(const t of timeslot){
         const startSplit = t.start.split(":")
         const endSplit = t.end.split(":")
-        str += t.day + " " + startSplit[0] + ":" + startSplit[1] + "-" + endSplit[0] + ":" + endSplit[1] + ", "
+        str += t.day + " "
+        let startHour = startSplit[0];
+        let endHour = endSplit[0]
+        let meridian1 = " AM"
+        let meridian2 = " AM"
+
+    
+        if (startHour > 12) {
+            startHour = startHour-12;
+            meridian1 = " PM";
+        }
+
+        if (endHour > 12) {
+            endHour = endHour-12;
+            meridian2 = " PM";
+        }
+        str += startHour + ":" + startSplit[1] + " " + meridian1 + " - " + endHour + ":" + endSplit[1] + " " + meridian2 +", "
     }
     return str
 }
