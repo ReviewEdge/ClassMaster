@@ -19,6 +19,7 @@ class classObjectFactory {
             return coFactory_master;
         }
         this.nextUniqueID = 1;
+        coFactory_master = this;
         coFactoryExists = true;
     }
 
