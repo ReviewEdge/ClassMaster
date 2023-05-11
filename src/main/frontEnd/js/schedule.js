@@ -212,7 +212,7 @@ export async function getCurrentSchedule(loginSecret){
 
 async function updateSchedule(){
     const curUserSecret = getCookie("user");
-    if (curUserSecret !== ""){
+    if ((curUserSecret !== "") && (getUserCurrScheduleFromCookie(curUserSecret))) {
         const container = document.getElementById("schedule-classes-list");
         const scheduleHeader = document.getElementById("schedule-display-header");
         const scheduleTerm = document.getElementById("curr-sched-term-name")
@@ -227,8 +227,10 @@ async function updateSchedule(){
         updateClassDisplayList(schedule, container, scheduleHeader, scheduleTerm)
         refreshCalendar(schedule)
     } else {
-        alert("Please login to save or add to a schedule")
-        console.log("NO ACCESS TO CURRENT SCHEDULE, YOU'RE NOT LOGGED IN");
+        if (getUserCurrScheduleFromCookie(curUserSecret)) {
+            alert("Please login to save or add to a schedule")
+            console.log("NO ACCESS TO CURRENT SCHEDULE, YOU'RE NOT LOGGED IN");
+        }
     }
 }
 
