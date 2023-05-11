@@ -10,6 +10,7 @@ input,textarea {
 .home-flex-container {
     display: flex;
     flex-wrap: wrap;
+    background-color: #BDD9BF;
 }
 
 .flex-item-left {
@@ -107,7 +108,7 @@ input,textarea {
 
 .new-sc-form {
     display: none;
-    padding-top: 1rem;
+    margin-top: 1rem;
 }
 
 #new-sc-name {
@@ -142,6 +143,7 @@ input,textarea {
 .schedule-classes-list {
     padding: 1rem;
     /* line-height: 20%; */
+    background-color: white;
 }
 
 .calendar-view {

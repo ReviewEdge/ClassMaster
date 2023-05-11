@@ -108,28 +108,35 @@ public class Schedule {
         }
 
         ArrayList<Timeslot> toAddSlots = toAdd.getTimeSlots();
-
-        // for every class currently in the schedule...
-        for (Class c: classes){
-            ArrayList<Timeslot> currClassSlots = c.getTimeSlots();
-            // for every timeslot of a current class...
-            for (int i = 0; i < currClassSlots.size(); i++) {
-                // for every timeslot of the adding class...
-                for (int j = 0; j < toAddSlots.size(); j++) {
-                    // checks if one of the classes overlaps
-                    if (currClassSlots.get(i).overlaps(toAddSlots.get(j))) {
-                        //TODO: eventually we'll want this to actually resolve the conflict intelligently, prompt user
+        if(toAddSlots != null) {
+            // for every class currently in the schedule...
+            for (Class c : classes) {
+                if(c.getTimeSlots() == null) continue;
+                ArrayList<Timeslot> currClassSlots = c.getTimeSlots();
+                // for every timeslot of a current class...
+                for (int i = 0; i < currClassSlots.size(); i++) {
+                    // for every timeslot of the adding class...
+                    for (int j = 0; j < toAddSlots.size(); j++) {
+                        // checks if one of the classes overlaps
+                        if (currClassSlots.get(i).overlaps(toAddSlots.get(j))) {
+                            //TODO: eventually we'll want this to actually resolve the conflict intelligently, prompt user
 //                        Class newClass = ResolveConflict(c,toAdd);
 //                        classes.remove(c);
 //                        currentcredits-=c.getCredits();
 //                        classes.add(newClass);
 //                        currentcredits+= newClass.getCredits();
-                        throw new Exception("overlaps class in schedule");
+                            throw new Exception("overlaps class in schedule");
+                        }
                     }
                 }
             }
         }
 
+        for (Class c : classes){
+            if(c.getCode().equals(toAdd.getCode())){
+                throw new Exception("class is already in schedule");
+            }
+        }
         currentcredits = currentcredits + toAdd.getCredits();
         classes.add(toAdd);
     }
