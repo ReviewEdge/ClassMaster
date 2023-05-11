@@ -1,3 +1,8 @@
+:root {
+    --default-color: #75ABBC;
+}
+
+
 body {
     margin: 0;
 }
@@ -25,7 +30,7 @@ input,textarea {
 }
 
 .hamburger-menu {
-    background-color: #BDD9BF;
+    background-color: var(--default-color);
     color: cadetblue;
     min-width: 4rem;
     height:100vh;
@@ -49,7 +54,7 @@ input,textarea {
 }
 
 .header {
-    background-color: #BDD9BF;
+    background-color: var(--default-color);
     padding: 1rem;
 }
 
@@ -151,7 +156,6 @@ input,textarea {
     padding: 1rem;
     margin: 8px;
 }
-
 
 
 .classText {
@@ -262,4 +266,12 @@ tr:nth-child(2n+1) td:first-child:after {
     cursor: pointer;
     border: solid 1px;
     padding: 3px;
+}
+
+.spring {
+    background-color: #CAE1CC;
+}
+
+.fall {
+    background-color: #CEA67C;
 }

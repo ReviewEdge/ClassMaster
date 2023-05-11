@@ -249,6 +249,17 @@ function updateClassDisplayList(schedule, cont, Header){
         cont.append(p);
     }
 
+    const hamMen = document.getElementsByClassName('hamburger-menu')[0];
+    const header = document.getElementsByClassName('header')[0];
+    // change to season theme color
+    if (schedule.term.name === "Fall 2020") {
+        hamMen.classList.add("fall");
+        header.classList.add("fall");
+    } else if (schedule.term.name === "Spring 2021") {
+        hamMen.classList.add("spring");
+        header.classList.add("spring");
+    }
+
     const termHeader = document.createElement("span")
     termHeader.id = "curr-sched-term-name"
     termHeader.innerText = schedule.term.name
