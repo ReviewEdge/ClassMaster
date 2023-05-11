@@ -31,8 +31,8 @@
 			<input id="new-sc-name" type="text" placeholder="Name">
 			<label for="new-sc-term">Choose a Term:</label>
 				<select id="new-sc-term" name="term">
-					<option value="Fall 2020">Fall 2020</option>
-					<option value="Spring 2021">Spring 2021</option>
+					<option value="Fall 2020" class="fall">Fall 2020</option>
+					<option value="Spring 2021" class="spring">Spring 2021</option>
 			</select>
 			<input id="new-sc-submit" type="submit">
 		</div>
@@ -172,7 +172,7 @@
 
       <div class="schedule-display">
         <div class="schedule-classes-list" id="schedule-classes-list">
-          <h4 id="schedule-display-header">Save classes to create your first schedule!<span id="curr-sched-term-name"></span></h4>
+          <h4 id="schedule-display-header">Create a schedule to save classes!<span id="curr-sched-term-name"></span></h4>
 			<!-- <p class="classText" id="classText1000"> TESTING COMP 141 A, COMP PROGRAMMING I, Spring 2021, [Monday 13:00 - 13:50, Wednesday 13:00 - 13:50, Friday 13:00 - 13:50], David Valentine 
 				<viewdetailsbutton id="detailsButton1000" onclick="clickMoreInfo(1)">(Click for Details)</viewdetailsbutton>
 				<p id="addClassButton1000" onclick="addClassToSchedule(1234)">(Click to add Class)</p>
