@@ -1,2 +1,2 @@
 # ClassMaster
-A class scheduling app
+A class scheduling web app
